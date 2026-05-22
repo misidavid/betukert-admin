@@ -3,6 +3,16 @@ import { WORD_BANK } from '../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes } from '../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../shared/curriculum/graphemes';
 
+
+const toSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
+    .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
+    .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
+    .replace(/[^a-z0-9]/g, '_');
+};
+
 const getFirstSound = (word: string): string => {
   const graphemes = splitIntoGraphemes(word.toLowerCase());
   return graphemes[0] || '';

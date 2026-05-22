@@ -22,6 +22,16 @@ const STATUS_COLORS: Record<ImageStatus, string> = {
   needs_replacement: 'bg-orange-100 text-orange-700',
 };
 
+
+const toSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
+    .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
+    .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
+    .replace(/[^a-z0-9]/g, '_');
+};
+
 export default function ImagesPage() {
   const [items, setItems] = useState<ImageNeed[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +73,7 @@ export default function ImagesPage() {
     setUploadingId(item.id);
     try {
       const ext = file.name.split('.').pop();
-      const path = `${item.phase}/${item.word}.${ext}`;
+      const path = `phase_${item.phase}/${toSlug(item.word)}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
         .from('images')
