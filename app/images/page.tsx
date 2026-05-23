@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase, ImageNeed, ImageStatus } from '../../lib/supabase';
 import { generateImageNeeds } from '../../lib/generateImageNeeds';
+import Link from 'next/link';
 
 const STATUS_LABELS: Record<ImageStatus, string> = {
   missing: 'Hiányzó',
@@ -22,7 +23,6 @@ const STATUS_COLORS: Record<ImageStatus, string> = {
   needs_replacement: 'bg-orange-100 text-orange-700',
 };
 
-
 const toSlug = (text: string): string => {
   return text
     .toLowerCase()
@@ -32,27 +32,37 @@ const toSlug = (text: string): string => {
     .replace(/[^a-z0-9]/g, '_');
 };
 
+interface ExerciseTypeConfig {
+  id: string;
+  label: string;
+  requires_image: boolean;
+}
+
 export default function ImagesPage() {
   const [items, setItems] = useState<ImageNeed[]>([]);
+  const [configs, setConfigs] = useState<ExerciseTypeConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [filter, setFilter] = useState<ImageStatus | 'all'>('all');
   const [phaseFilter, setPhaseFilter] = useState<number | 'all'>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    loadItems();
+    loadData();
   }, []);
 
-  const loadItems = async () => {
+  const loadData = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('image_needs')
-      .select('*')
-      .order('phase', { ascending: true });
 
-    if (!error && data) setItems(data);
+    const [{ data: imageData }, { data: configData }] = await Promise.all([
+      supabase.from('image_needs').select('*').order('phase', { ascending: true }),
+      supabase.from('exercise_type_config').select('*').eq('requires_image', true),
+    ]);
+
+    if (imageData) setItems(imageData);
+    if (configData) setConfigs(configData);
     setLoading(false);
   };
 
@@ -62,7 +72,7 @@ export default function ImagesPage() {
     try {
       const result = await generateImageNeeds();
       setMessage(`✅ ${result.inserted} új képszükséglet generálva, ${result.skipped} már létezett.`);
-      loadItems();
+      loadData();
     } catch (e: any) {
       setMessage(`❌ Hiba: ${e.message}`);
     }
@@ -95,7 +105,7 @@ export default function ImagesPage() {
         })
         .eq('id', item.id);
 
-      loadItems();
+      loadData();
     } catch (e: any) {
       setMessage(`❌ Feltöltési hiba: ${e.message}`);
     }
@@ -107,24 +117,111 @@ export default function ImagesPage() {
       .from('image_needs')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', id);
-    loadItems();
+    loadData();
   };
 
-  const filtered = items.filter(item => {
+  // Csak képköteles feladattípusokhoz tartozó szavak
+  const imageRequiredTypes = configs.map(c => c.id);
+
+  const relevantItems = items.filter(item =>
+    item.exercise_types?.some(t => imageRequiredTypes.includes(t))
+  );
+
+  // Feladattípusonként csoportosítás
+  const groupedByType: Record<string, { config: ExerciseTypeConfig; items: ImageNeed[] }> = {};
+  for (const config of configs) {
+    const typeItems = relevantItems.filter(item =>
+      item.exercise_types?.includes(config.id)
+    );
+    if (typeItems.length > 0) {
+      groupedByType[config.id] = { config, items: typeItems };
+    }
+  }
+
+  const filtered = relevantItems.filter(item => {
     if (filter !== 'all' && item.status !== filter) return false;
     if (phaseFilter !== 'all' && item.phase !== phaseFilter) return false;
+    if (typeFilter !== 'all' && !item.exercise_types?.includes(typeFilter)) return false;
     return true;
   });
 
-  const phases = [...new Set(items.map(i => i.phase))].sort((a, b) => a - b);
+  const phases = [...new Set(relevantItems.map(i => i.phase))].sort((a, b) => a - b);
 
   const stats = {
-    total: items.length,
-    missing: items.filter(i => i.status === 'missing').length,
-    uploaded: items.filter(i => i.status === 'uploaded').length,
-    approved: items.filter(i => i.status === 'approved').length,
-    published: items.filter(i => i.status === 'published').length,
+    total: relevantItems.length,
+    missing: relevantItems.filter(i => i.status === 'missing').length,
+    uploaded: relevantItems.filter(i => i.status === 'uploaded').length,
+    approved: relevantItems.filter(i => i.status === 'approved').length,
+    published: relevantItems.filter(i => i.status === 'published').length,
   };
+
+  const renderItem = (item: ImageNeed) => (
+    <div key={item.id} className="bg-white rounded-xl border p-4 flex items-center gap-4">
+      <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+        {item.file_url ? (
+          <img src={item.file_url} alt={item.word} className="w-full h-full object-cover" />
+        ) : (
+          <span className="text-2xl">🖼️</span>
+        )}
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-[#2D5A27] text-lg">{item.word}</span>
+          <span className="text-xs text-gray-400">{item.phase}. szint</span>
+          <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status]}`}>
+            {STATUS_LABELS[item.status]}
+          </span>
+        </div>
+        <div className="text-sm text-gray-500 mt-1">
+          {item.syllables?.join('-')} • Első hang: {item.first_sound}
+        </div>
+        <div className="text-xs text-gray-400 mt-1">{item.image_brief}</div>
+      </div>
+
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <label className="cursor-pointer">
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={e => {
+              if (e.target.files?.[0]) handleUpload(item, e.target.files[0]);
+            }}
+            disabled={uploadingId === item.id}
+          />
+          <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
+            {uploadingId === item.id ? 'Feltöltés...' : '⬆️ Feltöltés'}
+          </span>
+        </label>
+
+        {item.status === 'uploaded' && (
+          <>
+            <button
+              onClick={() => handleStatusChange(item.id, 'approved')}
+              className="bg-yellow-50 text-yellow-700 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-100 transition-colors"
+            >
+              ✓ Jóváhagyás
+            </button>
+            <button
+              onClick={() => handleStatusChange(item.id, 'rejected')}
+              className="bg-gray-50 text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              ✕ Elutasítás
+            </button>
+          </>
+        )}
+        {item.status === 'approved' && (
+          <button
+            onClick={() => handleStatusChange(item.id, 'published')}
+            className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
+          >
+            🚀 Publikálás
+          </button>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -132,28 +229,34 @@ export default function ImagesPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#2D5A27]">🖼️ Képek</h1>
           <p className="text-gray-500 text-sm mt-1">
-            Képszükségletek kezelése és feltöltése
+            Csak képköteles feladattípusokhoz tartozó szavak
           </p>
         </div>
-        <button
-          onClick={handleGenerate}
-          disabled={generating}
-          className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50"
-        >
-          {generating ? 'Generálás...' : '⚡ Képszükségletek generálása'}
-        </button>
+        <div className="flex gap-2">
+          <Link
+            href="/images/settings"
+            className="border border-[#2D5A27] text-[#2D5A27] px-4 py-2 rounded-lg hover:bg-[#E8F0E5] transition-colors text-sm"
+          >
+            ⚙️ Beállítások
+          </Link>
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50"
+          >
+            {generating ? 'Generálás...' : '⚡ Generálás'}
+          </button>
+        </div>
       </div>
 
       {message && (
-        <div className="bg-white border rounded-lg p-4 text-sm">
-          {message}
-        </div>
+        <div className="bg-white border rounded-lg p-4 text-sm">{message}</div>
       )}
 
       {/* Statisztikák */}
       <div className="grid grid-cols-5 gap-3">
         {[
-          { label: 'Összes', value: stats.total, color: 'bg-white' },
+          { label: 'Releváns', value: stats.total, color: 'bg-white' },
           { label: 'Hiányzó', value: stats.missing, color: 'bg-red-50' },
           { label: 'Feltöltve', value: stats.uploaded, color: 'bg-blue-50' },
           { label: 'Jóváhagyva', value: stats.approved, color: 'bg-yellow-50' },
@@ -190,109 +293,60 @@ export default function ImagesPage() {
           ))}
         </select>
 
+        <select
+          value={typeFilter}
+          onChange={e => setTypeFilter(e.target.value)}
+          className="border rounded-lg px-3 py-2 text-sm bg-white"
+        >
+          <option value="all">Minden feladattípus</option>
+          {configs.map(c => (
+            <option key={c.id} value={c.id}>{c.label}</option>
+          ))}
+        </select>
+
         <span className="text-sm text-gray-500 self-center">
           {filtered.length} elem
         </span>
       </div>
 
-      {/* Lista */}
       {loading ? (
         <div className="text-center py-12 text-gray-400">Betöltés...</div>
-      ) : filtered.length === 0 ? (
+      ) : configs.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
-          Nincs elem. Kattints a "Képszükségletek generálása" gombra!
+          Nincs képköteles feladattípus beállítva.{' '}
+          <Link href="/images/settings" className="text-[#2D5A27] underline">
+            Beállítások
+          </Link>
+        </div>
+      ) : typeFilter !== 'all' ? (
+        // Szűrt nézet
+        <div className="space-y-3">
+          {filtered.map(renderItem)}
         </div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map(item => (
-            <div
-              key={item.id}
-              className="bg-white rounded-xl border p-4 flex items-center gap-4"
-            >
-              {/* Kép előnézet */}
-              <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                {item.file_url ? (
-                  <img
-                    src={item.file_url}
-                    alt={item.word}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-2xl">🖼️</span>
-                )}
-              </div>
+        // Feladattípusonként csoportosítva
+        <div className="space-y-8">
+          {Object.values(groupedByType).map(({ config, items: groupItems }) => {
+            const filteredGroup = groupItems.filter(item => {
+              if (filter !== 'all' && item.status !== filter) return false;
+              if (phaseFilter !== 'all' && item.phase !== phaseFilter) return false;
+              return true;
+            });
 
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#2D5A27] text-lg">
-                    {item.word}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    {item.phase}. szint
-                  </span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status]}`}>
-                    {STATUS_LABELS[item.status]}
-                  </span>
-                </div>
-                <div className="text-sm text-gray-500 mt-1">
-                  Szótagok: {item.syllables?.join('-')} • 
-                  Első hang: {item.first_sound} • 
-                  Első szótag: {item.first_syllable}
-                </div>
-                <div className="text-xs text-gray-400 mt-1">
-                  {item.image_brief}
-                </div>
-              </div>
+            if (filteredGroup.length === 0) return null;
 
-              {/* Akciók */}
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {/* Feltöltés */}
-                <label className="cursor-pointer">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={e => {
-                      if (e.target.files?.[0]) {
-                        handleUpload(item, e.target.files[0]);
-                      }
-                    }}
-                    disabled={uploadingId === item.id}
-                  />
-                  <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
-                    {uploadingId === item.id ? 'Feltöltés...' : '⬆️ Feltöltés'}
+            return (
+              <div key={config.id} className="space-y-3">
+                <h2 className="font-bold text-[#2D5A27] text-lg border-b pb-2">
+                  {config.label}
+                  <span className="text-sm font-normal text-gray-400 ml-2">
+                    ({filteredGroup.length} szó)
                   </span>
-                </label>
-
-                {/* Státusz változtatás */}
-                {item.status === 'uploaded' && (
-                  <>
-                    <button
-                      onClick={() => handleStatusChange(item.id, 'approved')}
-                      className="bg-yellow-50 text-yellow-700 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-100 transition-colors"
-                    >
-                      ✓ Jóváhagyás
-                    </button>
-                    <button
-                      onClick={() => handleStatusChange(item.id, 'rejected')}
-                      className="bg-gray-50 text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-                    >
-                      ✕ Elutasítás
-                    </button>
-                  </>
-                )}
-                {item.status === 'approved' && (
-                  <button
-                    onClick={() => handleStatusChange(item.id, 'published')}
-                    className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
-                  >
-                    🚀 Publikálás
-                  </button>
-                )}
+                </h2>
+                {filteredGroup.map(renderItem)}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
