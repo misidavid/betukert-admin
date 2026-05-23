@@ -48,6 +48,16 @@ export default function ImagesPage() {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
+
+  const toggleSection = (id: string) => {
+    setOpenSections(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   useEffect(() => {
     loadData();
@@ -324,8 +334,8 @@ export default function ImagesPage() {
           {filtered.map(renderItem)}
         </div>
       ) : (
-        // Feladattípusonként csoportosítva
-        <div className="space-y-8">
+        // Feladattípusonként csoportosítva — akkordion
+        <div className="space-y-3">
           {Object.values(groupedByType).map(({ config, items: groupItems }) => {
             const filteredGroup = groupItems.filter(item => {
               if (filter !== 'all' && item.status !== filter) return false;
@@ -335,15 +345,105 @@ export default function ImagesPage() {
 
             if (filteredGroup.length === 0) return null;
 
+            const isOpen = openSections.has(config.id);
+            const missingCount = filteredGroup.filter(i => i.status === 'missing').length;
+            const publishedCount = filteredGroup.filter(i => i.status === 'published').length;
+
             return (
-              <div key={config.id} className="space-y-3">
-                <h2 className="font-bold text-[#2D5A27] text-lg border-b pb-2">
-                  {config.label}
-                  <span className="text-sm font-normal text-gray-400 ml-2">
-                    ({filteredGroup.length} szó)
+              <div key={config.id} className="bg-white rounded-xl border overflow-hidden">
+                <button
+                  onClick={() => toggleSection(config.id)}
+                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-[#2D5A27]">{config.label}</span>
+                    <span className="text-sm text-gray-400">{filteredGroup.length} szó</span>
+                    {missingCount > 0 && (
+                      <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full">
+                        {missingCount} hiányzó
+                      </span>
+                    )}
+                    {publishedCount > 0 && (
+                      <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">
+                        {publishedCount} publikált
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-gray-400 text-lg">
+                    {isOpen ? '▲' : '▼'}
                   </span>
-                </h2>
-                {filteredGroup.map(renderItem)}
+                </button>
+
+                {isOpen && (
+                  <div className="border-t divide-y">
+                    {filteredGroup.map(item => (
+                      <div key={item.id} className="p-4 flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          {item.file_url ? (
+                            <img src={item.file_url} alt={item.word} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-xl">🖼️</span>
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-[#2D5A27]">{item.word}</span>
+                            <span className="text-xs text-gray-400">{item.phase}. szint</span>
+                            <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status]}`}>
+                              {STATUS_LABELS[item.status]}
+                            </span>
+                          </div>
+                          <div className="text-xs text-gray-400 mt-0.5">
+                            {item.syllables?.join('-')} • {item.image_brief}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <label className="cursor-pointer">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={e => {
+                                if (e.target.files?.[0]) handleUpload(item, e.target.files[0]);
+                              }}
+                              disabled={uploadingId === item.id}
+                            />
+                            <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
+                              {uploadingId === item.id ? 'Feltöltés...' : '⬆️ Feltöltés'}
+                            </span>
+                          </label>
+
+                          {item.status === 'uploaded' && (
+                            <>
+                              <button
+                                onClick={() => handleStatusChange(item.id, 'approved')}
+                                className="bg-yellow-50 text-yellow-700 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-100 transition-colors"
+                              >
+                                ✓ Jóváhagyás
+                              </button>
+                              <button
+                                onClick={() => handleStatusChange(item.id, 'rejected')}
+                                className="bg-gray-50 text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                              >
+                                ✕
+                              </button>
+                            </>
+                          )}
+                          {item.status === 'approved' && (
+                            <button
+                              onClick={() => handleStatusChange(item.id, 'published')}
+                              className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
+                            >
+                              🚀 Publikálás
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
