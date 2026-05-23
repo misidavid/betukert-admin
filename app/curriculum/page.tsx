@@ -1,22 +1,86 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabase';
+import { seedWords } from '../../lib/seedWords';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
-import { filterWordsByPhase } from '../../shared/curriculum/wordFilter';
-import { WORD_BANK } from '../../shared/data/wordbank';
 
 type Tab = 'graphemes' | 'syllables' | 'words';
+
+interface WordItem {
+  id: string;
+  text: string;
+  syllables: string[];
+  syllable_count: number;
+  phase: number;
+  difficulty: number;
+  enabled: boolean;
+}
 
 export default function CurriculumPage() {
   const [tab, setTab] = useState<Tab>('graphemes');
   const [phaseFilter, setPhaseFilter] = useState<number>(1);
+  const [words, setWords] = useState<WordItem[]>([]);
+  const [loadingWords, setLoadingWords] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+  const [message, setMessage] = useState('');
+  const [searchWord, setSearchWord] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const graphemes = GRAPHEMES.filter(g => !g.rare && g.phase <= phaseFilter);
   const syllables = generateSyllables(phaseFilter).slice(0, 100);
-  const words = filterWordsByPhase(WORD_BANK, phaseFilter);
-
   const maxPhase = Math.max(...GRAPHEMES.filter(g => !g.rare).map(g => g.phase));
+
+  useEffect(() => {
+    if (tab === 'words') loadWords();
+  }, [tab, phaseFilter]);
+
+  const loadWords = async () => {
+    setLoadingWords(true);
+    const { data, error } = await supabase
+      .from('words')
+      .select('*')
+      .lte('phase', phaseFilter)
+      .order('phase', { ascending: true })
+      .order('syllable_count', { ascending: true });
+
+    if (!error && data) setWords(data);
+    setLoadingWords(false);
+  };
+
+  const handleSeed = async () => {
+    setSeeding(true);
+    setMessage('');
+    try {
+      const result = await seedWords();
+      setMessage(`✅ ${result.inserted} szó feltöltve, ${result.skipped} már létezett.`);
+      loadWords();
+    } catch (e: any) {
+      setMessage(`❌ Hiba: ${e.message}`);
+    }
+    setSeeding(false);
+  };
+
+  const handleDelete = async (id: string, text: string) => {
+    if (!confirm(`Biztosan törlöd: "${text}"?`)) return;
+    setDeletingId(id);
+    await supabase.from('words').delete().eq('id', id);
+    setWords(prev => prev.filter(w => w.id !== id));
+    setDeletingId(null);
+  };
+
+  const handleToggleEnabled = async (id: string, enabled: boolean) => {
+    await supabase
+      .from('words')
+      .update({ enabled: !enabled, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    setWords(prev => prev.map(w => w.id === id ? { ...w, enabled: !enabled } : w));
+  };
+
+  const filteredWords = words.filter(w =>
+    w.text.toLowerCase().includes(searchWord.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -27,15 +91,15 @@ export default function CurriculumPage() {
         </p>
       </div>
 
+      {message && (
+        <div className="bg-white border rounded-lg p-4 text-sm">{message}</div>
+      )}
+
       {/* Szintcsúszka */}
       <div className="bg-white rounded-xl border p-6 space-y-3">
         <div className="flex items-center justify-between">
-          <label className="font-bold text-[#2D5A27]">
-            Szint: {phaseFilter}
-          </label>
-          <span className="text-sm text-gray-500">
-            {graphemes.length} betű elérhető
-          </span>
+          <label className="font-bold text-[#2D5A27]">Szint: {phaseFilter}</label>
+          <span className="text-sm text-gray-500">{graphemes.length} betű elérhető</span>
         </div>
         <input
           type="range"
@@ -45,18 +109,9 @@ export default function CurriculumPage() {
           onChange={e => setPhaseFilter(Number(e.target.value))}
           className="w-full accent-[#2D5A27]"
         />
-        <div className="flex justify-between text-xs text-gray-400">
-          <span>1. szint</span>
-          <span>{maxPhase}. szint</span>
-        </div>
-
-        {/* Ismert betűk */}
         <div className="flex flex-wrap gap-2 pt-2">
           {graphemes.map(g => (
-            <span
-              key={g.id}
-              className="bg-[#E8F0E5] text-[#2D5A27] font-bold px-3 py-1 rounded-lg text-sm"
-            >
+            <span key={g.id} className="bg-[#E8F0E5] text-[#2D5A27] font-bold px-3 py-1 rounded-lg text-sm">
               {g.display}
             </span>
           ))}
@@ -68,7 +123,7 @@ export default function CurriculumPage() {
         {[
           { id: 'graphemes', label: `Betűk (${graphemes.length})` },
           { id: 'syllables', label: `Szótagok (${syllables.length})` },
-          { id: 'words', label: `Szavak (${words.length})` },
+          { id: 'words', label: `Szavak` },
         ].map(t => (
           <button
             key={t.id}
@@ -88,13 +143,8 @@ export default function CurriculumPage() {
       {tab === 'graphemes' && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {graphemes.map(g => (
-            <div
-              key={g.id}
-              className="bg-white rounded-xl border p-4 text-center"
-            >
-              <div className="text-4xl font-bold text-[#2D5A27] mb-2">
-                {g.display}
-              </div>
+            <div key={g.id} className="bg-white rounded-xl border p-4 text-center">
+              <div className="text-4xl font-bold text-[#2D5A27] mb-2">{g.display}</div>
               <div className="text-xs text-gray-500">{g.type}</div>
               <div className="text-xs text-gray-400">{g.phase}. szint</div>
             </div>
@@ -115,10 +165,7 @@ export default function CurriculumPage() {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {typeSyllables.map(s => (
-                    <span
-                      key={s.id}
-                      className="bg-white border rounded-lg px-3 py-1 text-sm font-medium text-[#2D5A27]"
-                    >
+                    <span key={s.id} className="bg-white border rounded-lg px-3 py-1 text-sm font-medium text-[#2D5A27]">
                       {s.text}
                     </span>
                   ))}
@@ -131,24 +178,70 @@ export default function CurriculumPage() {
 
       {/* Szavak tab */}
       {tab === 'words' && (
-        <div className="space-y-2">
-          {words.map(w => (
-            <div
-              key={w.id}
-              className="bg-white rounded-xl border p-3 flex items-center gap-4"
-            >
-              <span className="font-bold text-[#2D5A27] w-32">{w.text}</span>
-              <span className="text-sm text-gray-500">
-                {w.syllables.join('-')}
-              </span>
-              <span className="text-xs text-gray-400">
-                {w.syllableCount} szótag
-              </span>
-              <span className="text-xs bg-[#E8F0E5] text-[#2D5A27] px-2 py-0.5 rounded-full">
-                {w.phase}. szint
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-3">
+              <input
+                type="text"
+                placeholder="Keresés..."
+                value={searchWord}
+                onChange={e => setSearchWord(e.target.value)}
+                className="border rounded-lg px-3 py-2 text-sm bg-white w-48"
+              />
+              <span className="text-sm text-gray-500 self-center">
+                {filteredWords.length} szó
               </span>
             </div>
-          ))}
+            <button
+              onClick={handleSeed}
+              disabled={seeding}
+              className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50 text-sm"
+            >
+              {seeding ? 'Feltöltés...' : '⚡ Szóbank feltöltése'}
+            </button>
+          </div>
+
+          {loadingWords ? (
+            <div className="text-center py-12 text-gray-400">Betöltés...</div>
+          ) : filteredWords.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">
+              Nincs szó. Kattints a "Szóbank feltöltése" gombra!
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {filteredWords.map(w => (
+                <div
+                  key={w.id}
+                  className={`bg-white rounded-xl border p-3 flex items-center gap-4 ${!w.enabled ? 'opacity-50' : ''}`}
+                >
+                  <span className="font-bold text-[#2D5A27] w-32">{w.text}</span>
+                  <span className="text-sm text-gray-500">{w.syllables.join('-')}</span>
+                  <span className="text-xs text-gray-400">{w.syllable_count} szótag</span>
+                  <span className="text-xs bg-[#E8F0E5] text-[#2D5A27] px-2 py-0.5 rounded-full">
+                    {w.phase}. szint
+                  </span>
+                  <div className="flex-1" />
+                  <button
+                    onClick={() => handleToggleEnabled(w.id, w.enabled)}
+                    className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${
+                      w.enabled
+                        ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                    }`}
+                  >
+                    {w.enabled ? '✓ Aktív' : '✕ Letiltva'}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(w.id, w.text)}
+                    disabled={deletingId === w.id}
+                    className="bg-red-50 text-red-600 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors"
+                  >
+                    {deletingId === w.id ? '...' : '🗑 Törlés'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
