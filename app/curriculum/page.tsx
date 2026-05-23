@@ -67,11 +67,12 @@ export default function CurriculumPage() {
   };
 
   const handleSeed = async () => {
+    if (!confirm('Biztosan visszaállítod az alap szóbankot? A korábban törölt alap szavak visszakerülnek az adatbázisba.')) return;
     setSeeding(true);
     setMessage('');
     try {
       const result = await seedWords();
-      setMessage(`✅ ${result.inserted} szó feltöltve, ${result.skipped} már létezett.`);
+      setMessage(`✅ ${result.inserted} szó visszaállítva, ${result.skipped} már létezett.`);
       loadWords();
     } catch (e: any) {
       setMessage(`❌ Hiba: ${e.message}`);
@@ -248,7 +249,7 @@ export default function CurriculumPage() {
                 disabled={seeding}
                 className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50 text-sm"
               >
-                {seeding ? 'Feltöltés...' : '⚡ Alap szóbank'}
+                {seeding ? 'Visszaállítás...' : '↩ Alap szóbank visszaállítása'}
               </button>
             </div>
           </div>
