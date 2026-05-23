@@ -53,7 +53,10 @@ export const seedWords = async (): Promise<{ inserted: number; skipped: number }
 
   const existingTexts = new Set(existing?.map(e => e.text) || []);
 
-  const toInsert = WORD_BANK
+  // Deduplikálás
+  const uniqueWords = [...new Set(WORD_BANK)];
+
+  const toInsert = uniqueWords
     .filter(word => word.length >= 2 && !existingTexts.has(word))
     .map(word => {
       const syllables = splitIntoSyllables(word.toLowerCase());
