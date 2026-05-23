@@ -225,17 +225,17 @@ export default function CurriculumPage() {
               </span>
             </div>
             <div className="flex gap-2 items-center">
-              <select
-                value={generateCount}
-                onChange={e => setGenerateCount(Number(e.target.value))}
-                className="border rounded-lg px-3 py-2 text-sm bg-white"
-              >
-                <option value={50}>50 szó</option>
-                <option value={100}>100 szó</option>
-                <option value={200}>200 szó</option>
-                <option value={500}>500 szó</option>
-                <option value={1000}>1000 szó</option>
-              </select>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  max={1000}
+                  value={generateCount}
+                  onChange={e => setGenerateCount(Math.max(1, Number(e.target.value)))}
+                  className="border rounded-lg px-3 py-2 text-sm bg-white w-24"
+                />
+                <span className="text-sm text-gray-400">szó</span>
+              </div>
               <button
                 onClick={handleGenerate}
                 disabled={generating}
