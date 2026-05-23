@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { seedWords } from '../../lib/seedWords';
+import { generateWordsFromCorpus } from '../../lib/generateWords';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
 
@@ -27,6 +28,10 @@ export default function CurriculumPage() {
   const [message, setMessage] = useState('');
   const [searchWord, setSearchWord] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [generateCount, setGenerateCount] = useState<number>(100);
+  const [generating, setGenerating] = useState(false);
+  const [sortBy, setSortBy] = useState<'created_at' | 'text' | 'phase'>('phase');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
   const graphemes = GRAPHEMES.filter(g => !g.rare && g.phase <= phaseFilter);
   const syllables = generateSyllables(phaseFilter).slice(0, 100);
@@ -34,7 +39,20 @@ export default function CurriculumPage() {
 
   useEffect(() => {
     if (tab === 'words') loadWords();
-  }, [tab, phaseFilter]);
+  }, [tab, phaseFilter, sortBy, sortDir]);
+
+  const handleGenerate = async () => {
+    setGenerating(true);
+    setMessage('');
+    try {
+      const result = await generateWordsFromCorpus(generateCount);
+      setMessage(`✅ ${result.inserted} új szó generálva a korpuszból (${result.total} szóból szűrve).`);
+      loadWords();
+    } catch (e: any) {
+      setMessage(`❌ Hiba: ${e.message}`);
+    }
+    setGenerating(false);
+  };
 
   const loadWords = async () => {
     setLoadingWords(true);
@@ -42,8 +60,7 @@ export default function CurriculumPage() {
       .from('words')
       .select('*')
       .lte('phase', phaseFilter)
-      .order('phase', { ascending: true })
-      .order('syllable_count', { ascending: true });
+      .order(sortBy, { ascending: sortDir === 'asc' });
 
     if (!error && data) setWords(data);
     setLoadingWords(false);
@@ -188,17 +205,52 @@ export default function CurriculumPage() {
                 onChange={e => setSearchWord(e.target.value)}
                 className="border rounded-lg px-3 py-2 text-sm bg-white w-48"
               />
+              <select
+                value={sortBy}
+                onChange={e => setSortBy(e.target.value as any)}
+                className="border rounded-lg px-3 py-2 text-sm bg-white"
+              >
+                <option value="phase">Szint szerint</option>
+                <option value="text">ABC szerint</option>
+                <option value="created_at">Hozzáadás szerint</option>
+              </select>
+              <button
+                onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
+                className="border rounded-lg px-3 py-2 text-sm bg-white hover:bg-gray-50"
+              >
+                {sortDir === 'asc' ? '↑ Növekvő' : '↓ Csökkenő'}
+              </button>
               <span className="text-sm text-gray-500 self-center">
                 {filteredWords.length} szó
               </span>
             </div>
-            <button
-              onClick={handleSeed}
-              disabled={seeding}
-              className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50 text-sm"
-            >
-              {seeding ? 'Feltöltés...' : '⚡ Szóbank feltöltése'}
-            </button>
+            <div className="flex gap-2 items-center">
+              <select
+                value={generateCount}
+                onChange={e => setGenerateCount(Number(e.target.value))}
+                className="border rounded-lg px-3 py-2 text-sm bg-white"
+              >
+                <option value={50}>50 szó</option>
+                <option value={100}>100 szó</option>
+                <option value={200}>200 szó</option>
+                <option value={500}>500 szó</option>
+                <option value={1000}>1000 szó</option>
+              </select>
+              <button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="bg-[#4A7C42] text-white px-4 py-2 rounded-lg hover:bg-[#2D5A27] transition-colors disabled:opacity-50 text-sm"
+              >
+                {generating ? 'Generálás...' : '🔄 Generálás korpuszból'}
+              </button>
+              <button
+                onClick={handleSeed}
+                disabled={seeding}
+                className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50 text-sm"
+              >
+                {seeding ? 'Feltöltés...' : '⚡ Alap szóbank'}
+              </button>
+            </div>
           </div>
 
           {loadingWords ? (
