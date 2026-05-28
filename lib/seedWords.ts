@@ -3,28 +3,16 @@ import { WORD_BANK } from '../shared/data/wordbank';
 import {
   splitIntoSyllables,
   splitIntoGraphemes,
+  DISPLAY_TO_ID,
 } from '../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../shared/curriculum/graphemes';
 
 const getPhase = (word: string): number => {
   const graphemes = splitIntoGraphemes(word.toLowerCase());
-  const displayToId: Record<string, string> = {
-    'a': 'a', 'á': 'aa', 'e': 'e', 'é': 'ee',
-    'i': 'i', 'í': 'ii', 'o': 'o', 'ó': 'o',
-    'ö': 'oe', 'ő': 'oee', 'u': 'u', 'ú': 'uu',
-    'ü': 'ue', 'ű': 'uee',
-    'b': 'b', 'c': 'c', 'cs': 'cs', 'd': 'd',
-    'dz': 'dz', 'dzs': 'dzs', 'f': 'f', 'g': 'g',
-    'gy': 'gy', 'h': 'h', 'j': 'j', 'k': 'k',
-    'l': 'l', 'ly': 'ly', 'm': 'm', 'n': 'n',
-    'ny': 'ny', 'p': 'p', 'r': 'r', 's': 's',
-    'sz': 'sz', 't': 't', 'ty': 'ty', 'v': 'v',
-    'z': 'z', 'zs': 'zs',
-  };
 
   let maxPhase = 1;
   for (const g of graphemes) {
-    const id = displayToId[g];
+    const id = DISPLAY_TO_ID[g];
     if (id) {
       const grapheme = GRAPHEMES.find(gr => gr.id === id);
       if (grapheme && grapheme.phase > maxPhase) {

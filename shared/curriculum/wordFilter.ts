@@ -58,7 +58,7 @@ export const splitIntoSyllables = (word: string): string[] => {
   return syllables.filter(s => s.length > 0);
 };
 
-const DISPLAY_TO_ID: Record<string, string> = {
+export const DISPLAY_TO_ID: Record<string, string> = {
   'a': 'a', 'á': 'aa', 'e': 'e', 'é': 'ee',
   'i': 'i', 'í': 'ii', 'o': 'o', 'ó': 'oo',
   'ö': 'oe', 'ő': 'oee', 'u': 'u', 'ú': 'uu',
