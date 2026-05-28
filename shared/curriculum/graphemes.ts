@@ -3,7 +3,8 @@ import { Grapheme } from '../types';
 export const GRAPHEMES: Grapheme[] = [
   { id: 'a',   display: 'a',   phoneme: 'a',   type: 'vowel',     rare: false, phase: 1 },
   { id: 'i',   display: 'i',   phoneme: 'i',   type: 'vowel',     rare: false, phase: 1 },
-  { id: 'o',   display: 'ó',   phoneme: 'ó',   type: 'vowel',     rare: false, phase: 2 },
+  { id: 'oo',  display: 'ó',   phoneme: 'ó',   type: 'vowel',     rare: false, phase: 2 },
+  { id: 'o',   display: 'o',   phoneme: 'o',   type: 'vowel',     rare: false, phase: 2,  implicit: true },
   { id: 'm',   display: 'm',   phoneme: 'm',   type: 'consonant', rare: false, phase: 3 },
   { id: 't',   display: 't',   phoneme: 't',   type: 'consonant', rare: false, phase: 3 },
   { id: 's',   display: 's',   phoneme: 's',   type: 'consonant', rare: false, phase: 3 },
@@ -11,6 +12,7 @@ export const GRAPHEMES: Grapheme[] = [
   { id: 'e',   display: 'e',   phoneme: 'e',   type: 'vowel',     rare: false, phase: 5 },
   { id: 'l',   display: 'l',   phoneme: 'l',   type: 'consonant', rare: false, phase: 6 },
   { id: 'uu',  display: 'ú',   phoneme: 'ú',   type: 'vowel',     rare: false, phase: 7 },
+  { id: 'u',   display: 'u',   phoneme: 'u',   type: 'vowel',     rare: false, phase: 7,  implicit: true },
   { id: 'p',   display: 'p',   phoneme: 'p',   type: 'consonant', rare: false, phase: 8 },
   { id: 'c',   display: 'c',   phoneme: 'c',   type: 'consonant', rare: false, phase: 9 },
   { id: 'k',   display: 'k',   phoneme: 'k',   type: 'consonant', rare: false, phase: 10 },
@@ -46,6 +48,9 @@ export const GRAPHEMES: Grapheme[] = [
 ];
 
 export const getGraphemesByPhase = (maxPhase: number): Grapheme[] =>
+  GRAPHEMES.filter(g => g.phase <= maxPhase && !g.rare && !g.implicit);
+
+export const getGraphemesForWordFilter = (maxPhase: number): Grapheme[] =>
   GRAPHEMES.filter(g => g.phase <= maxPhase && !g.rare);
 
 export const getGraphemeById = (id: string): Grapheme | undefined =>

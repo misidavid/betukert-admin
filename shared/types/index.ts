@@ -5,6 +5,7 @@ export interface Grapheme {
   type: 'vowel' | 'consonant' | 'digraph' | 'trigraph';
   rare: boolean;
   phase: number;
+  implicit?: boolean;
 }
 
 export interface LearningPhase {
@@ -98,7 +99,8 @@ export type ExerciseType =
   | 'word_builder'
   | 'syllable_clapping'
   | 'sentence_order'
-  | 'sentence_comprehension';
+  | 'sentence_comprehension'
+  | 'direction_tracking';
 
 export interface PracticeSession {
   id: string;

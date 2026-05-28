@@ -1,5 +1,5 @@
 import { WordItem } from '../types';
-import { getGraphemesByPhase } from './graphemes';
+import { getGraphemesForWordFilter } from './graphemes';
 
 const VOWELS = ['a', 'á', 'e', 'é', 'i', 'í', 'o', 'ó', 'ö', 'ő', 'u', 'ú', 'ü', 'ű'];
 const DIGRAPHS = ['dzs', 'cs', 'dz', 'gy', 'ly', 'ny', 'sz', 'ty', 'zs'];
@@ -58,29 +58,28 @@ export const splitIntoSyllables = (word: string): string[] => {
   return syllables.filter(s => s.length > 0);
 };
 
+const DISPLAY_TO_ID: Record<string, string> = {
+  'a': 'a', 'á': 'aa', 'e': 'e', 'é': 'ee',
+  'i': 'i', 'í': 'ii', 'o': 'o', 'ó': 'oo',
+  'ö': 'oe', 'ő': 'oee', 'u': 'u', 'ú': 'uu',
+  'ü': 'ue', 'ű': 'uee',
+  'b': 'b', 'c': 'c', 'cs': 'cs', 'd': 'd',
+  'dz': 'dz', 'dzs': 'dzs', 'f': 'f', 'g': 'g',
+  'gy': 'gy', 'h': 'h', 'j': 'j', 'k': 'k',
+  'l': 'l', 'ly': 'ly', 'm': 'm', 'n': 'n',
+  'ny': 'ny', 'p': 'p', 'r': 'r', 's': 's',
+  'sz': 'sz', 't': 't', 'ty': 'ty', 'v': 'v',
+  'z': 'z', 'zs': 'zs',
+  'q': 'q', 'w': 'w', 'x': 'x', 'y': 'y',
+};
+
 export const wordIsKnown = (
   word: string,
   knownGraphemeIds: string[]
 ): boolean => {
   const graphemes = splitIntoGraphemes(word.toLowerCase());
-
-  const displayToId: Record<string, string> = {
-    'a': 'a', 'á': 'aa', 'e': 'e', 'é': 'ee',
-    'i': 'i', 'í': 'ii', 'o': 'o', 'ó': 'o',
-    'ö': 'oe', 'ő': 'oee', 'u': 'u', 'ú': 'uu',
-    'ü': 'ue', 'ű': 'uee',
-    'b': 'b', 'c': 'c', 'cs': 'cs', 'd': 'd',
-    'dz': 'dz', 'dzs': 'dzs', 'f': 'f', 'g': 'g',
-    'gy': 'gy', 'h': 'h', 'j': 'j', 'k': 'k',
-    'l': 'l', 'ly': 'ly', 'm': 'm', 'n': 'n',
-    'ny': 'ny', 'p': 'p', 'r': 'r', 's': 's',
-    'sz': 'sz', 't': 't', 'ty': 'ty', 'v': 'v',
-    'z': 'z', 'zs': 'zs',
-    'q': 'q', 'w': 'w', 'x': 'x', 'y': 'y',
-  };
-
   return graphemes.every(g => {
-    const id = displayToId[g];
+    const id = DISPLAY_TO_ID[g];
     return id && knownGraphemeIds.includes(id);
   });
 };
@@ -101,8 +100,10 @@ export const filterWordsByPhase = (
   words: string[],
   maxPhase: number
 ): WordItem[] => {
-  const knownGraphemes = getGraphemesByPhase(maxPhase);
+  const knownGraphemes = getGraphemesForWordFilter(maxPhase);
   const knownIds = knownGraphemes.map(g => g.id);
+  const idToPhase: Record<string, number> = {};
+  knownGraphemes.forEach(g => { idToPhase[g.id] = g.phase; });
 
   return words
     .filter(word => wordIsKnown(word, knownIds))
@@ -111,8 +112,8 @@ export const filterWordsByPhase = (
       const graphemes = splitIntoGraphemes(word);
       const maxGraphemePhase = Math.max(
         ...graphemes.map(g => {
-          const found = knownGraphemes.find(kg => kg.display === g);
-          return found ? found.phase : 0;
+          const id = DISPLAY_TO_ID[g];
+          return id ? (idToPhase[id] ?? 0) : 0;
         })
       );
 
