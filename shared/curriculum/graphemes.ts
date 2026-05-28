@@ -11,9 +11,8 @@ export const GRAPHEMES: Grapheme[] = [
   { id: 'i',   display: 'i',   phoneme: 'i',   type: 'vowel',     rare: false, phase: 1 },
   { id: 'ii',  display: 'í',   phoneme: 'í',   type: 'vowel',     rare: false, phase: 1,  implicit: true },
 
-  // Fázis 2 — ó  (+o implicit)
+  // Fázis 2 — ó
   { id: 'oo',  display: 'ó',   phoneme: 'ó',   type: 'vowel',     rare: false, phase: 2 },
-  { id: 'o',   display: 'o',   phoneme: 'o',   type: 'vowel',     rare: false, phase: 2,  implicit: true },
 
   // Fázis 3 — m, s, t  (a hivatal sorrend: m, s, t — s megelőzi t-t!)
   { id: 'm',   display: 'm',   phoneme: 'm',   type: 'consonant', rare: false, phase: 3 },
@@ -29,15 +28,16 @@ export const GRAPHEMES: Grapheme[] = [
   // Fázis 6 — l
   { id: 'l',   display: 'l',   phoneme: 'l',   type: 'consonant', rare: false, phase: 6 },
 
-  // Fázis 7 — ú  (+u implicit)
+  // Fázis 7 — ú
   { id: 'uu',  display: 'ú',   phoneme: 'ú',   type: 'vowel',     rare: false, phase: 7 },
-  { id: 'u',   display: 'u',   phoneme: 'u',   type: 'vowel',     rare: false, phase: 7,  implicit: true },
 
-  // Fázis 8 — p
+  // Fázis 8 — p  (+o implicit: „o megfigyelése" a Módszertanban, p bevezetése után)
   { id: 'p',   display: 'p',   phoneme: 'p',   type: 'consonant', rare: false, phase: 8 },
+  { id: 'o',   display: 'o',   phoneme: 'o',   type: 'vowel',     rare: false, phase: 8,  implicit: true },
 
-  // Fázis 9 — c
+  // Fázis 9 — c  (+u implicit: „u, o, i megfigyelése" a Módszertanban, c bevezetése után)
   { id: 'c',   display: 'c',   phoneme: 'c',   type: 'consonant', rare: false, phase: 9 },
+  { id: 'u',   display: 'u',   phoneme: 'u',   type: 'vowel',     rare: false, phase: 9,  implicit: true },
 
   // Fázis 10 — k
   { id: 'k',   display: 'k',   phoneme: 'k',   type: 'consonant', rare: false, phase: 10 },
@@ -54,12 +54,12 @@ export const GRAPHEMES: Grapheme[] = [
   // Fázis 14 — z
   { id: 'z',   display: 'z',   phoneme: 'z',   type: 'consonant', rare: false, phase: 14 },
 
-  // Fázis 15 — ő  (+ö implicit: "ö megfigyelése" a módszertanban)
+  // Fázis 15 — ő
   { id: 'oee', display: 'ő',   phoneme: 'ő',   type: 'vowel',     rare: false, phase: 15 },
-  { id: 'oe',  display: 'ö',   phoneme: 'ö',   type: 'vowel',     rare: false, phase: 15, implicit: true },
 
-  // Fázis 16 — d
+  // Fázis 16 — d  (+ö implicit: „ö megfigyelése" a Módszertanban, d bevezetése után)
   { id: 'd',   display: 'd',   phoneme: 'd',   type: 'consonant', rare: false, phase: 16 },
+  { id: 'oe',  display: 'ö',   phoneme: 'ö',   type: 'vowel',     rare: false, phase: 16, implicit: true },
 
   // Fázis 17 — j
   { id: 'j',   display: 'j',   phoneme: 'j',   type: 'consonant', rare: false, phase: 17 },

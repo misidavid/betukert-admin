@@ -6,19 +6,35 @@ const DIGRAPHS = ['dzs', 'cs', 'dz', 'gy', 'ly', 'ny', 'sz', 'ty', 'zs'];
 
 export const splitIntoGraphemes = (word: string): string[] => {
   const graphemes: string[] = [];
+  const lower = word.toLowerCase();
   let i = 0;
-  while (i < word.length) {
+  while (i < lower.length) {
     let matched = false;
+
+    // Doubled digraphs (ggy→gy+gy, nny→ny+ny, ssz→sz+sz, ccs→cs+cs, etc.):
+    // the first char is the digraph's first char doubled, so advance only 1.
     for (const digraph of DIGRAPHS) {
-      if (word.slice(i, i + digraph.length).toLowerCase() === digraph) {
+      if (lower[i] === digraph[0] && lower.slice(i + 1, i + 1 + digraph.length) === digraph) {
         graphemes.push(digraph);
-        i += digraph.length;
+        i += 1;
         matched = true;
         break;
       }
     }
+
     if (!matched) {
-      graphemes.push(word[i].toLowerCase());
+      for (const digraph of DIGRAPHS) {
+        if (lower.slice(i, i + digraph.length) === digraph) {
+          graphemes.push(digraph);
+          i += digraph.length;
+          matched = true;
+          break;
+        }
+      }
+    }
+
+    if (!matched) {
+      graphemes.push(lower[i]);
       i++;
     }
   }

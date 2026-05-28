@@ -59,7 +59,8 @@ const generateCVSyllables = (
 };
 
 // CVC típusú szótagok: mássalhangzó + magánhangzó + mássalhangzó
-// Pl: mam, sir, tos — csak később, magasabb szintokban
+// Pl: mam, hal, fal, sir — csak később, magasabb szintokban
+// Meixner: azonos kezdő- és záró-mássalhangzójú szótagok (hal, fal) jönnek ELŐBB
 const generateCVCSyllables = (
   vowels: Grapheme[],
   consonants: Grapheme[],
@@ -73,7 +74,6 @@ const generateCVCSyllables = (
   for (const c1 of consonants) {
     for (const vowel of vowels) {
       for (const c2 of consonants) {
-        if (c1.id === c2.id) continue; // nem generálunk pl. "mam"-ot
         const text = c1.display + vowel.display + c2.display;
         const syllablePhase = Math.max(c1.phase, vowel.phase, c2.phase);
         if (syllablePhase <= phase) {
@@ -89,7 +89,25 @@ const generateCVCSyllables = (
     }
   }
 
-  return syllables;
+  // Meixner 4-fokozatú CVC-sorrend:
+  //   1. Szimmetrikus (C1===C3): mam, sis — a legegyszerűbb keret
+  //   2. Azonos záró mássalhangzó (C3): hal, fal, kal — stage-2 gyakorlatok alapja
+  //   3. Azonos C1+C3 keret (hal, hol): a C3→C1 szerinti belső csoportosítás fedezi
+  //   4. Azonos nyitó (C1) / mind különböző — az exercise engine dolga
+  return syllables.sort((a, b) => {
+    if (a.phase !== b.phase) return a.phase - b.phase;
+
+    const aSymmetric = a.graphemes[0] === a.graphemes[2] ? 0 : 1;
+    const bSymmetric = b.graphemes[0] === b.graphemes[2] ? 0 : 1;
+    if (aSymmetric !== bSymmetric) return aSymmetric - bSymmetric;
+
+    // C3 szerinti csoportosítás → azonos záró mássalhangzójú szótagok szomszédosak (2. fokozat)
+    const c3Cmp = a.graphemes[2].localeCompare(b.graphemes[2]);
+    if (c3Cmp !== 0) return c3Cmp;
+
+    // Azonos C3-on belül C1 szerinti csoportosítás → azonos keret (hal, hol) szomszédos (1b fokozat)
+    return a.graphemes[0].localeCompare(b.graphemes[0]);
+  });
 };
 
 // Fő generátor függvény
@@ -104,6 +122,30 @@ export const generateSyllables = (maxPhase: number): Syllable[] => {
   return [...vc, ...cv, ...cvc];
 };
 
+// Meixner-féle tévesztőpárok — soha nem szerepelhetnek ugyanabban a feladatban
+// Forrás: Meixner Ildikó (589344797), NT-98488 kézikönyv
+// Vizuálisan ÉS akusztikusan hasonló (legsúlyosabb): b–d, m–n
+// Csak vizuálisan hasonló: b–p, d–p, f–t, h–n
+// Csak akusztikusan hasonló (képzés módja): sz–f, g–d
+const CONFUSION_PAIRS: [string, string][] = [
+  ['b', 'd'],
+  ['b', 'p'],
+  ['d', 'p'],
+  ['m', 'n'],
+  ['f', 't'],
+  ['h', 'n'],
+  ['sz', 'f'],
+  ['g', 'd'],
+];
+
+const sharesConfusionPair = (g1: string[], g2: string[]): boolean => {
+  const set1 = new Set(g1);
+  const set2 = new Set(g2);
+  return CONFUSION_PAIRS.some(([a, b]) =>
+    (set1.has(a) && set2.has(b)) || (set1.has(b) && set2.has(a))
+  );
+};
+
 // Zavarók generálása — Meixner elvek szerint
 // Soha nem adunk hasonló hangzású zavarót!
 export const generateDistractors = (
@@ -115,11 +157,12 @@ export const generateDistractors = (
     if (s.id === target.id) return false;
     if (s.type !== target.type) return false;
 
-    // Homogén gátlás: kerüljük a túl hasonló szótagokat
-    // Ha az első betű ugyanaz, ne adjuk zavarókként
-    const targetFirst = target.text[0];
-    const candidateFirst = s.text[0];
-    if (targetFirst === candidateFirst) return false;
+    // Homogén gátlás: ha az első karakter ugyanaz, ne adjuk zavarókként
+    if (target.text[0] === s.text[0]) return false;
+
+    // Meixner-féle tévesztőpárok: ha a célszótag és a jelölt
+    // egymással összekeverhetős graféméket tartalmaz, kizárjuk
+    if (sharesConfusionPair(target.graphemes, s.graphemes)) return false;
 
     return true;
   });
