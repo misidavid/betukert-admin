@@ -39,6 +39,7 @@ export default function ImagesPage() {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<{ url: string; word: string } | null>(null);
   const [message, setMessage] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
 
@@ -159,7 +160,12 @@ export default function ImagesPage() {
     <div key={item.id} className="bg-white rounded-xl border p-4 flex items-center gap-4">
       <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
         {item.file_url ? (
-          <img src={item.file_url} alt={item.word} className="w-full h-full object-cover" />
+          <img
+            src={item.file_url}
+            alt={item.word}
+            className="w-full h-full object-cover cursor-zoom-in"
+            onClick={() => setLightbox({ url: item.file_url!, word: item.word })}
+          />
         ) : (
           <span className="text-2xl">🖼️</span>
         )}
@@ -233,6 +239,28 @@ export default function ImagesPage() {
   );
 
   return (
+    <>
+    {lightbox && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+        onClick={() => setLightbox(null)}
+      >
+        <div className="relative max-w-3xl max-h-[90vh] p-4" onClick={e => e.stopPropagation()}>
+          <img
+            src={lightbox.url}
+            alt={lightbox.word}
+            className="max-w-full max-h-[80vh] rounded-xl object-contain shadow-2xl"
+          />
+          <div className="text-center text-white font-bold mt-2 text-lg">{lightbox.word}</div>
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute top-2 right-2 text-white bg-black/50 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/80 transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    )}
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -379,7 +407,12 @@ export default function ImagesPage() {
                       <div key={item.id} className="p-4 flex items-center gap-4">
                         <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
                           {item.file_url ? (
-                            <img src={item.file_url} alt={item.word} className="w-full h-full object-cover" />
+                            <img
+                              src={item.file_url}
+                              alt={item.word}
+                              className="w-full h-full object-cover cursor-zoom-in"
+                              onClick={() => setLightbox({ url: item.file_url!, word: item.word })}
+                            />
                           ) : (
                             <span className="text-xl">🖼️</span>
                           )}
@@ -458,5 +491,6 @@ export default function ImagesPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
