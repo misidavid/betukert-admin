@@ -126,6 +126,7 @@ export const generateSyllables = (maxPhase: number): Syllable[] => {
 // Forrás: Meixner Ildikó (589344797), NT-98488 kézikönyv
 // Vizuálisan ÉS akusztikusan hasonló (legsúlyosabb): b–d, m–n
 // Csak vizuálisan hasonló: b–p, d–p, f–t, h–n
+// Csak akusztikusan hasonló (képzés helye): f–v, t–n
 // Csak akusztikusan hasonló (képzés módja): sz–f, g–d
 const CONFUSION_PAIRS: [string, string][] = [
   ['b', 'd'],
@@ -133,6 +134,8 @@ const CONFUSION_PAIRS: [string, string][] = [
   ['d', 'p'],
   ['m', 'n'],
   ['f', 't'],
+  ['f', 'v'],
+  ['t', 'n'],
   ['h', 'n'],
   ['sz', 'f'],
   ['g', 'd'],
