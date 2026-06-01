@@ -67,12 +67,16 @@ export async function generateImageNeedsAction(): Promise<{ inserted: number; sk
 }
 
 export async function uploadImageFileAction(
-  id: string,
-  phase: number,
-  word: string,
-  file: File,
+  formData: FormData,
 ): Promise<{ error?: string }> {
   try {
+    const id = formData.get('id') as string;
+    const phase = Number(formData.get('phase'));
+    const word = formData.get('word') as string;
+    const file = formData.get('file') as File;
+
+    if (!file || !file.name) return { error: 'Hiányzó fájl' };
+
     const toSlug = (text: string) => text.toLowerCase()
       .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
       .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')

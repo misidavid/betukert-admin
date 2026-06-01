@@ -23,15 +23,6 @@ const STATUS_COLORS: Record<ImageStatus, string> = {
   needs_replacement: 'bg-orange-100 text-orange-700',
 };
 
-const toSlug = (text: string): string => {
-  return text
-    .toLowerCase()
-    .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
-    .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
-    .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
-    .replace(/[^a-z0-9]/g, '_');
-};
-
 interface ExerciseTypeConfig {
   id: string;
   label: string;
@@ -91,11 +82,20 @@ export default function ImagesPage() {
 
   const handleUpload = async (item: ImageNeed, file: File) => {
     setUploadingId(item.id);
-    const result = await uploadImageFileAction(item.id, item.phase, item.word, file);
-    if (result.error) {
-      setMessage(`❌ Feltöltési hiba: ${result.error}`);
-    } else {
-      loadData();
+    try {
+      const fd = new FormData();
+      fd.append('id', item.id);
+      fd.append('phase', String(item.phase));
+      fd.append('word', item.word);
+      fd.append('file', file);
+      const result = await uploadImageFileAction(fd);
+      if (result.error) {
+        setMessage(`❌ Feltöltési hiba: ${result.error}`);
+      } else {
+        loadData();
+      }
+    } catch (e: any) {
+      setMessage(`❌ Feltöltési hiba: ${e?.message ?? 'Ismeretlen hiba'}`);
     }
     setUploadingId(null);
   };
