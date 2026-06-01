@@ -1,12 +1,12 @@
 'use server';
 
-import { supabaseAdmin } from '../../lib/supabaseAdmin';
+import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 
 export async function publishPackageAction(): Promise<{ version: string; imageCount: number; soundCount: number; error?: string }> {
   try {
     const [{ data: images }, { data: sounds }] = await Promise.all([
-      supabaseAdmin.from('image_needs').select('*').eq('status', 'published'),
-      supabaseAdmin.from('sound_needs').select('*').eq('status', 'published'),
+      getSupabaseAdmin().from('image_needs').select('*').eq('status', 'published'),
+      getSupabaseAdmin().from('sound_needs').select('*').eq('status', 'published'),
     ]);
 
     const version = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -17,7 +17,7 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
       sounds: sounds?.map((snd: any) => ({ text: snd.text, type: snd.type, phase: snd.phase, url: snd.file_url })) || [],
     };
 
-    const { error } = await supabaseAdmin.from('published_packages').insert({
+    const { error } = await getSupabaseAdmin().from('published_packages').insert({
       version,
       image_count: images?.length || 0,
       sound_count: sounds?.length || 0,

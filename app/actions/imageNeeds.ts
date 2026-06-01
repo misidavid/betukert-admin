@@ -1,6 +1,6 @@
 'use server';
 
-import { supabaseAdmin } from '../../lib/supabaseAdmin';
+import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { ImageStatus } from '../../lib/supabase';
 import { WORD_BANK } from '../../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
@@ -34,7 +34,7 @@ const getExerciseTypes = (word: string): string[] => {
 
 export async function generateImageNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
-    const { data: existing } = await supabaseAdmin.from('image_needs').select('word');
+    const { data: existing } = await getSupabaseAdmin().from('image_needs').select('word');
     const existingWords = new Set(existing?.map((e: any) => e.word) || []);
 
     const toInsert = WORD_BANK
@@ -57,7 +57,7 @@ export async function generateImageNeedsAction(): Promise<{ inserted: number; sk
 
     if (toInsert.length === 0) return { inserted: 0, skipped: existingWords.size };
 
-    const { error } = await supabaseAdmin.from('image_needs').insert(toInsert);
+    const { error } = await getSupabaseAdmin().from('image_needs').insert(toInsert);
     if (error) return { inserted: 0, skipped: existingWords.size, error: error.message };
 
     return { inserted: toInsert.length, skipped: existingWords.size };
@@ -86,15 +86,15 @@ export async function uploadImageFileAction(
     const ext = file.name.split('.').pop();
     const path = `phase_${phase}/${toSlug(word)}.${ext}`;
 
-    const { error: uploadError } = await supabaseAdmin.storage
+    const { error: uploadError } = await getSupabaseAdmin().storage
       .from('images')
       .upload(path, file, { upsert: true });
 
     if (uploadError) return { error: `Storage: ${uploadError.message}` };
 
-    const { data: urlData } = supabaseAdmin.storage.from('images').getPublicUrl(path);
+    const { data: urlData } = getSupabaseAdmin().storage.from('images').getPublicUrl(path);
 
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('image_needs')
       .update({ status: 'uploaded', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
       .eq('id', id);
@@ -108,7 +108,7 @@ export async function uploadImageFileAction(
 
 export async function updateImageNeedStatusAction(id: string, status: ImageStatus): Promise<{ error?: string }> {
   try {
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('image_needs')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', id);

@@ -1,6 +1,6 @@
 'use server';
 
-import { supabaseAdmin } from '../../lib/supabaseAdmin';
+import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { SoundStatus } from '../../lib/supabase';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
@@ -9,7 +9,7 @@ import { filterWordsByPhase } from '../../shared/curriculum/wordFilter';
 
 export async function generateSoundNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
-    const { data: existing } = await supabaseAdmin.from('sound_needs').select('text, type');
+    const { data: existing } = await getSupabaseAdmin().from('sound_needs').select('text, type');
     const existingSet = new Set(existing?.map((e: any) => `${e.type}:${e.text}`) || []);
 
     const toInsert: any[] = [];
@@ -45,7 +45,7 @@ export async function generateSoundNeedsAction(): Promise<{ inserted: number; sk
 
     if (toInsert.length === 0) return { inserted: 0, skipped: existingSet.size };
 
-    const { error } = await supabaseAdmin.from('sound_needs').insert(toInsert);
+    const { error } = await getSupabaseAdmin().from('sound_needs').insert(toInsert);
     if (error) return { inserted: 0, skipped: existingSet.size, error: error.message };
 
     return { inserted: toInsert.length, skipped: existingSet.size };
@@ -65,15 +65,15 @@ export async function uploadSoundFileAction(
     const ext = file.name.split('.').pop();
     const path = `${type}/${phase}/${text}.${ext}`;
 
-    const { error: uploadError } = await supabaseAdmin.storage
+    const { error: uploadError } = await getSupabaseAdmin().storage
       .from('sounds')
       .upload(path, file, { upsert: true });
 
     if (uploadError) return { error: `Storage: ${uploadError.message}` };
 
-    const { data: urlData } = supabaseAdmin.storage.from('sounds').getPublicUrl(path);
+    const { data: urlData } = getSupabaseAdmin().storage.from('sounds').getPublicUrl(path);
 
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('sound_needs')
       .update({ status: 'pending_review', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
       .eq('id', id);
@@ -87,7 +87,7 @@ export async function uploadSoundFileAction(
 
 export async function updateSoundNeedStatusAction(id: string, status: SoundStatus): Promise<{ error?: string }> {
   try {
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('sound_needs')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', id);

@@ -1,6 +1,6 @@
 'use server';
 
-import { supabaseAdmin } from '../../lib/supabaseAdmin';
+import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { WORD_BANK } from '../../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
@@ -31,7 +31,7 @@ const getDifficulty = (word: string): number => {
 
 export async function seedWordsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
-    const { data: existing } = await supabaseAdmin.from('words').select('text');
+    const { data: existing } = await getSupabaseAdmin().from('words').select('text');
     const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
     const uniqueWords = [...new Set(WORD_BANK)];
 
@@ -45,7 +45,7 @@ export async function seedWordsAction(): Promise<{ inserted: number; skipped: nu
 
     if (toInsert.length === 0) return { inserted: 0, skipped: existingTexts.size };
 
-    const { error } = await supabaseAdmin.from('words').insert(toInsert);
+    const { error } = await getSupabaseAdmin().from('words').insert(toInsert);
     if (error) return { inserted: 0, skipped: existingTexts.size, error: error.message };
 
     return { inserted: toInsert.length, skipped: existingTexts.size };
@@ -71,7 +71,7 @@ export async function insertWordsAction(words: WordInsertData[]): Promise<{ inse
     let inserted = 0;
     for (let i = 0; i < words.length; i += batchSize) {
       const batch = words.slice(i, i + batchSize);
-      const { error } = await supabaseAdmin.from('words').insert(batch);
+      const { error } = await getSupabaseAdmin().from('words').insert(batch);
       if (error) return { inserted, error: error.message };
       inserted += batch.length;
     }
@@ -83,7 +83,7 @@ export async function insertWordsAction(words: WordInsertData[]): Promise<{ inse
 
 export async function deleteWordAction(id: string): Promise<{ error?: string }> {
   try {
-    const { error } = await supabaseAdmin.from('words').delete().eq('id', id);
+    const { error } = await getSupabaseAdmin().from('words').delete().eq('id', id);
     if (error) return { error: error.message };
     return {};
   } catch (e: any) {
@@ -93,7 +93,7 @@ export async function deleteWordAction(id: string): Promise<{ error?: string }> 
 
 export async function toggleWordEnabledAction(id: string, enabled: boolean): Promise<{ error?: string }> {
   try {
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('words')
       .update({ enabled: !enabled, updated_at: new Date().toISOString() })
       .eq('id', id);
