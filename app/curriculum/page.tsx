@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { seedWords } from '../../lib/seedWords';
-import { generateWordsFromCorpus } from '../../lib/generateWords';
+import { buildWordsFromLines } from '../../lib/generateWords';
+import { seedWordsAction, insertWordsAction, deleteWordAction, toggleWordEnabledAction } from '../actions/words';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
 
@@ -45,8 +45,16 @@ export default function CurriculumPage() {
     setGenerating(true);
     setMessage('');
     try {
-      const result = await generateWordsFromCorpus(generateCount);
-      setMessage(`✅ ${result.inserted} új szó generálva a korpuszból (${result.total} szóból szűrve).`);
+      const response = await fetch('/hu_words.txt');
+      const text = await response.text();
+      const lines = text.trim().split('\n');
+
+      const { data: existing } = await supabase.from('words').select('text');
+      const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
+
+      const words = buildWordsFromLines(existingTexts, lines, generateCount);
+      const { inserted } = await insertWordsAction(words);
+      setMessage(`✅ ${inserted} új szó generálva a korpuszból (${lines.length} szóból szűrve).`);
       loadWords();
     } catch (e: any) {
       setMessage(`❌ Hiba: ${e.message}`);
@@ -71,7 +79,7 @@ export default function CurriculumPage() {
     setSeeding(true);
     setMessage('');
     try {
-      const result = await seedWords();
+      const result = await seedWordsAction();
       setMessage(`✅ ${result.inserted} szó visszaállítva, ${result.skipped} már létezett.`);
       loadWords();
     } catch (e: any) {
@@ -83,16 +91,13 @@ export default function CurriculumPage() {
   const handleDelete = async (id: string, text: string) => {
     if (!confirm(`Biztosan törlöd: "${text}"?`)) return;
     setDeletingId(id);
-    await supabase.from('words').delete().eq('id', id);
+    await deleteWordAction(id);
     setWords(prev => prev.filter(w => w.id !== id));
     setDeletingId(null);
   };
 
   const handleToggleEnabled = async (id: string, enabled: boolean) => {
-    await supabase
-      .from('words')
-      .update({ enabled: !enabled, updated_at: new Date().toISOString() })
-      .eq('id', id);
+    await toggleWordEnabledAction(id, enabled);
     setWords(prev => prev.map(w => w.id === id ? { ...w, enabled: !enabled } : w));
   };
 

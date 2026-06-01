@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
+import { toggleRequiresImageAction } from '../../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
 interface ExerciseTypeConfig {
@@ -33,10 +34,7 @@ export default function ImageSettingsPage() {
 
   const handleToggle = async (id: string, value: boolean) => {
     setSaving(id);
-    await supabase
-      .from('exercise_type_config')
-      .update({ requires_image: value, updated_at: new Date().toISOString() })
-      .eq('id', id);
+    await toggleRequiresImageAction(id, value);
     await loadConfigs();
     setMessage('✅ Mentve');
     setTimeout(() => setMessage(''), 2000);

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { supabase, SoundNeed, SoundStatus } from '../../lib/supabase';
+import { generateSoundNeedsAction, updateSoundNeedFileAction, updateSoundNeedStatusAction } from '../actions/soundNeeds';
 
 const STATUS_LABELS: Record<SoundStatus, string> = {
   missing: 'Hiányzó',
@@ -62,84 +63,13 @@ export default function SoundsPage() {
     setGenerating(true);
     setMessage('');
     try {
-      const result = await generateSoundNeeds();
+      const result = await generateSoundNeedsAction();
       setMessage(`✅ ${result.inserted} új hangszükséglet generálva, ${result.skipped} már létezett.`);
       loadItems();
     } catch (e: any) {
       setMessage(`❌ Hiba: ${e.message}`);
     }
     setGenerating(false);
-  };
-
-  const generateSoundNeeds = async () => {
-    const { data: existing } = await supabase
-      .from('sound_needs')
-      .select('text, type');
-
-    const existingSet = new Set(
-      existing?.map(e => `${e.type}:${e.text}`) || []
-    );
-
-    // Importáljuk a szükséges adatokat
-    const { GRAPHEMES } = await import('../../shared/curriculum/graphemes');
-    const { generateSyllables } = await import('../../shared/curriculum/syllableGenerator');
-    const { WORD_BANK } = await import('../../shared/data/wordbank');
-    const { filterWordsByPhase } = await import('../../shared/curriculum/wordFilter');
-
-    const toInsert: any[] = [];
-
-    // Fonémák — minden betű
-    for (const g of GRAPHEMES.filter(g => !g.rare)) {
-      const key = `phoneme:${g.display}`;
-      if (!existingSet.has(key)) {
-        toInsert.push({
-          text: g.display,
-          type: 'phoneme',
-          phase: g.phase,
-          pronunciation_note: `A "${g.display}" hang ejtése — NEM a betű neve!`,
-          status: 'missing',
-        });
-      }
-    }
-
-    // Szótagok — fázisig
-    const syllables = generateSyllables(36);
-    for (const s of syllables.slice(0, 200)) {
-      const key = `syllable:${s.text}`;
-      if (!existingSet.has(key)) {
-        toInsert.push({
-          text: s.text,
-          type: 'syllable',
-          phase: s.phase,
-          status: 'missing',
-        });
-      }
-    }
-
-    // Szavak
-    const words = filterWordsByPhase(WORD_BANK, 36);
-    for (const w of words) {
-      const key = `word:${w.text}`;
-      if (!existingSet.has(key)) {
-        toInsert.push({
-          text: w.text,
-          type: 'word',
-          phase: w.phase,
-          status: 'missing',
-        });
-      }
-    }
-
-    if (toInsert.length === 0) {
-      return { inserted: 0, skipped: existingSet.size };
-    }
-
-    const { error } = await supabase
-      .from('sound_needs')
-      .insert(toInsert);
-
-    if (error) throw error;
-    return { inserted: toInsert.length, skipped: existingSet.size };
   };
 
   const handleUpload = async (item: SoundNeed, file: File) => {
@@ -158,15 +88,7 @@ export default function SoundsPage() {
         .from('sounds')
         .getPublicUrl(path);
 
-      await supabase
-        .from('sound_needs')
-        .update({
-          status: 'pending_review',
-          file_path: path,
-          file_url: urlData.publicUrl,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', item.id);
+      await updateSoundNeedFileAction(item.id, path, urlData.publicUrl);
 
       loadItems();
     } catch (e: any) {
@@ -195,10 +117,7 @@ export default function SoundsPage() {
   };
 
   const handleStatusChange = async (id: string, status: SoundStatus) => {
-    await supabase
-      .from('sound_needs')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', id);
+    await updateSoundNeedStatusAction(id, status);
     loadItems();
   };
 

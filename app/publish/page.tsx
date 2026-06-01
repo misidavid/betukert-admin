@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
+import { publishPackageAction } from '../actions/publish';
 
 interface PackageStats {
   publishedImages: number;
@@ -66,64 +67,13 @@ export default function PublishPage() {
   const handlePublish = async () => {
     setPublishing(true);
     setMessage('');
-
     try {
-      // Publikált képek és hangok lekérése
-      const { data: images } = await supabase
-        .from('image_needs')
-        .select('*')
-        .eq('status', 'published');
-
-      const { data: sounds } = await supabase
-        .from('sound_needs')
-        .select('*')
-        .eq('status', 'published');
-
-      // Verzió generálása
-      const version = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-
-      const manifest = {
-        version,
-        generated_at: new Date().toISOString(),
-        images: images?.map(img => ({
-          word: img.word,
-          phase: img.phase,
-          url: img.file_url,
-          syllables: img.syllables,
-        })) || [],
-        sounds: sounds?.map(snd => ({
-          text: snd.text,
-          type: snd.type,
-          phase: snd.phase,
-          url: snd.file_url,
-        })) || [],
-      };
-
-      // Ellenőrzés hogy van-e published_packages tábla
-      const { error: insertError } = await supabase
-        .from('published_packages')
-        .insert({
-          version,
-          image_count: images?.length || 0,
-          sound_count: sounds?.length || 0,
-          manifest,
-        });
-
-      if (insertError) {
-        // Ha nincs meg a tábla, hozzuk létre
-        if (insertError.message.includes('does not exist')) {
-          setMessage('❌ A published_packages tábla hiányzik. Kérlek futtasd le az SQL migrációt!');
-        } else {
-          throw insertError;
-        }
-      } else {
-        setMessage(`✅ Csomag publikálva! Verzió: ${version} | ${images?.length || 0} kép, ${sounds?.length || 0} hang`);
-        loadData();
-      }
+      const { version, imageCount, soundCount } = await publishPackageAction();
+      setMessage(`✅ Csomag publikálva! Verzió: ${version} | ${imageCount} kép, ${soundCount} hang`);
+      loadData();
     } catch (e: any) {
       setMessage(`❌ Hiba: ${e.message}`);
     }
-
     setPublishing(false);
   };
 

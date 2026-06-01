@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase, ImageNeed, ImageStatus } from '../../lib/supabase';
-import { generateImageNeeds } from '../../lib/generateImageNeeds';
+import { generateImageNeedsAction, updateImageNeedFileAction, updateImageNeedStatusAction } from '../actions/imageNeeds';
 import Link from 'next/link';
 
 const STATUS_LABELS: Record<ImageStatus, string> = {
@@ -80,7 +80,7 @@ export default function ImagesPage() {
     setGenerating(true);
     setMessage('');
     try {
-      const result = await generateImageNeeds();
+      const result = await generateImageNeedsAction();
       setMessage(`✅ ${result.inserted} új képszükséglet generálva, ${result.skipped} már létezett.`);
       loadData();
     } catch (e: any) {
@@ -105,15 +105,7 @@ export default function ImagesPage() {
         .from('images')
         .getPublicUrl(path);
 
-      await supabase
-        .from('image_needs')
-        .update({
-          status: 'uploaded',
-          file_path: path,
-          file_url: urlData.publicUrl,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', item.id);
+      await updateImageNeedFileAction(item.id, path, urlData.publicUrl);
 
       loadData();
     } catch (e: any) {
@@ -123,10 +115,7 @@ export default function ImagesPage() {
   };
 
   const handleStatusChange = async (id: string, status: ImageStatus) => {
-    await supabase
-      .from('image_needs')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', id);
+    await updateImageNeedStatusAction(id, status);
     loadData();
   };
 

@@ -1,0 +1,71 @@
+'use server';
+
+import { supabaseAdmin } from '../../lib/supabaseAdmin';
+import { SoundStatus } from '../../lib/supabase';
+import { GRAPHEMES } from '../../shared/curriculum/graphemes';
+import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
+import { WORD_BANK } from '../../shared/data/wordbank';
+import { filterWordsByPhase } from '../../shared/curriculum/wordFilter';
+
+export async function generateSoundNeedsAction(): Promise<{ inserted: number; skipped: number }> {
+  const { data: existing } = await supabaseAdmin.from('sound_needs').select('text, type');
+  const existingSet = new Set(existing?.map((e: any) => `${e.type}:${e.text}`) || []);
+
+  const toInsert: any[] = [];
+
+  for (const g of GRAPHEMES.filter(g => !g.rare)) {
+    const key = `phoneme:${g.display}`;
+    if (!existingSet.has(key)) {
+      toInsert.push({
+        text: g.display,
+        type: 'phoneme',
+        phase: g.phase,
+        pronunciation_note: `A "${g.display}" hang ejtése — NEM a betű neve!`,
+        status: 'missing',
+      });
+    }
+  }
+
+  const syllables = generateSyllables(36);
+  for (const s of syllables.slice(0, 200)) {
+    const key = `syllable:${s.text}`;
+    if (!existingSet.has(key)) {
+      toInsert.push({ text: s.text, type: 'syllable', phase: s.phase, status: 'missing' });
+    }
+  }
+
+  const words = filterWordsByPhase(WORD_BANK, 36);
+  for (const w of words) {
+    const key = `word:${w.text}`;
+    if (!existingSet.has(key)) {
+      toInsert.push({ text: w.text, type: 'word', phase: w.phase, status: 'missing' });
+    }
+  }
+
+  if (toInsert.length === 0) return { inserted: 0, skipped: existingSet.size };
+
+  const { error } = await supabaseAdmin.from('sound_needs').insert(toInsert);
+  if (error) throw new Error(error.message);
+
+  return { inserted: toInsert.length, skipped: existingSet.size };
+}
+
+export async function updateSoundNeedFileAction(
+  id: string,
+  filePath: string,
+  fileUrl: string,
+): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from('sound_needs')
+    .update({ status: 'pending_review', file_path: filePath, file_url: fileUrl, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+export async function updateSoundNeedStatusAction(id: string, status: SoundStatus): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from('sound_needs')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+}
