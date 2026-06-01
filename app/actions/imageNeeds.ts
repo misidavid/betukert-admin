@@ -106,6 +106,26 @@ export async function uploadImageFileAction(
   }
 }
 
+export async function deleteImageFileAction(id: string, filePath: string): Promise<{ error?: string }> {
+  try {
+    const { error: storageError } = await getSupabaseAdmin().storage
+      .from('images')
+      .remove([filePath]);
+
+    if (storageError) return { error: `Storage: ${storageError.message}` };
+
+    const { error } = await getSupabaseAdmin()
+      .from('image_needs')
+      .update({ status: 'missing', file_path: null, file_url: null, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) return { error: `DB: ${error.message}` };
+    return {};
+  } catch (e: any) {
+    return { error: e.message };
+  }
+}
+
 export async function updateImageNeedStatusAction(id: string, status: ImageStatus): Promise<{ error?: string }> {
   try {
     const { error } = await getSupabaseAdmin()

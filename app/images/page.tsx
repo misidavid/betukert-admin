@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase, ImageNeed, ImageStatus } from '../../lib/supabase';
-import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction } from '../actions/imageNeeds';
+import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction } from '../actions/imageNeeds';
 import Link from 'next/link';
 
 const STATUS_LABELS: Record<ImageStatus, string> = {
@@ -38,6 +38,7 @@ export default function ImagesPage() {
   const [phaseFilter, setPhaseFilter] = useState<number | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [uploadingId, setUploadingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
 
@@ -98,6 +99,19 @@ export default function ImagesPage() {
       setMessage(`❌ Feltöltési hiba: ${e?.message ?? 'Ismeretlen hiba'}`);
     }
     setUploadingId(null);
+  };
+
+  const handleDelete = async (item: ImageNeed) => {
+    if (!item.file_path) return;
+    setDeletingId(item.id);
+    try {
+      const result = await deleteImageFileAction(item.id, item.file_path);
+      if (result.error) setMessage(`❌ Törlési hiba: ${result.error}`);
+      else loadData();
+    } catch (e: any) {
+      setMessage(`❌ Törlési hiba: ${e?.message ?? 'Ismeretlen hiba'}`);
+    }
+    setDeletingId(null);
   };
 
   const handleStatusChange = async (id: string, status: ImageStatus) => {
@@ -203,6 +217,15 @@ export default function ImagesPage() {
             className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
           >
             🚀 Publikálás
+          </button>
+        )}
+        {item.file_path && (
+          <button
+            onClick={() => handleDelete(item)}
+            disabled={deletingId === item.id}
+            className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+          >
+            {deletingId === item.id ? '...' : '🗑️'}
           </button>
         )}
       </div>
@@ -413,6 +436,15 @@ export default function ImagesPage() {
                               className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
                             >
                               🚀 Publikálás
+                            </button>
+                          )}
+                          {item.file_path && (
+                            <button
+                              onClick={() => handleDelete(item)}
+                              disabled={deletingId === item.id}
+                              className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+                            >
+                              {deletingId === item.id ? '...' : '🗑️'}
                             </button>
                           )}
                         </div>
