@@ -50,14 +50,27 @@ export async function generateSoundNeedsAction(): Promise<{ inserted: number; sk
   return { inserted: toInsert.length, skipped: existingSet.size };
 }
 
-export async function updateSoundNeedFileAction(
+export async function uploadSoundFileAction(
   id: string,
-  filePath: string,
-  fileUrl: string,
+  type: string,
+  phase: number,
+  text: string,
+  file: File,
 ): Promise<void> {
+  const ext = file.name.split('.').pop();
+  const path = `${type}/${phase}/${text}.${ext}`;
+
+  const { error: uploadError } = await supabaseAdmin.storage
+    .from('sounds')
+    .upload(path, file, { upsert: true });
+
+  if (uploadError) throw new Error(uploadError.message);
+
+  const { data: urlData } = supabaseAdmin.storage.from('sounds').getPublicUrl(path);
+
   const { error } = await supabaseAdmin
     .from('sound_needs')
-    .update({ status: 'pending_review', file_path: filePath, file_url: fileUrl, updated_at: new Date().toISOString() })
+    .update({ status: 'pending_review', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
     .eq('id', id);
   if (error) throw new Error(error.message);
 }

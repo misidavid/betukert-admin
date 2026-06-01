@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { supabase, SoundNeed, SoundStatus } from '../../lib/supabase';
-import { generateSoundNeedsAction, updateSoundNeedFileAction, updateSoundNeedStatusAction } from '../actions/soundNeeds';
+import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction } from '../actions/soundNeeds';
 
 const STATUS_LABELS: Record<SoundStatus, string> = {
   missing: 'Hiányzó',
@@ -75,21 +75,7 @@ export default function SoundsPage() {
   const handleUpload = async (item: SoundNeed, file: File) => {
     setUploadingId(item.id);
     try {
-      const ext = file.name.split('.').pop();
-      const path = `${item.type}/${item.phase}/${item.text}.${ext}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('sounds')
-        .upload(path, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: urlData } = supabase.storage
-        .from('sounds')
-        .getPublicUrl(path);
-
-      await updateSoundNeedFileAction(item.id, path, urlData.publicUrl);
-
+      await uploadSoundFileAction(item.id, item.type, item.phase, item.text, file);
       loadItems();
     } catch (e: any) {
       setMessage(`❌ Feltöltési hiba: ${e.message}`);

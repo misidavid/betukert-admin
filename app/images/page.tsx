@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase, ImageNeed, ImageStatus } from '../../lib/supabase';
-import { generateImageNeedsAction, updateImageNeedFileAction, updateImageNeedStatusAction } from '../actions/imageNeeds';
+import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction } from '../actions/imageNeeds';
 import Link from 'next/link';
 
 const STATUS_LABELS: Record<ImageStatus, string> = {
@@ -92,21 +92,7 @@ export default function ImagesPage() {
   const handleUpload = async (item: ImageNeed, file: File) => {
     setUploadingId(item.id);
     try {
-      const ext = file.name.split('.').pop();
-      const path = `phase_${item.phase}/${toSlug(item.word)}.${ext}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('images')
-        .upload(path, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: urlData } = supabase.storage
-        .from('images')
-        .getPublicUrl(path);
-
-      await updateImageNeedFileAction(item.id, path, urlData.publicUrl);
-
+      await uploadImageFileAction(item.id, item.phase, item.word, file);
       loadData();
     } catch (e: any) {
       setMessage(`❌ Feltöltési hiba: ${e.message}`);

@@ -62,14 +62,32 @@ export async function generateImageNeedsAction(): Promise<{ inserted: number; sk
   return { inserted: toInsert.length, skipped: existingWords.size };
 }
 
-export async function updateImageNeedFileAction(
+export async function uploadImageFileAction(
   id: string,
-  filePath: string,
-  fileUrl: string,
+  phase: number,
+  word: string,
+  file: File,
 ): Promise<void> {
+  const toSlug = (text: string) => text.toLowerCase()
+    .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
+    .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
+    .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
+    .replace(/[^a-z0-9]/g, '_');
+
+  const ext = file.name.split('.').pop();
+  const path = `phase_${phase}/${toSlug(word)}.${ext}`;
+
+  const { error: uploadError } = await supabaseAdmin.storage
+    .from('images')
+    .upload(path, file, { upsert: true });
+
+  if (uploadError) throw new Error(uploadError.message);
+
+  const { data: urlData } = supabaseAdmin.storage.from('images').getPublicUrl(path);
+
   const { error } = await supabaseAdmin
     .from('image_needs')
-    .update({ status: 'uploaded', file_path: filePath, file_url: fileUrl, updated_at: new Date().toISOString() })
+    .update({ status: 'uploaded', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
     .eq('id', id);
   if (error) throw new Error(error.message);
 }
