@@ -62,23 +62,23 @@ export default function SoundsPage() {
   const handleGenerate = async () => {
     setGenerating(true);
     setMessage('');
-    try {
-      const result = await generateSoundNeedsAction();
+    const result = await generateSoundNeedsAction();
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
       setMessage(`✅ ${result.inserted} új hangszükséglet generálva, ${result.skipped} már létezett.`);
       loadItems();
-    } catch (e: any) {
-      setMessage(`❌ Hiba: ${e.message}`);
     }
     setGenerating(false);
   };
 
   const handleUpload = async (item: SoundNeed, file: File) => {
     setUploadingId(item.id);
-    try {
-      await uploadSoundFileAction(item.id, item.type, item.phase, item.text, file);
+    const result = await uploadSoundFileAction(item.id, item.type, item.phase, item.text, file);
+    if (result.error) {
+      setMessage(`❌ Feltöltési hiba: ${result.error}`);
+    } else {
       loadItems();
-    } catch (e: any) {
-      setMessage(`❌ Feltöltési hiba: ${e.message}`);
     }
     setUploadingId(null);
   };
@@ -103,8 +103,9 @@ export default function SoundsPage() {
   };
 
   const handleStatusChange = async (id: string, status: SoundStatus) => {
-    await updateSoundNeedStatusAction(id, status);
-    loadItems();
+    const result = await updateSoundNeedStatusAction(id, status);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else loadItems();
   };
 
   const filtered = items.filter(item => {

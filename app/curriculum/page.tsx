@@ -53,9 +53,13 @@ export default function CurriculumPage() {
       const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
 
       const words = buildWordsFromLines(existingTexts, lines, generateCount);
-      const { inserted } = await insertWordsAction(words);
-      setMessage(`✅ ${inserted} új szó generálva a korpuszból (${lines.length} szóból szűrve).`);
-      loadWords();
+      const result = await insertWordsAction(words);
+      if (result.error) {
+        setMessage(`❌ Hiba: ${result.error}`);
+      } else {
+        setMessage(`✅ ${result.inserted} új szó generálva a korpuszból (${lines.length} szóból szűrve).`);
+        loadWords();
+      }
     } catch (e: any) {
       setMessage(`❌ Hiba: ${e.message}`);
     }
@@ -78,12 +82,12 @@ export default function CurriculumPage() {
     if (!confirm('Biztosan visszaállítod az alap szóbankot? A korábban törölt alap szavak visszakerülnek az adatbázisba.')) return;
     setSeeding(true);
     setMessage('');
-    try {
-      const result = await seedWordsAction();
+    const result = await seedWordsAction();
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
       setMessage(`✅ ${result.inserted} szó visszaállítva, ${result.skipped} már létezett.`);
       loadWords();
-    } catch (e: any) {
-      setMessage(`❌ Hiba: ${e.message}`);
     }
     setSeeding(false);
   };
@@ -91,14 +95,16 @@ export default function CurriculumPage() {
   const handleDelete = async (id: string, text: string) => {
     if (!confirm(`Biztosan törlöd: "${text}"?`)) return;
     setDeletingId(id);
-    await deleteWordAction(id);
-    setWords(prev => prev.filter(w => w.id !== id));
+    const result = await deleteWordAction(id);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else setWords(prev => prev.filter(w => w.id !== id));
     setDeletingId(null);
   };
 
   const handleToggleEnabled = async (id: string, enabled: boolean) => {
-    await toggleWordEnabledAction(id, enabled);
-    setWords(prev => prev.map(w => w.id === id ? { ...w, enabled: !enabled } : w));
+    const result = await toggleWordEnabledAction(id, enabled);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else setWords(prev => prev.map(w => w.id === id ? { ...w, enabled: !enabled } : w));
   };
 
   const filteredWords = words.filter(w =>

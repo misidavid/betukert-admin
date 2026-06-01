@@ -34,10 +34,14 @@ export default function ImageSettingsPage() {
 
   const handleToggle = async (id: string, value: boolean) => {
     setSaving(id);
-    await toggleRequiresImageAction(id, value);
-    await loadConfigs();
-    setMessage('✅ Mentve');
-    setTimeout(() => setMessage(''), 2000);
+    const result = await toggleRequiresImageAction(id, value);
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
+      await loadConfigs();
+      setMessage('✅ Mentve');
+      setTimeout(() => setMessage(''), 2000);
+    }
     setSaving(null);
   };
 

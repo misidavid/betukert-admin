@@ -32,34 +32,38 @@ const getExerciseTypes = (word: string): string[] => {
   return types;
 };
 
-export async function generateImageNeedsAction(): Promise<{ inserted: number; skipped: number }> {
-  const { data: existing } = await supabaseAdmin.from('image_needs').select('word');
-  const existingWords = new Set(existing?.map((e: any) => e.word) || []);
+export async function generateImageNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
+  try {
+    const { data: existing } = await supabaseAdmin.from('image_needs').select('word');
+    const existingWords = new Set(existing?.map((e: any) => e.word) || []);
 
-  const toInsert = WORD_BANK
-    .filter(word => word.length >= 2 && !existingWords.has(word))
-    .map(word => {
-      const syllables = splitIntoSyllables(word.toLowerCase());
-      return {
-        word,
-        syllables,
-        syllable_count: syllables.length,
-        first_sound: getFirstSound(word),
-        first_syllable: getFirstSyllable(word),
-        phase: getPhase(word),
-        exercise_types: getExerciseTypes(word),
-        image_brief: `Egyértelmű, gyerekbarát illusztráció erről: "${word}"`,
-        ambiguity_notes: '',
-        status: 'missing',
-      };
-    });
+    const toInsert = WORD_BANK
+      .filter(word => word.length >= 2 && !existingWords.has(word))
+      .map(word => {
+        const syllables = splitIntoSyllables(word.toLowerCase());
+        return {
+          word,
+          syllables,
+          syllable_count: syllables.length,
+          first_sound: getFirstSound(word),
+          first_syllable: getFirstSyllable(word),
+          phase: getPhase(word),
+          exercise_types: getExerciseTypes(word),
+          image_brief: `Egyértelmű, gyerekbarát illusztráció erről: "${word}"`,
+          ambiguity_notes: '',
+          status: 'missing',
+        };
+      });
 
-  if (toInsert.length === 0) return { inserted: 0, skipped: existingWords.size };
+    if (toInsert.length === 0) return { inserted: 0, skipped: existingWords.size };
 
-  const { error } = await supabaseAdmin.from('image_needs').insert(toInsert);
-  if (error) throw new Error(error.message);
+    const { error } = await supabaseAdmin.from('image_needs').insert(toInsert);
+    if (error) return { inserted: 0, skipped: existingWords.size, error: error.message };
 
-  return { inserted: toInsert.length, skipped: existingWords.size };
+    return { inserted: toInsert.length, skipped: existingWords.size };
+  } catch (e: any) {
+    return { inserted: 0, skipped: 0, error: e.message };
+  }
 }
 
 export async function uploadImageFileAction(
@@ -67,35 +71,46 @@ export async function uploadImageFileAction(
   phase: number,
   word: string,
   file: File,
-): Promise<void> {
-  const toSlug = (text: string) => text.toLowerCase()
-    .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
-    .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
-    .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
-    .replace(/[^a-z0-9]/g, '_');
+): Promise<{ error?: string }> {
+  try {
+    const toSlug = (text: string) => text.toLowerCase()
+      .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
+      .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
+      .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
+      .replace(/[^a-z0-9]/g, '_');
 
-  const ext = file.name.split('.').pop();
-  const path = `phase_${phase}/${toSlug(word)}.${ext}`;
+    const ext = file.name.split('.').pop();
+    const path = `phase_${phase}/${toSlug(word)}.${ext}`;
 
-  const { error: uploadError } = await supabaseAdmin.storage
-    .from('images')
-    .upload(path, file, { upsert: true });
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from('images')
+      .upload(path, file, { upsert: true });
 
-  if (uploadError) throw new Error(uploadError.message);
+    if (uploadError) return { error: `Storage: ${uploadError.message}` };
 
-  const { data: urlData } = supabaseAdmin.storage.from('images').getPublicUrl(path);
+    const { data: urlData } = supabaseAdmin.storage.from('images').getPublicUrl(path);
 
-  const { error } = await supabaseAdmin
-    .from('image_needs')
-    .update({ status: 'uploaded', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
-    .eq('id', id);
-  if (error) throw new Error(error.message);
+    const { error } = await supabaseAdmin
+      .from('image_needs')
+      .update({ status: 'uploaded', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) return { error: `DB: ${error.message}` };
+    return {};
+  } catch (e: any) {
+    return { error: e.message };
+  }
 }
 
-export async function updateImageNeedStatusAction(id: string, status: ImageStatus): Promise<void> {
-  const { error } = await supabaseAdmin
-    .from('image_needs')
-    .update({ status, updated_at: new Date().toISOString() })
-    .eq('id', id);
-  if (error) throw new Error(error.message);
+export async function updateImageNeedStatusAction(id: string, status: ImageStatus): Promise<{ error?: string }> {
+  try {
+    const { error } = await supabaseAdmin
+      .from('image_needs')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) return { error: error.message };
+    return {};
+  } catch (e: any) {
+    return { error: e.message };
+  }
 }

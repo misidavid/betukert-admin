@@ -79,30 +79,31 @@ export default function ImagesPage() {
   const handleGenerate = async () => {
     setGenerating(true);
     setMessage('');
-    try {
-      const result = await generateImageNeedsAction();
+    const result = await generateImageNeedsAction();
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
       setMessage(`✅ ${result.inserted} új képszükséglet generálva, ${result.skipped} már létezett.`);
       loadData();
-    } catch (e: any) {
-      setMessage(`❌ Hiba: ${e.message}`);
     }
     setGenerating(false);
   };
 
   const handleUpload = async (item: ImageNeed, file: File) => {
     setUploadingId(item.id);
-    try {
-      await uploadImageFileAction(item.id, item.phase, item.word, file);
+    const result = await uploadImageFileAction(item.id, item.phase, item.word, file);
+    if (result.error) {
+      setMessage(`❌ Feltöltési hiba: ${result.error}`);
+    } else {
       loadData();
-    } catch (e: any) {
-      setMessage(`❌ Feltöltési hiba: ${e.message}`);
     }
     setUploadingId(null);
   };
 
   const handleStatusChange = async (id: string, status: ImageStatus) => {
-    await updateImageNeedStatusAction(id, status);
-    loadData();
+    const result = await updateImageNeedStatusAction(id, status);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else loadData();
   };
 
   // Csak képköteles feladattípusokhoz tartozó szavak

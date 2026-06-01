@@ -67,12 +67,12 @@ export default function PublishPage() {
   const handlePublish = async () => {
     setPublishing(true);
     setMessage('');
-    try {
-      const { version, imageCount, soundCount } = await publishPackageAction();
-      setMessage(`✅ Csomag publikálva! Verzió: ${version} | ${imageCount} kép, ${soundCount} hang`);
+    const result = await publishPackageAction();
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
+      setMessage(`✅ Csomag publikálva! Verzió: ${result.version} | ${result.imageCount} kép, ${result.soundCount} hang`);
       loadData();
-    } catch (e: any) {
-      setMessage(`❌ Hiba: ${e.message}`);
     }
     setPublishing(false);
   };

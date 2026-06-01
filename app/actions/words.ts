@@ -29,25 +29,29 @@ const getDifficulty = (word: string): number => {
   return 5;
 };
 
-export async function seedWordsAction(): Promise<{ inserted: number; skipped: number }> {
-  const { data: existing } = await supabaseAdmin.from('words').select('text');
-  const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
-  const uniqueWords = [...new Set(WORD_BANK)];
+export async function seedWordsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
+  try {
+    const { data: existing } = await supabaseAdmin.from('words').select('text');
+    const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
+    const uniqueWords = [...new Set(WORD_BANK)];
 
-  const toInsert = uniqueWords
-    .filter(word => word.length >= 2 && !existingTexts.has(word))
-    .map(word => {
-      const syllables = splitIntoSyllables(word.toLowerCase());
-      const graphemes = splitIntoGraphemes(word.toLowerCase());
-      return { text: word, syllables, syllable_count: syllables.length, graphemes, phase: getPhase(word), difficulty: getDifficulty(word), enabled: true };
-    });
+    const toInsert = uniqueWords
+      .filter(word => word.length >= 2 && !existingTexts.has(word))
+      .map(word => {
+        const syllables = splitIntoSyllables(word.toLowerCase());
+        const graphemes = splitIntoGraphemes(word.toLowerCase());
+        return { text: word, syllables, syllable_count: syllables.length, graphemes, phase: getPhase(word), difficulty: getDifficulty(word), enabled: true };
+      });
 
-  if (toInsert.length === 0) return { inserted: 0, skipped: existingTexts.size };
+    if (toInsert.length === 0) return { inserted: 0, skipped: existingTexts.size };
 
-  const { error } = await supabaseAdmin.from('words').insert(toInsert);
-  if (error) throw new Error(error.message);
+    const { error } = await supabaseAdmin.from('words').insert(toInsert);
+    if (error) return { inserted: 0, skipped: existingTexts.size, error: error.message };
 
-  return { inserted: toInsert.length, skipped: existingTexts.size };
+    return { inserted: toInsert.length, skipped: existingTexts.size };
+  } catch (e: any) {
+    return { inserted: 0, skipped: 0, error: e.message };
+  }
 }
 
 export type WordInsertData = {
@@ -60,28 +64,42 @@ export type WordInsertData = {
   enabled: boolean;
 };
 
-export async function insertWordsAction(words: WordInsertData[]): Promise<{ inserted: number }> {
+export async function insertWordsAction(words: WordInsertData[]): Promise<{ inserted: number; error?: string }> {
   if (words.length === 0) return { inserted: 0 };
-
-  const batchSize = 100;
-  let inserted = 0;
-  for (let i = 0; i < words.length; i += batchSize) {
-    const batch = words.slice(i, i + batchSize);
-    const { error } = await supabaseAdmin.from('words').insert(batch);
-    if (!error) inserted += batch.length;
+  try {
+    const batchSize = 100;
+    let inserted = 0;
+    for (let i = 0; i < words.length; i += batchSize) {
+      const batch = words.slice(i, i + batchSize);
+      const { error } = await supabaseAdmin.from('words').insert(batch);
+      if (error) return { inserted, error: error.message };
+      inserted += batch.length;
+    }
+    return { inserted };
+  } catch (e: any) {
+    return { inserted: 0, error: e.message };
   }
-  return { inserted };
 }
 
-export async function deleteWordAction(id: string): Promise<void> {
-  const { error } = await supabaseAdmin.from('words').delete().eq('id', id);
-  if (error) throw new Error(error.message);
+export async function deleteWordAction(id: string): Promise<{ error?: string }> {
+  try {
+    const { error } = await supabaseAdmin.from('words').delete().eq('id', id);
+    if (error) return { error: error.message };
+    return {};
+  } catch (e: any) {
+    return { error: e.message };
+  }
 }
 
-export async function toggleWordEnabledAction(id: string, enabled: boolean): Promise<void> {
-  const { error } = await supabaseAdmin
-    .from('words')
-    .update({ enabled: !enabled, updated_at: new Date().toISOString() })
-    .eq('id', id);
-  if (error) throw new Error(error.message);
+export async function toggleWordEnabledAction(id: string, enabled: boolean): Promise<{ error?: string }> {
+  try {
+    const { error } = await supabaseAdmin
+      .from('words')
+      .update({ enabled: !enabled, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) return { error: error.message };
+    return {};
+  } catch (e: any) {
+    return { error: e.message };
+  }
 }
