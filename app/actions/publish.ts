@@ -46,6 +46,7 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
       .upload('manifest.json', JSON.stringify(manifest), {
         contentType: 'application/json',
         upsert: true,
+        cacheControl: '0',
       });
 
     if (storageError) return { version: '', imageCount: 0, soundCount: 0, error: `DB ok, storage: ${storageError.message}` };
