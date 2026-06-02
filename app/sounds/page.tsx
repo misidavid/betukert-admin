@@ -24,21 +24,11 @@ const STATUS_COLORS: Record<SoundStatus, string> = {
   needs_regeneration: 'bg-orange-100 text-orange-700',
 };
 
-const TYPE_LABELS: Record<string, string> = {
-  phoneme: 'Fonéma',
-  syllable: 'Szótag',
-  word: 'Szó',
-  sentence: 'Mondat',
-  instruction: 'Utasítás',
-};
-
 export default function SoundsPage() {
   const [items, setItems] = useState<SoundNeed[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [filter, setFilter] = useState<SoundStatus | 'all'>('all');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [phaseFilter, setPhaseFilter] = useState<number | 'all'>('all');
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
@@ -53,7 +43,8 @@ export default function SoundsPage() {
     const { data, error } = await supabase
       .from('sound_needs')
       .select('*')
-      .order('phase', { ascending: true });
+      .eq('type', 'instruction')
+      .order('created_at', { ascending: true });
 
     if (!error && data) setItems(data);
     setLoading(false);
@@ -66,7 +57,7 @@ export default function SoundsPage() {
     if (result.error) {
       setMessage(`❌ Hiba: ${result.error}`);
     } else {
-      setMessage(`✅ ${result.inserted} új hangszükséglet generálva, ${result.skipped} már létezett.`);
+      setMessage(`✅ ${result.inserted} új utasítás generálva, ${result.skipped} már létezett.`);
       loadItems();
     }
     setGenerating(false);
@@ -74,7 +65,7 @@ export default function SoundsPage() {
 
   const handleUpload = async (item: SoundNeed, file: File) => {
     setUploadingId(item.id);
-    const result = await uploadSoundFileAction(item.id, item.type, item.phase, item.text, file);
+    const result = await uploadSoundFileAction(item.id, item.text, file);
     if (result.error) {
       setMessage(`❌ Feltöltési hiba: ${result.error}`);
     } else {
@@ -108,14 +99,7 @@ export default function SoundsPage() {
     else loadItems();
   };
 
-  const filtered = items.filter(item => {
-    if (filter !== 'all' && item.status !== filter) return false;
-    if (typeFilter !== 'all' && item.type !== typeFilter) return false;
-    if (phaseFilter !== 'all' && item.phase !== phaseFilter) return false;
-    return true;
-  });
-
-  const phases = [...new Set(items.map(i => i.phase))].sort((a, b) => a - b);
+  const filtered = items.filter(item => filter === 'all' || item.status === filter);
 
   const stats = {
     total: items.length,
@@ -131,7 +115,7 @@ export default function SoundsPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#2D5A27]">🔊 Hangok</h1>
           <p className="text-gray-500 text-sm mt-1">
-            Hangszükségletek kezelése és feltöltése
+            Feladatutasítások hangfelvételeinek kezelése
           </p>
         </div>
         <button
@@ -139,7 +123,7 @@ export default function SoundsPage() {
           disabled={generating}
           className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50"
         >
-          {generating ? 'Generálás...' : '⚡ Hangszükségletek generálása'}
+          {generating ? 'Generálás...' : '⚡ Utasítások generálása'}
         </button>
       </div>
 
@@ -165,7 +149,7 @@ export default function SoundsPage() {
         ))}
       </div>
 
-      {/* Szűrők */}
+      {/* Szűrő */}
       <div className="flex gap-3 flex-wrap">
         <select
           value={filter}
@@ -175,28 +159,6 @@ export default function SoundsPage() {
           <option value="all">Minden státusz</option>
           {Object.entries(STATUS_LABELS).map(([value, label]) => (
             <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
-
-        <select
-          value={typeFilter}
-          onChange={e => setTypeFilter(e.target.value)}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
-        >
-          <option value="all">Minden típus</option>
-          {Object.entries(TYPE_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
-
-        <select
-          value={phaseFilter}
-          onChange={e => setPhaseFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
-        >
-          <option value="all">Minden szint</option>
-          {phases.map(phase => (
-            <option key={phase} value={phase}>{phase}. szint</option>
           ))}
         </select>
 
@@ -210,7 +172,7 @@ export default function SoundsPage() {
         <div className="text-center py-12 text-gray-400">Betöltés...</div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
-          Nincs elem. Kattints a "Hangszükségletek generálása" gombra!
+          Nincs elem. Kattints az "Utasítások generálása" gombra!
         </div>
       ) : (
         <div className="space-y-2">
@@ -237,24 +199,13 @@ export default function SoundsPage() {
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#2D5A27] text-lg">
+                  <span className="font-medium text-gray-800">
                     {item.text}
-                  </span>
-                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                    {TYPE_LABELS[item.type]}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    {item.phase}. szint
                   </span>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status]}`}>
                     {STATUS_LABELS[item.status]}
                   </span>
                 </div>
-                {item.pronunciation_note && (
-                  <div className="text-xs text-gray-400 mt-1">
-                    💡 {item.pronunciation_note}
-                  </div>
-                )}
               </div>
 
               {/* Akciók */}

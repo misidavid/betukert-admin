@@ -2,46 +2,31 @@
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { SoundStatus } from '../../lib/supabase';
-import { GRAPHEMES } from '../../shared/curriculum/graphemes';
-import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
-import { WORD_BANK } from '../../shared/data/wordbank';
-import { filterWordsByPhase } from '../../shared/curriculum/wordFilter';
+
+const INSTRUCTIONS = [
+  'Koppints a betűre!',
+  'Koppints minden betűre!',
+  'Melyik hanggal kezdődik?',
+  'Melyik szótag ez?',
+  'Tapsolj, és számold meg a szótagokat!',
+  'Melyik szót látod a képen?',
+  'Rakd ki a szót!',
+  'Keresd meg a szótagpárokat!',
+  'Rakd helyes sorrendbe a szavakat!',
+];
 
 export async function generateSoundNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
-    const { data: existing } = await getSupabaseAdmin().from('sound_needs').select('text, type');
-    const existingSet = new Set(existing?.map((e: any) => `${e.type}:${e.text}`) || []);
+    const { data: existing } = await getSupabaseAdmin()
+      .from('sound_needs')
+      .select('text')
+      .eq('type', 'instruction');
 
-    const toInsert: any[] = [];
+    const existingSet = new Set(existing?.map((e: any) => e.text) || []);
 
-    for (const g of GRAPHEMES.filter(g => !g.rare)) {
-      const key = `phoneme:${g.display}`;
-      if (!existingSet.has(key)) {
-        toInsert.push({
-          text: g.display,
-          type: 'phoneme',
-          phase: g.phase,
-          pronunciation_note: `A "${g.display}" hang ejtése — NEM a betű neve!`,
-          status: 'missing',
-        });
-      }
-    }
-
-    const syllables = generateSyllables(36);
-    for (const s of syllables.slice(0, 200)) {
-      const key = `syllable:${s.text}`;
-      if (!existingSet.has(key)) {
-        toInsert.push({ text: s.text, type: 'syllable', phase: s.phase, status: 'missing' });
-      }
-    }
-
-    const words = filterWordsByPhase(WORD_BANK, 36);
-    for (const w of words) {
-      const key = `word:${w.text}`;
-      if (!existingSet.has(key)) {
-        toInsert.push({ text: w.text, type: 'word', phase: w.phase, status: 'missing' });
-      }
-    }
+    const toInsert = INSTRUCTIONS
+      .filter(text => !existingSet.has(text))
+      .map(text => ({ text, type: 'instruction', phase: 0, status: 'missing' }));
 
     if (toInsert.length === 0) return { inserted: 0, skipped: existingSet.size };
 
@@ -56,14 +41,18 @@ export async function generateSoundNeedsAction(): Promise<{ inserted: number; sk
 
 export async function uploadSoundFileAction(
   id: string,
-  type: string,
-  phase: number,
   text: string,
   file: File,
 ): Promise<{ error?: string }> {
   try {
     const ext = file.name.split('.').pop();
-    const path = `${type}/${phase}/${text}.${ext}`;
+    const safeName = text
+      .toLowerCase()
+      .replace(/[!?,.:;]/g, '')
+      .replace(/\s+/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_|_$/, '');
+    const path = `instruction/${safeName}.${ext}`;
 
     const { error: uploadError } = await getSupabaseAdmin().storage
       .from('sounds')
