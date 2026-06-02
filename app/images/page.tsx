@@ -40,6 +40,10 @@ export default function ImagesPage() {
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; word: string } | null>(null);
+  const [replaceConfirm, setReplaceConfirm] = useState<ImageNeed | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkWorking, setBulkWorking] = useState(false);
+  const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
   const [message, setMessage] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
 
@@ -55,6 +59,10 @@ export default function ImagesPage() {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    setSelected(new Set());
+  }, [filter, phaseFilter, typeFilter]);
 
   const loadData = async () => {
     setLoading(true);
@@ -121,6 +129,44 @@ export default function ImagesPage() {
     else loadData();
   };
 
+  const toggleSelect = (id: string) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = (items: ImageNeed[]) => {
+    const allIds = items.map(i => i.id);
+    const allSelected = allIds.every(id => selected.has(id));
+    setSelected(allSelected ? new Set() : new Set(allIds));
+  };
+
+  const handleBulkStatusChange = async (status: ImageStatus) => {
+    setBulkWorking(true);
+    const selectedItems = filtered.filter(i => selected.has(i.id));
+    await Promise.all(selectedItems.map(item => updateImageNeedStatusAction(item.id, status)));
+    setSelected(new Set());
+    setBulkWorking(false);
+    loadData();
+  };
+
+  const handleBulkDelete = async () => {
+    setBulkWorking(true);
+    const selectedItems = filtered.filter(i => selected.has(i.id));
+    const toDelete = selectedItems.filter(i => i.file_path && i.status !== 'published');
+    const toReplace = selectedItems.filter(i => i.status === 'published');
+    await Promise.all([
+      ...toDelete.map(item => deleteImageFileAction(item.id, item.file_path!)),
+      ...toReplace.map(item => updateImageNeedStatusAction(item.id, 'needs_replacement')),
+    ]);
+    setSelected(new Set());
+    setBulkWorking(false);
+    loadData();
+  };
+
   // Csak képköteles feladattípusokhoz tartozó szavak
   const imageRequiredTypes = configs.map(c => c.id);
 
@@ -158,6 +204,12 @@ export default function ImagesPage() {
 
   const renderItem = (item: ImageNeed) => (
     <div key={item.id} className="bg-white rounded-xl border p-4 flex items-center gap-4">
+      <input
+        type="checkbox"
+        checked={selected.has(item.id)}
+        onChange={() => toggleSelect(item.id)}
+        className="w-4 h-4 flex-shrink-0 cursor-pointer accent-[#2D5A27]"
+      />
       <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
         {item.file_url ? (
           <img
@@ -226,13 +278,22 @@ export default function ImagesPage() {
           </button>
         )}
         {item.file_path && (
-          <button
-            onClick={() => handleDelete(item)}
-            disabled={deletingId === item.id}
-            className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
-          >
-            {deletingId === item.id ? '...' : '🗑️'}
-          </button>
+          item.status === 'published' ? (
+            <button
+              onClick={() => setReplaceConfirm(item)}
+              className="bg-orange-50 text-orange-700 text-xs px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-colors"
+            >
+              🔄 Csere
+            </button>
+          ) : (
+            <button
+              onClick={() => handleDelete(item)}
+              disabled={deletingId === item.id}
+              className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+            >
+              {deletingId === item.id ? '...' : '🗑️'}
+            </button>
+          )
         )}
       </div>
     </div>
@@ -261,6 +322,70 @@ export default function ImagesPage() {
         </div>
       </div>
     )}
+    {replaceConfirm && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl">
+          <h3 className="font-bold text-lg text-gray-800 mb-2">Publikált kép cseréje</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            A <strong>{replaceConfirm.word}</strong> képe jelenleg él a mobilalkalmazásban.
+            Közvetlen törlés helyett <strong>„Csere szükséges"</strong> státuszra állítjuk:
+            a régi kép elérhető marad az appban, amíg feltöltesz egy újat és újra publikálsz.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => setReplaceConfirm(null)}
+              className="text-gray-600 text-sm px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              Mégse
+            </button>
+            <button
+              onClick={() => {
+                const item = replaceConfirm;
+                setReplaceConfirm(null);
+                handleStatusChange(item.id, 'needs_replacement');
+              }}
+              className="bg-orange-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+            >
+              Csere szükségesre állítás
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    {bulkDeleteConfirm && (() => {
+      const selectedItems = filtered.filter(i => selected.has(i.id));
+      const toDelete = selectedItems.filter(i => i.file_path && i.status !== 'published');
+      const toReplace = selectedItems.filter(i => i.status === 'published');
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl">
+            <h3 className="font-bold text-lg text-gray-800 mb-3">Tömeges törlés megerősítése</h3>
+            <ul className="text-sm text-gray-600 mb-4 space-y-1">
+              {toDelete.length > 0 && (
+                <li>• <strong>{toDelete.length} kép</strong> törlésre kerül a storage-ból (státusz: hiányzó)</li>
+              )}
+              {toReplace.length > 0 && (
+                <li>• <strong>{toReplace.length} publikált kép</strong> „Csere szükséges" státuszra kerül — a fájl megmarad az appban</li>
+              )}
+            </ul>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setBulkDeleteConfirm(false)}
+                className="text-gray-600 text-sm px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                Mégse
+              </button>
+              <button
+                onClick={() => { setBulkDeleteConfirm(false); handleBulkDelete(); }}
+                className="bg-red-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+              >
+                Törlés
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    })()}
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -341,10 +466,64 @@ export default function ImagesPage() {
           ))}
         </select>
 
-        <span className="text-sm text-gray-500 self-center">
-          {filtered.length} elem
-        </span>
+        <label className="flex items-center gap-2 cursor-pointer self-center ml-auto">
+          <input
+            type="checkbox"
+            checked={filtered.length > 0 && filtered.every(i => selected.has(i.id))}
+            onChange={() => toggleSelectAll(filtered)}
+            className="w-4 h-4 cursor-pointer accent-[#2D5A27]"
+          />
+          <span className="text-sm text-gray-500">
+            {selected.size > 0 ? `${selected.size} / ${filtered.length} kijelölve` : `${filtered.length} elem`}
+          </span>
+        </label>
       </div>
+
+      {selected.size > 0 && (
+        <div className="flex items-center gap-2 flex-wrap bg-[#f0f7ee] border border-[#2D5A27]/20 rounded-xl px-4 py-3">
+          <span className="text-sm font-medium text-[#2D5A27] mr-1">{selected.size} kijelölve</span>
+          {filter === 'uploaded' && (
+            <button
+              onClick={() => handleBulkStatusChange('approved')}
+              disabled={bulkWorking}
+              className="bg-yellow-100 text-yellow-800 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-200 transition-colors disabled:opacity-50"
+            >
+              ✓ Jóváhagyás
+            </button>
+          )}
+          {filter === 'approved' && (
+            <button
+              onClick={() => handleBulkStatusChange('published')}
+              disabled={bulkWorking}
+              className="bg-green-100 text-green-800 text-xs px-3 py-1.5 rounded-lg hover:bg-green-200 transition-colors disabled:opacity-50"
+            >
+              🚀 Publikálás
+            </button>
+          )}
+          {filter === 'published' && (
+            <button
+              onClick={() => handleBulkStatusChange('needs_replacement')}
+              disabled={bulkWorking}
+              className="bg-orange-100 text-orange-800 text-xs px-3 py-1.5 rounded-lg hover:bg-orange-200 transition-colors disabled:opacity-50"
+            >
+              🔄 Csere szükséges
+            </button>
+          )}
+          <button
+            onClick={() => setBulkDeleteConfirm(true)}
+            disabled={bulkWorking}
+            className="bg-red-100 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50"
+          >
+            🗑️ Törlés
+          </button>
+          <button
+            onClick={() => setSelected(new Set())}
+            className="text-gray-500 text-xs px-3 py-1.5 rounded-lg hover:bg-white transition-colors ml-auto"
+          >
+            Kijelölés törlése
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <div className="text-center py-12 text-gray-400">Betöltés...</div>
@@ -405,6 +584,12 @@ export default function ImagesPage() {
                   <div className="border-t divide-y">
                     {filteredGroup.map(item => (
                       <div key={item.id} className="p-4 flex items-center gap-4">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(item.id)}
+                          onChange={() => toggleSelect(item.id)}
+                          className="w-4 h-4 flex-shrink-0 cursor-pointer accent-[#2D5A27]"
+                        />
                         <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
                           {item.file_url ? (
                             <img
@@ -472,13 +657,22 @@ export default function ImagesPage() {
                             </button>
                           )}
                           {item.file_path && (
-                            <button
-                              onClick={() => handleDelete(item)}
-                              disabled={deletingId === item.id}
-                              className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
-                            >
-                              {deletingId === item.id ? '...' : '🗑️'}
-                            </button>
+                            item.status === 'published' ? (
+                              <button
+                                onClick={() => setReplaceConfirm(item)}
+                                className="bg-orange-50 text-orange-700 text-xs px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-colors"
+                              >
+                                🔄 Csere
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleDelete(item)}
+                                disabled={deletingId === item.id}
+                                className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+                              >
+                                {deletingId === item.id ? '...' : '🗑️'}
+                              </button>
+                            )
                           )}
                         </div>
                       </div>
