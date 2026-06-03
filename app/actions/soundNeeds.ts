@@ -4,6 +4,9 @@ import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { SoundStatus } from '../../lib/supabase';
 import { requireAuth } from '../../lib/requireAuth';
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const VALID_SOUND_STATUSES = new Set<SoundStatus>(['missing', 'uploaded', 'pending_review', 'approved', 'published', 'rejected', 'needs_regeneration']);
+
 const INSTRUCTIONS = [
   'Koppints a betűre!',
   'Koppints minden betűre!',
@@ -48,6 +51,7 @@ export async function uploadSoundFileAction(
 ): Promise<{ error?: string }> {
   try {
     await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
     const ALLOWED_SOUND_EXTENSIONS = ['mp3', 'wav', 'ogg', 'm4a'];
     const ext = file.name.split('.').pop()?.toLowerCase();
     if (!ext || !ALLOWED_SOUND_EXTENSIONS.includes(ext)) {
@@ -84,6 +88,8 @@ export async function uploadSoundFileAction(
 export async function updateSoundNeedStatusAction(id: string, status: SoundStatus): Promise<{ error?: string }> {
   try {
     await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+    if (!VALID_SOUND_STATUSES.has(status)) return { error: 'Érvénytelen státusz' };
     const { error } = await getSupabaseAdmin()
       .from('sound_needs')
       .update({ status, updated_at: new Date().toISOString() })

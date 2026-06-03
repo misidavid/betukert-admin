@@ -7,6 +7,9 @@ import { WORD_BANK } from '../../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const VALID_IMAGE_STATUSES = new Set<ImageStatus>(['missing', 'uploaded', 'approved', 'published', 'rejected', 'needs_replacement']);
+
 const getFirstSound = (word: string): string =>
   splitIntoGraphemes(word.toLowerCase())[0] || '';
 
@@ -74,7 +77,9 @@ export async function uploadImageFileAction(
   try {
     await requireAuth();
     const id = formData.get('id') as string;
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
     const phase = Number(formData.get('phase'));
+    if (!Number.isInteger(phase) || phase < 1 || phase > 20) return { error: 'Érvénytelen szint' };
     const word = formData.get('word') as string;
     const file = formData.get('file') as File;
 
@@ -117,6 +122,7 @@ export async function uploadImageFileAction(
 export async function deleteImageFileAction(id: string, filePath: string): Promise<{ error?: string }> {
   try {
     await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
     const { error: storageError } = await getSupabaseAdmin().storage
       .from('images')
       .remove([filePath]);
@@ -138,6 +144,8 @@ export async function deleteImageFileAction(id: string, filePath: string): Promi
 export async function updateImageNeedStatusAction(id: string, status: ImageStatus): Promise<{ error?: string }> {
   try {
     await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+    if (!VALID_IMAGE_STATUSES.has(status)) return { error: 'Érvénytelen státusz' };
     const { error } = await getSupabaseAdmin()
       .from('image_needs')
       .update({ status, updated_at: new Date().toISOString() })
