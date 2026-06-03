@@ -73,6 +73,11 @@ export type WordInsertData = {
 };
 
 export async function insertWordsAction(words: WordInsertData[]): Promise<{ inserted: number; error?: string }> {
+  try {
+    await requireAuth();
+  } catch {
+    return { inserted: 0, error: 'Unauthorized' };
+  }
   if (words.length === 0) return { inserted: 0 };
   if (words.length > 1000) return { inserted: 0, error: 'Túl sok szó egyszerre (max 1000)' };
   for (const w of words) {
@@ -82,7 +87,6 @@ export async function insertWordsAction(words: WordInsertData[]): Promise<{ inse
     if (typeof w.enabled !== 'boolean') return { inserted: 0, error: 'Érvénytelen enabled érték' };
   }
   try {
-    await requireAuth();
     const batchSize = 100;
     let inserted = 0;
     for (let i = 0; i < words.length; i += batchSize) {
