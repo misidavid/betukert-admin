@@ -65,7 +65,7 @@ export default function SoundsPage() {
 
   const handleUpload = async (item: SoundNeed, file: File) => {
     setUploadingId(item.id);
-    const result = await uploadSoundFileAction(item.id, item.text, file);
+    const result = await uploadSoundFileAction(item.id, file);
     if (result.error) {
       setMessage(`❌ Feltöltési hiba: ${result.error}`);
     } else {

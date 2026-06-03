@@ -50,18 +50,26 @@ export async function generateSoundNeedsAction(): Promise<{ inserted: number; sk
 
 export async function uploadSoundFileAction(
   id: string,
-  text: string,
   file: File,
 ): Promise<{ error?: string }> {
   try {
     await requireAuth();
     if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+
+    const { data: record, error: fetchError } = await getSupabaseAdmin()
+      .from('sound_needs')
+      .select('text')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !record?.text) return { error: 'Nem található a bejegyzés' };
+
     const ALLOWED_SOUND_EXTENSIONS = ['mp3', 'wav', 'ogg', 'm4a'];
     const ext = file.name.split('.').pop()?.toLowerCase();
     if (!ext || !ALLOWED_SOUND_EXTENSIONS.includes(ext)) {
       return { error: `Nem engedélyezett fájlformátum. Engedélyezett: ${ALLOWED_SOUND_EXTENSIONS.join(', ')}` };
     }
-    const safeName = text
+    const safeName = record.text
       .toLowerCase()
       .replace(/[!?,.:;]/g, '')
       .replace(/\s+/g, '_')
