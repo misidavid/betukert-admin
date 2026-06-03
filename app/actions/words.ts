@@ -1,6 +1,7 @@
 'use server';
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
+import { requireAuth } from '../../lib/requireAuth';
 import { WORD_BANK } from '../../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
@@ -31,6 +32,7 @@ const getDifficulty = (word: string): number => {
 
 export async function seedWordsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
+    await requireAuth();
     const { data: existing } = await getSupabaseAdmin().from('words').select('text');
     const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
     const uniqueWords = [...new Set(WORD_BANK)];
@@ -67,6 +69,7 @@ export type WordInsertData = {
 export async function insertWordsAction(words: WordInsertData[]): Promise<{ inserted: number; error?: string }> {
   if (words.length === 0) return { inserted: 0 };
   try {
+    await requireAuth();
     const batchSize = 100;
     let inserted = 0;
     for (let i = 0; i < words.length; i += batchSize) {
@@ -83,6 +86,7 @@ export async function insertWordsAction(words: WordInsertData[]): Promise<{ inse
 
 export async function deleteWordAction(id: string): Promise<{ error?: string }> {
   try {
+    await requireAuth();
     const { error } = await getSupabaseAdmin().from('words').delete().eq('id', id);
     if (error) return { error: error.message };
     return {};
@@ -93,6 +97,7 @@ export async function deleteWordAction(id: string): Promise<{ error?: string }> 
 
 export async function toggleWordEnabledAction(id: string, enabled: boolean): Promise<{ error?: string }> {
   try {
+    await requireAuth();
     const { error } = await getSupabaseAdmin()
       .from('words')
       .update({ enabled: !enabled, updated_at: new Date().toISOString() })

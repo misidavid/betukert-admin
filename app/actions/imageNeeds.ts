@@ -2,6 +2,7 @@
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { ImageStatus } from '../../lib/supabase';
+import { requireAuth } from '../../lib/requireAuth';
 import { WORD_BANK } from '../../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
@@ -34,6 +35,7 @@ const getExerciseTypes = (word: string): string[] => {
 
 export async function generateImageNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
+    await requireAuth();
     const { data: existing } = await getSupabaseAdmin().from('image_needs').select('word');
     const existingWords = new Set(existing?.map((e: any) => e.word) || []);
 
@@ -70,6 +72,7 @@ export async function uploadImageFileAction(
   formData: FormData,
 ): Promise<{ error?: string }> {
   try {
+    await requireAuth();
     const id = formData.get('id') as string;
     const phase = Number(formData.get('phase'));
     const word = formData.get('word') as string;
@@ -108,6 +111,7 @@ export async function uploadImageFileAction(
 
 export async function deleteImageFileAction(id: string, filePath: string): Promise<{ error?: string }> {
   try {
+    await requireAuth();
     const { error: storageError } = await getSupabaseAdmin().storage
       .from('images')
       .remove([filePath]);
@@ -128,6 +132,7 @@ export async function deleteImageFileAction(id: string, filePath: string): Promi
 
 export async function updateImageNeedStatusAction(id: string, status: ImageStatus): Promise<{ error?: string }> {
   try {
+    await requireAuth();
     const { error } = await getSupabaseAdmin()
       .from('image_needs')
       .update({ status, updated_at: new Date().toISOString() })

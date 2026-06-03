@@ -1,10 +1,12 @@
 'use server';
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
+import { requireAuth } from '../../lib/requireAuth';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 
 export async function publishPackageAction(): Promise<{ version: string; imageCount: number; soundCount: number; error?: string }> {
   try {
+    await requireAuth();
     const [{ data: images }, { data: sounds }, { data: words }] = await Promise.all([
       getSupabaseAdmin().from('image_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('sound_needs').select('*').eq('status', 'published'),

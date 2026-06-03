@@ -2,6 +2,7 @@
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { SoundStatus } from '../../lib/supabase';
+import { requireAuth } from '../../lib/requireAuth';
 
 const INSTRUCTIONS = [
   'Koppints a betűre!',
@@ -17,6 +18,7 @@ const INSTRUCTIONS = [
 
 export async function generateSoundNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
+    await requireAuth();
     const { data: existing } = await getSupabaseAdmin()
       .from('sound_needs')
       .select('text')
@@ -45,6 +47,7 @@ export async function uploadSoundFileAction(
   file: File,
 ): Promise<{ error?: string }> {
   try {
+    await requireAuth();
     const ext = file.name.split('.').pop();
     const safeName = text
       .toLowerCase()
@@ -76,6 +79,7 @@ export async function uploadSoundFileAction(
 
 export async function updateSoundNeedStatusAction(id: string, status: SoundStatus): Promise<{ error?: string }> {
   try {
+    await requireAuth();
     const { error } = await getSupabaseAdmin()
       .from('sound_needs')
       .update({ status, updated_at: new Date().toISOString() })
