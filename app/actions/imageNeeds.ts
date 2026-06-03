@@ -130,13 +130,22 @@ export async function uploadImageFileAction(
   }
 }
 
-export async function deleteImageFileAction(id: string, filePath: string): Promise<{ error?: string }> {
+export async function deleteImageFileAction(id: string): Promise<{ error?: string }> {
   try {
     await requireAuth();
     if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+
+    const { data: record, error: fetchError } = await getSupabaseAdmin()
+      .from('image_needs')
+      .select('file_path')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !record?.file_path) return { error: 'Nem található a fájl' };
+
     const { error: storageError } = await getSupabaseAdmin().storage
       .from('images')
-      .remove([filePath]);
+      .remove([record.file_path]);
 
     if (storageError) {
       console.error('[deleteImageFileAction] Storage hiba:', storageError);

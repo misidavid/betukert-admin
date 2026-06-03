@@ -114,7 +114,7 @@ export default function ImagesPage() {
     if (!item.file_path) return;
     setDeletingId(item.id);
     try {
-      const result = await deleteImageFileAction(item.id, item.file_path);
+      const result = await deleteImageFileAction(item.id);
       if (result.error) setMessage(`❌ Törlési hiba: ${result.error}`);
       else loadData();
     } catch (e: any) {
@@ -159,7 +159,7 @@ export default function ImagesPage() {
     const toDelete = selectedItems.filter(i => i.file_path && i.status !== 'published');
     const toReplace = selectedItems.filter(i => i.status === 'published');
     await Promise.all([
-      ...toDelete.map(item => deleteImageFileAction(item.id, item.file_path!)),
+      ...toDelete.map(item => deleteImageFileAction(item.id)),
       ...toReplace.map(item => updateImageNeedStatusAction(item.id, 'needs_replacement')),
     ]);
     setSelected(new Set());
