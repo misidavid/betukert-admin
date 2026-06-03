@@ -48,7 +48,11 @@ export async function uploadSoundFileAction(
 ): Promise<{ error?: string }> {
   try {
     await requireAuth();
-    const ext = file.name.split('.').pop();
+    const ALLOWED_SOUND_EXTENSIONS = ['mp3', 'wav', 'ogg', 'm4a'];
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    if (!ext || !ALLOWED_SOUND_EXTENSIONS.includes(ext)) {
+      return { error: `Nem engedélyezett fájlformátum. Engedélyezett: ${ALLOWED_SOUND_EXTENSIONS.join(', ')}` };
+    }
     const safeName = text
       .toLowerCase()
       .replace(/[!?,.:;]/g, '')

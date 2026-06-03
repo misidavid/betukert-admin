@@ -80,13 +80,18 @@ export async function uploadImageFileAction(
 
     if (!file || !file.name) return { error: 'Hiányzó fájl' };
 
+    const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    if (!ext || !ALLOWED_IMAGE_EXTENSIONS.includes(ext)) {
+      return { error: `Nem engedélyezett fájlformátum. Engedélyezett: ${ALLOWED_IMAGE_EXTENSIONS.join(', ')}` };
+    }
+
     const toSlug = (text: string) => text.toLowerCase()
       .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
       .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
       .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
       .replace(/[^a-z0-9]/g, '_');
 
-    const ext = file.name.split('.').pop();
     const path = `phase_${phase}/${toSlug(word)}.${ext}`;
 
     const { error: uploadError } = await getSupabaseAdmin().storage
