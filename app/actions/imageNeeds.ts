@@ -82,9 +82,16 @@ export async function uploadImageFileAction(
     await requireAuth();
     const id = formData.get('id') as string;
     if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
-    const phase = Number(formData.get('phase'));
-    if (!Number.isInteger(phase) || phase < 1 || phase > 20) return { error: 'Érvénytelen szint' };
-    const word = formData.get('word') as string;
+
+    const { data: record, error: fetchError } = await getSupabaseAdmin()
+      .from('image_needs')
+      .select('word, phase')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !record) return { error: 'Nem található a bejegyzés' };
+
+    const { word, phase } = record;
     const file = formData.get('file') as File;
 
     if (!file || !file.name) return { error: 'Hiányzó fájl' };

@@ -74,6 +74,13 @@ export type WordInsertData = {
 
 export async function insertWordsAction(words: WordInsertData[]): Promise<{ inserted: number; error?: string }> {
   if (words.length === 0) return { inserted: 0 };
+  if (words.length > 1000) return { inserted: 0, error: 'Túl sok szó egyszerre (max 1000)' };
+  for (const w of words) {
+    if (typeof w.text !== 'string' || w.text.length < 2 || w.text.length > 100) return { inserted: 0, error: 'Érvénytelen szó' };
+    if (!Number.isInteger(w.phase) || w.phase < 1 || w.phase > 99) return { inserted: 0, error: 'Érvénytelen szint' };
+    if (!Number.isInteger(w.difficulty) || w.difficulty < 1 || w.difficulty > 5) return { inserted: 0, error: 'Érvénytelen nehézség' };
+    if (typeof w.enabled !== 'boolean') return { inserted: 0, error: 'Érvénytelen enabled érték' };
+  }
   try {
     await requireAuth();
     const batchSize = 100;

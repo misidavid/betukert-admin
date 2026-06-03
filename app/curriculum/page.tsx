@@ -46,6 +46,7 @@ export default function CurriculumPage() {
     setMessage('');
     try {
       const response = await fetch('/hu_words.txt');
+      if (!response.ok) throw new Error(`Nem tölthető be a korpusz (${response.status})`);
       const text = await response.text();
       const lines = text.trim().split('\n');
 
