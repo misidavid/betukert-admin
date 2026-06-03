@@ -6,6 +6,8 @@ import { WORD_BANK } from '../../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 const getPhase = (word: string): number => {
   const graphemes = splitIntoGraphemes(word.toLowerCase());
   let maxPhase = 1;
@@ -48,11 +50,15 @@ export async function seedWordsAction(): Promise<{ inserted: number; skipped: nu
     if (toInsert.length === 0) return { inserted: 0, skipped: existingTexts.size };
 
     const { error } = await getSupabaseAdmin().from('words').insert(toInsert);
-    if (error) return { inserted: 0, skipped: existingTexts.size, error: error.message };
+    if (error) {
+      console.error('[seedWordsAction] DB hiba:', error);
+      return { inserted: 0, skipped: existingTexts.size, error: 'Adatbázis hiba' };
+    }
 
     return { inserted: toInsert.length, skipped: existingTexts.size };
-  } catch (e: any) {
-    return { inserted: 0, skipped: 0, error: e.message };
+  } catch (e) {
+    console.error('[seedWordsAction]', e);
+    return { inserted: 0, skipped: 0, error: 'Szerverhiba' };
   }
 }
 
@@ -75,36 +81,50 @@ export async function insertWordsAction(words: WordInsertData[]): Promise<{ inse
     for (let i = 0; i < words.length; i += batchSize) {
       const batch = words.slice(i, i + batchSize);
       const { error } = await getSupabaseAdmin().from('words').insert(batch);
-      if (error) return { inserted, error: error.message };
+      if (error) {
+        console.error('[insertWordsAction] DB hiba:', error);
+        return { inserted, error: 'Adatbázis hiba' };
+      }
       inserted += batch.length;
     }
     return { inserted };
-  } catch (e: any) {
-    return { inserted: 0, error: e.message };
+  } catch (e) {
+    console.error('[insertWordsAction]', e);
+    return { inserted: 0, error: 'Szerverhiba' };
   }
 }
 
 export async function deleteWordAction(id: string): Promise<{ error?: string }> {
   try {
     await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
     const { error } = await getSupabaseAdmin().from('words').delete().eq('id', id);
-    if (error) return { error: error.message };
+    if (error) {
+      console.error('[deleteWordAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
     return {};
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e) {
+    console.error('[deleteWordAction]', e);
+    return { error: 'Szerverhiba' };
   }
 }
 
 export async function toggleWordEnabledAction(id: string, enabled: boolean): Promise<{ error?: string }> {
   try {
     await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
     const { error } = await getSupabaseAdmin()
       .from('words')
       .update({ enabled: !enabled, updated_at: new Date().toISOString() })
       .eq('id', id);
-    if (error) return { error: error.message };
+    if (error) {
+      console.error('[toggleWordEnabledAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
     return {};
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e) {
+    console.error('[toggleWordEnabledAction]', e);
+    return { error: 'Szerverhiba' };
   }
 }

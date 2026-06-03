@@ -38,9 +38,11 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
       manifest,
     });
 
-    if (error) return { version: '', imageCount: 0, soundCount: 0, error: error.message };
+    if (error) {
+      console.error('[publishPackageAction] DB hiba:', error);
+      return { version: '', imageCount: 0, soundCount: 0, error: 'Adatbázis hiba' };
+    }
 
-    // Upload manifest to public storage so the mobile app can fetch it
     const supabase = getSupabaseAdmin();
     await supabase.storage.createBucket('content', { public: true }).catch(() => {});
     const { error: storageError } = await supabase.storage
@@ -51,10 +53,14 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
         cacheControl: '0',
       });
 
-    if (storageError) return { version: '', imageCount: 0, soundCount: 0, error: `DB ok, storage: ${storageError.message}` };
+    if (storageError) {
+      console.error('[publishPackageAction] Storage hiba:', storageError);
+      return { version: '', imageCount: 0, soundCount: 0, error: 'Tárhely hiba (az adatbázisba mentés sikeres volt)' };
+    }
 
     return { version, imageCount: images?.length || 0, soundCount: sounds?.length || 0 };
-  } catch (e: any) {
-    return { version: '', imageCount: 0, soundCount: 0, error: e.message };
+  } catch (e) {
+    console.error('[publishPackageAction]', e);
+    return { version: '', imageCount: 0, soundCount: 0, error: 'Szerverhiba' };
   }
 }

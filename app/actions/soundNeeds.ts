@@ -36,11 +36,15 @@ export async function generateSoundNeedsAction(): Promise<{ inserted: number; sk
     if (toInsert.length === 0) return { inserted: 0, skipped: existingSet.size };
 
     const { error } = await getSupabaseAdmin().from('sound_needs').insert(toInsert);
-    if (error) return { inserted: 0, skipped: existingSet.size, error: error.message };
+    if (error) {
+      console.error('[generateSoundNeedsAction] DB hiba:', error);
+      return { inserted: 0, skipped: existingSet.size, error: 'Adatbázis hiba' };
+    }
 
     return { inserted: toInsert.length, skipped: existingSet.size };
-  } catch (e: any) {
-    return { inserted: 0, skipped: 0, error: e.message };
+  } catch (e) {
+    console.error('[generateSoundNeedsAction]', e);
+    return { inserted: 0, skipped: 0, error: 'Szerverhiba' };
   }
 }
 
@@ -69,7 +73,10 @@ export async function uploadSoundFileAction(
       .from('sounds')
       .upload(path, file, { upsert: true });
 
-    if (uploadError) return { error: `Storage: ${uploadError.message}` };
+    if (uploadError) {
+      console.error('[uploadSoundFileAction] Storage hiba:', uploadError);
+      return { error: 'Tárhely hiba' };
+    }
 
     const { data: urlData } = getSupabaseAdmin().storage.from('sounds').getPublicUrl(path);
 
@@ -78,10 +85,14 @@ export async function uploadSoundFileAction(
       .update({ status: 'pending_review', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
       .eq('id', id);
 
-    if (error) return { error: `DB: ${error.message}` };
+    if (error) {
+      console.error('[uploadSoundFileAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
     return {};
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e) {
+    console.error('[uploadSoundFileAction]', e);
+    return { error: 'Szerverhiba' };
   }
 }
 
@@ -94,9 +105,13 @@ export async function updateSoundNeedStatusAction(id: string, status: SoundStatu
       .from('sound_needs')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', id);
-    if (error) return { error: error.message };
+    if (error) {
+      console.error('[updateSoundNeedStatusAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
     return {};
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e) {
+    console.error('[updateSoundNeedStatusAction]', e);
+    return { error: 'Szerverhiba' };
   }
 }

@@ -63,11 +63,15 @@ export async function generateImageNeedsAction(): Promise<{ inserted: number; sk
     if (toInsert.length === 0) return { inserted: 0, skipped: existingWords.size };
 
     const { error } = await getSupabaseAdmin().from('image_needs').insert(toInsert);
-    if (error) return { inserted: 0, skipped: existingWords.size, error: error.message };
+    if (error) {
+      console.error('[generateImageNeedsAction] DB hiba:', error);
+      return { inserted: 0, skipped: existingWords.size, error: 'Adatbázis hiba' };
+    }
 
     return { inserted: toInsert.length, skipped: existingWords.size };
-  } catch (e: any) {
-    return { inserted: 0, skipped: 0, error: e.message };
+  } catch (e) {
+    console.error('[generateImageNeedsAction]', e);
+    return { inserted: 0, skipped: 0, error: 'Szerverhiba' };
   }
 }
 
@@ -103,7 +107,10 @@ export async function uploadImageFileAction(
       .from('images')
       .upload(path, file, { upsert: true });
 
-    if (uploadError) return { error: `Storage: ${uploadError.message}` };
+    if (uploadError) {
+      console.error('[uploadImageFileAction] Storage hiba:', uploadError);
+      return { error: 'Tárhely hiba' };
+    }
 
     const { data: urlData } = getSupabaseAdmin().storage.from('images').getPublicUrl(path);
 
@@ -112,10 +119,14 @@ export async function uploadImageFileAction(
       .update({ status: 'uploaded', file_path: path, file_url: urlData.publicUrl, updated_at: new Date().toISOString() })
       .eq('id', id);
 
-    if (error) return { error: `DB: ${error.message}` };
+    if (error) {
+      console.error('[uploadImageFileAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
     return {};
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e) {
+    console.error('[uploadImageFileAction]', e);
+    return { error: 'Szerverhiba' };
   }
 }
 
@@ -127,17 +138,24 @@ export async function deleteImageFileAction(id: string, filePath: string): Promi
       .from('images')
       .remove([filePath]);
 
-    if (storageError) return { error: `Storage: ${storageError.message}` };
+    if (storageError) {
+      console.error('[deleteImageFileAction] Storage hiba:', storageError);
+      return { error: 'Tárhely hiba' };
+    }
 
     const { error } = await getSupabaseAdmin()
       .from('image_needs')
       .update({ status: 'missing', file_path: null, file_url: null, updated_at: new Date().toISOString() })
       .eq('id', id);
 
-    if (error) return { error: `DB: ${error.message}` };
+    if (error) {
+      console.error('[deleteImageFileAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
     return {};
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e) {
+    console.error('[deleteImageFileAction]', e);
+    return { error: 'Szerverhiba' };
   }
 }
 
@@ -150,9 +168,13 @@ export async function updateImageNeedStatusAction(id: string, status: ImageStatu
       .from('image_needs')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', id);
-    if (error) return { error: error.message };
+    if (error) {
+      console.error('[updateImageNeedStatusAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
     return {};
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e) {
+    console.error('[updateImageNeedStatusAction]', e);
+    return { error: 'Szerverhiba' };
   }
 }
