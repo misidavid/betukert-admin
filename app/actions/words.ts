@@ -49,13 +49,19 @@ export async function seedWordsAction(): Promise<{ inserted: number; skipped: nu
 
     if (toInsert.length === 0) return { inserted: 0, skipped: existingTexts.size };
 
-    const { error } = await getSupabaseAdmin().from('words').insert(toInsert);
-    if (error) {
-      console.error('[seedWordsAction] DB hiba:', error);
-      return { inserted: 0, skipped: existingTexts.size, error: 'Adatbázis hiba' };
+    const batchSize = 100;
+    let inserted = 0;
+    for (let i = 0; i < toInsert.length; i += batchSize) {
+      const batch = toInsert.slice(i, i + batchSize);
+      const { error } = await getSupabaseAdmin().from('words').insert(batch);
+      if (error) {
+        console.error('[seedWordsAction] DB hiba:', error.message, error.details);
+        return { inserted, skipped: existingTexts.size, error: `Adatbázis hiba: ${error.message}` };
+      }
+      inserted += batch.length;
     }
 
-    return { inserted: toInsert.length, skipped: existingTexts.size };
+    return { inserted, skipped: existingTexts.size };
   } catch (e) {
     console.error('[seedWordsAction]', e);
     return { inserted: 0, skipped: 0, error: 'Szerverhiba' };
