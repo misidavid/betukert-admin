@@ -51,7 +51,7 @@ export default function CurriculumPage() {
   };
 
   const handleSeed = async () => {
-    if (!confirm('Biztosan visszaállítod az alap szóbankot? A korábban törölt alap szavak visszakerülnek az adatbázisba.')) return;
+    if (!confirm('Ez törli az összes jelenlegi szót és az alap szóbankkal tölti fel újra az adatbázist. Folytatod?')) return;
     setSeeding(true);
     setMessage('');
     const result = await seedWordsAction();

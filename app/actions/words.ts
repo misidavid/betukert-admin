@@ -35,19 +35,23 @@ const getDifficulty = (word: string): number => {
 export async function seedWordsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
   try {
     await requireAuth();
-    const { data: existing } = await getSupabaseAdmin().from('words').select('text');
-    const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
-    const uniqueWords = [...new Set(WORD_BANK)];
 
-    const toInsert = uniqueWords
-      .filter(word => word.length >= 2 && !existingTexts.has(word))
+    const { error: deleteError } = await getSupabaseAdmin()
+      .from('words')
+      .delete()
+      .neq('id', '00000000-0000-0000-0000-000000000000');
+    if (deleteError) {
+      console.error('[seedWordsAction] Törlési hiba:', deleteError.message);
+      return { inserted: 0, skipped: 0, error: `Adatbázis hiba: ${deleteError.message}` };
+    }
+
+    const toInsert = [...new Set(WORD_BANK)]
+      .filter(word => word.length >= 2)
       .map(word => {
         const syllables = splitIntoSyllables(word.toLowerCase());
         const graphemes = splitIntoGraphemes(word.toLowerCase());
         return { text: word, syllables, syllable_count: syllables.length, graphemes, phase: getPhase(word), difficulty: getDifficulty(word), enabled: true };
       });
-
-    if (toInsert.length === 0) return { inserted: 0, skipped: existingTexts.size };
 
     const batchSize = 100;
     let inserted = 0;
@@ -56,12 +60,12 @@ export async function seedWordsAction(): Promise<{ inserted: number; skipped: nu
       const { error } = await getSupabaseAdmin().from('words').insert(batch);
       if (error) {
         console.error('[seedWordsAction] DB hiba:', error.message, error.details);
-        return { inserted, skipped: existingTexts.size, error: `Adatbázis hiba: ${error.message}` };
+        return { inserted, skipped: 0, error: `Adatbázis hiba: ${error.message}` };
       }
       inserted += batch.length;
     }
 
-    return { inserted, skipped: existingTexts.size };
+    return { inserted, skipped: 0 };
   } catch (e) {
     console.error('[seedWordsAction]', e);
     return { inserted: 0, skipped: 0, error: 'Szerverhiba' };
