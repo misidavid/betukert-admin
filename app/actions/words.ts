@@ -3,13 +3,14 @@
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { requireAuth } from '../../lib/requireAuth';
 import { WORD_BANK } from '../../shared/data/wordbank';
-import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
+import { splitIntoSyllables, splitIntoGraphemes, splitNameIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const getPhase = (word: string): number => {
-  const graphemes = splitIntoGraphemes(word.toLowerCase());
+  const isName = word[0] && word[0] !== word[0].toLowerCase();
+  const graphemes = isName ? splitNameIntoGraphemes(word) : splitIntoGraphemes(word.toLowerCase());
   let maxPhase = 1;
   for (const g of graphemes) {
     const id = DISPLAY_TO_ID[g];

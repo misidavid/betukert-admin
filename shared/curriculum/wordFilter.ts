@@ -3,6 +3,8 @@ import { getGraphemesForWordFilter } from './graphemes';
 
 const VOWELS = ['a', 'á', 'e', 'é', 'i', 'í', 'o', 'ó', 'ö', 'ő', 'u', 'ú', 'ü', 'ű'];
 const DIGRAPHS = ['dzs', 'cs', 'dz', 'gy', 'ly', 'ny', 'sz', 'ty', 'zs'];
+// Nagybetűs kétjegyűek (keresztnevekhez, pl. Cs-illa, Gy-ula, Sz-abi)
+const UPPER_DIGRAPHS = ['Dzs', 'Dz', 'Cs', 'Gy', 'Ly', 'Ny', 'Sz', 'Ty', 'Zs'];
 
 export const splitIntoGraphemes = (word: string): string[] => {
   const graphemes: string[] = [];
@@ -41,6 +43,18 @@ export const splitIntoGraphemes = (word: string): string[] => {
   return graphemes;
 };
 
+// Keresztnevekhez: az első grafémát nagybetűsen adja vissza, a többit kisbetűsen.
+// Pl. 'Csilla' → ['Cs', 'i', 'l', 'l', 'a'], 'Alma' → ['A', 'l', 'm', 'a']
+export const splitNameIntoGraphemes = (word: string): string[] => {
+  if (!word || word[0] === word[0].toLowerCase()) return splitIntoGraphemes(word);
+  for (const digraph of UPPER_DIGRAPHS) {
+    if (word.startsWith(digraph)) {
+      return [digraph, ...splitIntoGraphemes(word.slice(digraph.length))];
+    }
+  }
+  return [word[0], ...splitIntoGraphemes(word.slice(1))];
+};
+
 const isVowel = (g: string): boolean => VOWELS.includes(g);
 
 export const splitIntoSyllables = (word: string): string[] => {
@@ -75,6 +89,7 @@ export const splitIntoSyllables = (word: string): string[] => {
 };
 
 export const DISPLAY_TO_ID: Record<string, string> = {
+  // Kisbetűk
   'a': 'a', 'á': 'aa', 'e': 'e', 'é': 'ee',
   'i': 'i', 'í': 'ii', 'o': 'o', 'ó': 'oo',
   'ö': 'oe', 'ő': 'oee', 'u': 'u', 'ú': 'uu',
@@ -87,6 +102,18 @@ export const DISPLAY_TO_ID: Record<string, string> = {
   'sz': 'sz', 't': 't', 'ty': 'ty', 'v': 'v',
   'z': 'z', 'zs': 'zs',
   'q': 'q', 'w': 'w', 'x': 'x', 'y': 'y',
+  // Nagybetűk (keresztnevekhez)
+  'A': 'A', 'Á': 'AA', 'E': 'E', 'É': 'EE',
+  'I': 'I', 'Í': 'II', 'O': 'O', 'Ó': 'OO',
+  'Ö': 'OE', 'Ő': 'OEE', 'U': 'U', 'Ú': 'UU',
+  'Ü': 'UE', 'Ű': 'UEE',
+  'B': 'B', 'C': 'C', 'Cs': 'Cs', 'D': 'D',
+  'Dz': 'Dz', 'Dzs': 'Dzs', 'F': 'F', 'G': 'G',
+  'Gy': 'Gy', 'H': 'H', 'J': 'J', 'K': 'K',
+  'L': 'L', 'Ly': 'Ly', 'M': 'M', 'N': 'N',
+  'Ny': 'Ny', 'P': 'P', 'R': 'R', 'S': 'S',
+  'Sz': 'Sz', 'T': 'T', 'Ty': 'Ty', 'V': 'V',
+  'Z': 'Z', 'Zs': 'Zs',
 };
 
 export const wordIsKnown = (
