@@ -5,263 +5,339 @@
 // - gyerekek életteréből ismert fogalmak
 // - fokozatosan nehezedő
 // - szint szerint rendezve
+//
+// A szekciók a szó TÉNYLEGES fázisát jelzik
+// (a benne lévő legkésőbbi graféma alapján).
+// * = implicit graféma (megfigyelés útján tanult)
 // ============================================
 
 export const WORD_BANK: string[] = [
 
   // ----------------------------------------
-  // FÁZIS 1–5 — a, i, ó, e  (a=1, i=1, ó=2, e=5)
-  // Csak magánhangzók — rövid, egyszerű szavak
+  // Fázis 3 — m, s, t
   // ----------------------------------------
-  'ó', 'á', 'é', 'í',
+  'ma', 'mi', 'mit',
+  'tó', 'só',
+  'sas',
+  'ima',
+  'mama', 'mami', 'tata', 'sima',
 
   // ----------------------------------------
-  // FÁZIS 3 — m, s, t bevezetése
+  // Fázis 4 — v
   // ----------------------------------------
-  'ma', 'mi', 'te', 'se',
-  'mos', 'mit', 'most', 'más',
-  'ám', 'tó', 'só', 'tű',
-  'ima', 'esti',
-  'mama', 'mami', 'tata',
-  'sima',
-  'atom', 'ásít',
+  'vas', 'vita', 'avat', 'savó',
 
   // ----------------------------------------
-  // FÁZIS 4 — v bevezetése
+  // Fázis 5 — e
   // ----------------------------------------
-  'vaj', 'vár', 'vér', 'víz',
-  'vas', 'van', 'vég',
-  'teve', 'vese', 'vita',
-  'avat', 'övez',
-  'savó', 'evés',
+  'te', 'se',
+  'mese', 'este', 'test', 'evet',
+  'esti', 'teve', 'vese',
 
   // ----------------------------------------
-  // FÁZIS 6 — l bevezetése  ✓
+  // Fázis 6 — l
   // ----------------------------------------
-  'lám', 'lép', 'lót',
-  'alma', 'alig', 'alap',
-  'lila', 'leves', 'lámpa',
-  'talál',
-  'levél', 'völgy',
-  'álom', 'étel',
-  'villa', 'villám',
+  'ló', 'les',
+  'tele', 'illat',
+  'alma', 'lila', 'leves', 'villa',
 
   // ----------------------------------------
-  // FÁZIS 8 — p bevezetése
+  // Fázis 7 — ú
   // ----------------------------------------
-  'pap', 'pék', 'pók',
-  'kap', 'kép', 'köp',
-  'pápa', 'pipa', 'púpos',
-  'tapló', 'kapál',
-  'papír', 'palota',
-  'tepsi', 'lepke',
-  'lop', 'lap',
+  'út', 'lassú',
 
   // ----------------------------------------
-  // FÁZIS 10 — k bevezetése
+  // Fázis 8 — p, o*
   // ----------------------------------------
-  'kos', 'kút', 'kéz',
-  'kel', 'köt',
-  'kuka', 'kefe', 'képes',
-  'kakas', 'kalap', 'kacsa',
-  'sikál', 'lakás',
-  'mesék', 'falak',
-  'kavics', 'kaktusz',
+  'lep', 'lop', 'lap',
+  'toll', 'olló', 'olvas', 'posta',
+  'mos', 'most', 'atom',
+  'pap', 'pipa', 'tapló',
+  'alap', 'palota', 'tepsi', 'púpos',
 
   // ----------------------------------------
-  // FÁZIS 12 — f bevezetése
+  // Fázis 9 — c, u*
   // ----------------------------------------
-  'fa', 'fű', 'fej',
-  'fal', 'fut', 'fél',
-  'fakó', 'falat', 'fecske',
-  'féltve', 'fésű',
-  'fülke', 'füstös',
-  'kaftan', 'kupac',
+  'cím', 'cumi', 'cica',
+  'malac', 'pacal',
+  'autó', 'piac', 'utca',
 
   // ----------------------------------------
-  // FÁZIS 13 — h bevezetése
+  // Fázis 10 — k
   // ----------------------------------------
-  'ház', 'hús', 'hét',
-  'hal', 'haj', 'hív',
-  'havas', 'halak', 'határ',
-  'hullik', 'hasít',
-  'pohár', 'tehén',
-  'méh', 'hőség',
-  'hiéna', 'hattyú',
+  'kis', 'okos',
+  'kap', 'kel', 'kos', 'kút',
+  'kapa', 'kupa', 'kuka', 'makk', 'móka',
+  'kapu', 'sapka', 'lakó', 'komp',
+  'kocka', 'mókus',
+  'kakas', 'kalap', 'kupac',
+  'pakol', 'iskola',
+  'kupola', 'lakoma',
+  'kócos', 'pocak', 'vacak',
+  'lepke', 'pók',
 
   // ----------------------------------------
-  // FÁZIS 11 — á bevezetése  ✓
+  // Fázis 11 — á
   // ----------------------------------------
-  'ár', 'ág', 'áll',
-  'ásó', 'átok', 'áram',
-  'madár', 'vásár',
-  'barát', 'kakás',
-  'málna', 'párna',
-  'sárga', 'zárka',
+  'ám', 'más',
+  'tál', 'sál', 'láp', 'mák',
+  'váll', 'lapát',
+  'áll', 'ásó', 'átok', 'ásít',
+  'saláta', 'táska', 'állomás',
+  'lám', 'lámpa', 'álom', 'villám',
+  'pápa', 'kapál', 'sikál', 'lakás', 'talál',
 
   // ----------------------------------------
-  // FÁZIS 14 — z bevezetése
+  // Fázis 12 — f
   // ----------------------------------------
-  'zár', 'zúg', 'zöld',
-  'zene', 'zajog', 'zokni',
-  'hazai', 'kazal',
-  'varázs', 'fizet',
-  'fazék', 'lazac',
-  'rózsa', 'kézzel',
+  'fa', 'fal', 'fut',
+  'fest', 'fóka', 'fekete',
+  'fakó', 'falat', 'kefe',
+  'foci', 'ficam',
 
   // ----------------------------------------
-  // FÁZIS 9 — c bevezetése
-  // Korai c-szavak (phase 9-12, az első ismert betűkkel):
-  'cím', 'cumi',     // phase 9: c,í,m és c,u,m,i
-  'kócos',           // phase 10: k,ó,c,o,s
-  'foci',            // phase 12: f,o,c,i
-  // Magasabb fázisú c-szavak:
-  'cél', 'cég',
-  'cica', 'cipő', 'citrom',
-  'cukor', 'ceruza',
-  'pocak', 'kacaj',
-  'lucska', 'pacal',
-  'ficam', 'vacak',
+  // Fázis 13 — h
+  // ----------------------------------------
+  'hó', 'hal', 'hús', 'hív', 'hát', 'has',
+  'hull', 'homok', 'puha',
+  'havas', 'hullik', 'hasít',
 
   // ----------------------------------------
-  // FÁZIS 16 — d bevezetése
+  // Fázis 14 — z
   // ----------------------------------------
-  'dob', 'dal', 'dél',
-  'dió', 'duda', 'domb',
-  'darab', 'doboz', 'dolog',
-  'fodor', 'medál',
-  'vidám', 'fedél',
-  'radar',
+  'víz', 'hoz', 'húz', 'íz',
+  'ház', 'mozi',
+  'hazai', 'kazal', 'fizet', 'lazac',
 
   // ----------------------------------------
-  // FÁZIS 15–16 — ő, ö bevezetése  (ő=15, ö=16 implicit)
+  // Fázis 15 — ő
   // ----------------------------------------
-  'ős', 'öt', 'ők',
-  'öböl', 'öreg', 'ördög',
-  'főzés', 'dőlés',
-  'tölgy',
-  'körte', 'körtefa',
-  'erős', 'szőlő',
+  'ős', 'ők', 'őz',
+  'kő', 'eső', 'főz', 'tető', 'mező',
+  'cipő',
 
   // ----------------------------------------
-  // FÁZIS 19 — n bevezetése
+  // Fázis 16 — d, ö*
   // ----------------------------------------
-  'nap', 'nő', 'nem',
-  'néni', 'anya', 'neve',
-  'napos', 'nevet', 'néma',
-  'fonál', 'kanál',
-  'ének', 'lenéz',
-  'menő', 'honos',
-  'anyuka', 'nagyi',
+  'öt', 'öl', 'öv', 'ad',
+  'vad', 'lúd', 'híd', 'köd', 'kedd',
+  'dió', 'duda', 'dal',
+  'hold', 'padló', 'kötő',
+  'kesudió',
+  'zöld', 'köp', 'köt', 'övez',
+  'medál', 'vidám',
 
   // ----------------------------------------
-  // FÁZIS 20 — sz bevezetése
+  // Fázis 17 — j
   // ----------------------------------------
-  'szó', 'szín', 'szép',
-  'szer', 'szív', 'szél',
-  'szeret', 'szalag', 'szeder',
-  'asztal', 'osztály',
-  'moszkva', 'reszket',
-  'észak', 'szüret',
-  'szilva',
+  'jó', 'új', 'tej',
+  'haj', 'fej', 'vaj', 'ujj',
+  'sajt', 'tojás',
+  'hajó', 'ajtó',
+  'sejt', 'majom', 'kacaj',
 
   // ----------------------------------------
-  // FÁZIS 22 — r bevezetése
+  // Fázis 18 — é
   // ----------------------------------------
-  'rák', 'rét', 'rés',
-  'rak', 'repül', 'remeg',
-  'rajzol',
-  'karám', 'marha',
-  'derék',
-  'rovar', 'horror',
+  'év', 'él', 'kék', 'kés', 'méz', 'tél',
+  'vés', 'véd',
+  'hét', 'méh', 'fél',
+  'lép', 'pék', 'kép', 'kéz',
+  'cél', 'dél',
+  'sétál', 'hétfő', 'délelőtt',
+  'képes', 'féltve',
+  'édes', 'épít', 'ítél',
+  'fazék', 'fedél',
+  'levél', 'étel',
+  'játék', 'útlevél',
+  'főzés', 'dőlés', 'evés',
 
   // ----------------------------------------
-  // FÁZIS 17 — j bevezetése
+  // Fázis 19 — n
   // ----------------------------------------
-  'jó', 'jár', 'játék',
-  'jég', 'jobb', 'juhar',
-  'bajusz', 'pajzs',
-  'sejt',
-  'fijaim', 'folyam',
-  'hajnal', 'majom',
+  'nő', 'nap', 'nem',
+  'kint', 'van',
+  'néz', 'énekel',
+  'póni', 'vonat', 'hinta', 'katona',
+  'kendő', 'pince', 'mandula', 'vonalzó',
+  'délután', 'péntek',
+  'néni', 'neve', 'néma',
+  'napos', 'nevet',
+  'zene', 'zokni', 'kaftan',
+  'tehén', 'hiéna', 'málna',
+  'fonál', 'kanál', 'ének',
+  'lenéz', 'menő', 'honos', 'hajnal',
 
   // ----------------------------------------
-  // FÁZIS 24 — b bevezetése
+  // Fázis 20 — sz
   // ----------------------------------------
-  'bab', 'bál', 'bőr',
-  'baba', 'bábu', 'bárány',
-  'bagoly', 'barack',
-  'boldog',
-  'csokor', 'labda',
-  'kabát', 'szabad',
-  'ebéd', 'ablak',
+  'száj', 'szén', 'szem',
+  'puszi', 'ősz', 'száll', 'szék', 'kasza',
+  'szó', 'szín', 'szív', 'szép', 'szél',
+  'uszoda', 'hosszú', 'széles',
+  'eszik', 'iszik',
+  'disznó', 'káposzta',
+  'iszap', 'szikla', 'tavasz',
+  'szappan', 'szandál',
+  'asztal', 'szilva',
+  'kaktusz', 'szőlő', 'észak',
+  'úszik', 'íjász', 'díszít',
 
   // ----------------------------------------
-  // FÁZIS 21 — g bevezetése  ✓
+  // Fázis 21 — g
   // ----------------------------------------
+  'fog', 'ing',
+  'súg', 'húg', 'vág', 'tág', 'hág',
+  'szög', 'szeg',
+  'meleg', 'hideg', 'magas', 'vastag',
+  'hang', 'liget', 'fogkefe',
+  'dugó', 'vége', 'gida', 'hugi',
   'gép', 'gőz', 'gáz',
-  'gomba', 'garázs', 'gazda',
-  'bogár', 'egér', 'fagylalt',
-  'gólya', 'gömb',
-  'rugó', 'agár',
-  'fogoly', 'fogás',
+  'ág', 'zúg', 'jég',
+  'vég', 'alig', 'hőség',
+  'cég', 'dolog', 'szalag',
+  'gazda', 'fogás', 'újság',
+  'zajog',
 
   // ----------------------------------------
-  // FÁZIS 18 — é bevezetése  (ú=7 és í=1 már korábban bevezetve)
+  // Fázis 22 — r
   // ----------------------------------------
-  'édes', 'érez', 'épít',
-  'úszik', 'újság', 'útlevél',
-  'íjász', 'írás', 'ítél',
-  'kérdez',
-  'szúnyog', 'túrós',
-  'díszít', 'kísér',
+  'ír', 'kor', 'kör', 'kér', 'kár', 'kar',
+  'rég', 'rág', 'sár',
+  'piros', 'fehér', 'régi', 'rövid', 'szomorú',
+  'orr', 'térd',
+  'virág', 'erdő',
+  'tör', 'varr', 'farag', 'söpör', 'töröl',
+  'ugrik', 'gurul', 'ugrat',
+  'rigó', 'rágó', 'karó', 'kérő', 'róka',
+  'orvos', 'tanár', 'mérnök', 'sofőr',
+  'daru', 'varjú', 'szarvas', 'szamár', 'denevér',
+  'eper', 'lekvár', 'retek', 'sárgarépa', 'krumpli',
+  'harmat', 'ikra', 'hurka',
+  'vödör', 'seprő', 'takaró', 'törölköző',
+  'radír', 'ragasztó', 'nadrág', 'kréta', 'kerékpár', 'roller',
+  'reggel', 'szerda', 'vasárnap',
+  'strand', 'kórház', 'játszótér',
+  'rák', 'rét', 'rés', 'rak',
+  'kert', 'park', 'kard', 'rönk',
+  'kerék', 'korom', 'köröm', 'karom',
+  'káros', 'koros', 'kapar', 'rakás',
+  'korona', 'karika', 'koszorú',
+  'vár', 'vér', 'papír', 'határ', 'pohár',
+  'ár', 'áram', 'madár', 'vásár',
+  'párna', 'sárga', 'zárka', 'zár',
+  'citrom', 'cukor', 'ceruza',
+  'fodor', 'radar',
+  'öreg', 'ördög', 'körte', 'körtefa', 'erős',
+  'szer', 'szeret', 'szeder', 'reszket',
+  'remeg', 'rajzol', 'karám', 'marha', 'derék',
+  'rovar', 'horror',
+  'jár', 'juhar', 'egér', 'rugó', 'agár',
+  'érez', 'írás', 'kérdez', 'túrós', 'kísér',
 
   // ----------------------------------------
-  // FÁZIS 23 — ü, ű bevezetése  ✓
+  // Fázis 23 — ü, ű
   // ----------------------------------------
-  'üveg', 'ünnepe', 'ügyes',
-  'fűszer', 'tűzhely',
-  'ünnep', 'ütemes',
-  'körül', 'tükör',
-  'füzet', 'fűnyíró',
-  'szűrő', 'szükség',
+  'fül', 'sül', 'süt', 'tűr', 'tűz',
+  'hűs', 'hűtő', 'sütő', 'kürt',
+  'szürke',
+  'üres', 'üreg', 'üzen',
+  'sün', 'ürge',
+  'tű', 'fű', 'fésű', 'fülke', 'füstös',
+  'fűszer', 'szüret', 'repül',
+  'üveg', 'ünnepe', 'ünnep', 'ütemes',
+  'körül', 'tükör', 'füzet', 'szűrő', 'szükség',
 
   // ----------------------------------------
-  // FÁZIS 25 — gy bevezetése
+  // Fázis 24 — b
   // ----------------------------------------
-  'gyár', 'gyep', 'gyík',
-  'gyors', 'gyöngy', 'gyümölcs',
-  'agyag', 'egyed',
-  'Magyar',
-  'hagyma', 'nagyon',
-  'meggyfa', 'dinnye',
+  'bár', 'bor', 'bál', 'bőr', 'baj',
+  'bél', 'bér', 'bír', 'bán', 'bűn',
+  'bari', 'boci', 'béna', 'betű',
+  'boka', 'bokor', 'birka',
+  'béka', 'bika',
+  'galamb', 'veréb',
+  'tábla', 'szoba', 'gomb', 'bolt',
+  'szabó', 'bíró', 'szombat',
+  'kolbász', 'borsó', 'uborka',
+  'dob', 'domb', 'darab', 'doboz',
+  'öböl', 'jobb', 'bajusz',
+  'bab', 'baba', 'bábu', 'barack', 'boldog',
+  'labda', 'kabát', 'szabad', 'ebéd', 'ablak',
+  'gomba', 'bogár', 'gömb', 'barát',
 
   // ----------------------------------------
-  // FÁZIS 26 — cs bevezetése
+  // Fázis 25 — gy
   // ----------------------------------------
+  'nagy', 'ágy', 'hegy', 'légy', 'fagy',
+  'megy', 'gyenge',
+  'meggy', 'gyere',
+  'kígyó', 'gyűrű', 'gyalu', 'gyúró',
+  'mogyoró',
+  'völgy', 'tölgy', 'fagylalt',
+  'ügyes', 'nagyi',
+  'gyár', 'gyep', 'gyík', 'gyors', 'gyöngy',
+  'agyag', 'egyed', 'hagyma', 'nagyon', 'meggyfa',
+
+  // ----------------------------------------
+  // Fázis 26 — cs
+  // ----------------------------------------
+  'csap', 'csal', 'csáp', 'csel',
+  'csomó', 'tócsa', 'csaló',
+  'olcsó', 'karcsú',
+  'vércse', 'harcsa',
+  'csengő', 'csorba', 'csárda', 'csorda',
+  'csapda', 'csemete', 'vacsora',
+  'csuka', 'csákó', 'csikó',
+  'csecsemő', 'lépcső',
+  'hörcsög', 'csirke', 'pogácsa',
+  'paradicsom', 'narancs',
+  'mocsár', 'cserje',
+  'csésze', 'papucs', 'csúszda', 'csípő',
+  'szakács', 'csütörtök',
+  'kacsa', 'kavics', 'fecske', 'lucska',
+  'csokor', 'gyümölcs',
   'cső', 'csók', 'csúcs',
-  'csiga', 'csizma', 'csillag',
-  'csapat', 'csavar',
-  'macska',
-  'kulcs',
-  'csempe', 'csöpög',
+  'csiga', 'csizma', 'csillag', 'csapat', 'csavar',
+  'macska', 'kulcs', 'csempe', 'csöpög',
 
   // ----------------------------------------
-  // FÁZIS 27 — ny bevezetése
+  // Fázis 27 — ny
   // ----------------------------------------
-  'nyár', 'nyél', 'nyom',
-  'nyúl', 'nyírfa', 'nyakkendő',
-  'banya',
-  'arány', 'kemény',
-  'lányok', 'könnyed',
-  'szenny',
+  'nyak', 'nyíl',
+  'tény', 'lény', 'lényeg',
+  'konyha', 'szoknya', 'hernyó', 'nyalka', 'pernye',
+  'kenyér', 'tenyér', 'tányér', 'nyereg',
+  'patkány', 'cseresznye',
+  'kémény', 'kötény', 'torony',
+  'könyv', 'könyök', 'könyvtár',
+  'csúnya', 'könnyű', 'savanyú', 'alacsony', 'keskeny', 'vékony',
+  'nyit',
+  'anya', 'anyuka', 'bárány',
+  'szúnyog', 'fűnyíró', 'dinnye',
+  'nyár', 'nyél', 'nyom', 'nyúl', 'nyírfa', 'nyakkendő',
+  'banya', 'arány', 'kemény', 'könnyed', 'szenny',
 
   // ----------------------------------------
-  // FÁZIS 28–30 — zs, ty, ly bevezetése  (zs=28, ty=29, ly=30)
+  // Fázis 28 — zs
   // ----------------------------------------
-  'zsák', 'zsír', 'zsoké',
-  'zsemle', 'zsivaj',
-  'lyuk', 'gally',
-  'tyúk', 'batyu',
-  'zsebkendő', 'zsivány',
+  'zselé', 'rezsó', 'rozsda', 'vizsla',
+  'varázs', 'rózsa', 'pajzs', 'garázs',
+  'zsák', 'zsír', 'zsoké', 'zsemle', 'zsivaj', 'zsebkendő', 'zsivány',
+
+  // ----------------------------------------
+  // Fázis 29 — ty
+  // ----------------------------------------
+  'kutya', 'kesztyű', 'potya',
+  'hattyú', 'tyúk', 'batyu',
+
+  // ----------------------------------------
+  // Fázis 30 — ly
+  // ----------------------------------------
+  'hely', 'súly', 'mély', 'folyó',
+  'sirály', 'kastély', 'selyem',
+  'boglya', 'fáklya', 'kályha',
+  'bagoly', 'gólya', 'fogoly', 'tűzhely',
+  'osztály', 'folyam', 'lyuk', 'gally',
+
 ];

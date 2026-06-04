@@ -31,6 +31,24 @@ const getDifficulty = (word: string): number => {
   return 5;
 };
 
+// Egyértelmű ragvégződések — ezekkel végződő szavak szinte biztosan
+// ragozott alakok, nem tőszavak. Konzervatív lista: csak olyan végződések
+// szerepelnek, amelyekre nincs ismert magyar tőszó-kivétel.
+// Korlát: assimilált instrumentalis alakok (kézzel, bottal) nem szűrhetők
+// egyszerű végződés-vizsgálattal, morfológiai elemző nélkül.
+const INFLECTED_SUFFIXES = [
+  'ban', 'ben',        // inessivus: házban, kertben
+  'ból', 'ből',        // elativus: házból, kertből
+  'nak', 'nek',        // dativus: anyának, gyereknek
+  'tól', 'től',        // delativus: háztól, kerttől
+  'hoz', 'hez', 'höz', // adessivus: házhoz, kerthez
+  'nál', 'nél',        // adessivus: háznál, kertnél
+  'val', 'vel',        // instrumentalis (nem assimilált: autóval, táblával)
+];
+
+const isInflectedForm = (word: string): boolean =>
+  INFLECTED_SUFFIXES.some(s => word.endsWith(s) && word.length > s.length + 1);
+
 export const buildWordsFromLines = (
   existingTexts: Set<string>,
   lines: string[],
@@ -51,6 +69,7 @@ export const buildWordsFromLines = (
     if (existingTexts.has(word)) continue;
     if (!/^[a-záéíóöőúüű]+$/.test(word)) continue;
     if (!wordIsKnown(word, allKnownIds)) continue;
+    if (isInflectedForm(word)) continue;
 
     const syllables = splitIntoSyllables(word);
     const graphemes = splitIntoGraphemes(word);

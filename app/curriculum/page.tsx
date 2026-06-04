@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { buildWordsFromLines } from '../../lib/generateWords';
-import { seedWordsAction, insertWordsAction, deleteWordAction, toggleWordEnabledAction } from '../actions/words';
+import { seedWordsAction, deleteWordAction, toggleWordEnabledAction } from '../actions/words';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
 
@@ -28,8 +27,6 @@ export default function CurriculumPage() {
   const [message, setMessage] = useState('');
   const [searchWord, setSearchWord] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [generateCount, setGenerateCount] = useState<number>(100);
-  const [generating, setGenerating] = useState(false);
   const [sortBy, setSortBy] = useState<'created_at' | 'text' | 'phase'>('phase');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
@@ -40,32 +37,6 @@ export default function CurriculumPage() {
   useEffect(() => {
     if (tab === 'words') loadWords();
   }, [tab, phaseFilter, sortBy, sortDir]);
-
-  const handleGenerate = async () => {
-    setGenerating(true);
-    setMessage('');
-    try {
-      const response = await fetch('/hu_words.txt');
-      if (!response.ok) throw new Error(`Nem tölthető be a korpusz (${response.status})`);
-      const text = await response.text();
-      const lines = text.trim().split('\n');
-
-      const { data: existing } = await supabase.from('words').select('text');
-      const existingTexts = new Set(existing?.map((e: any) => e.text) || []);
-
-      const words = buildWordsFromLines(existingTexts, lines, generateCount);
-      const result = await insertWordsAction(words);
-      if (result.error) {
-        setMessage(`❌ Hiba: ${result.error}`);
-      } else {
-        setMessage(`✅ ${result.inserted} új szó generálva a korpuszból (${lines.length} szóból szűrve).`);
-        loadWords();
-      }
-    } catch (e: any) {
-      setMessage(`❌ Hiba: ${e.message}`);
-    }
-    setGenerating(false);
-  };
 
   const loadWords = async () => {
     setLoadingWords(true);
@@ -238,24 +209,6 @@ export default function CurriculumPage() {
               </span>
             </div>
             <div className="flex gap-2 items-center">
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  min={1}
-                  max={1000}
-                  value={generateCount}
-                  onChange={e => setGenerateCount(Math.max(1, Number(e.target.value)))}
-                  className="border rounded-lg px-3 py-2 text-sm bg-white w-24"
-                />
-                <span className="text-sm text-gray-400">szó</span>
-              </div>
-              <button
-                onClick={handleGenerate}
-                disabled={generating}
-                className="bg-[#4A7C42] text-white px-4 py-2 rounded-lg hover:bg-[#2D5A27] transition-colors disabled:opacity-50 text-sm"
-              >
-                {generating ? 'Generálás...' : '🔄 Generálás korpuszból'}
-              </button>
               <button
                 onClick={handleSeed}
                 disabled={seeding}
