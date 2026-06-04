@@ -86,6 +86,7 @@ export interface Exercise {
   syllableCount?: number;
   syllableParts?: string[];
   acceptedOrders?: string[][];
+  displayText?: string;
 }
 
 export type ExerciseType =
