@@ -123,72 +123,72 @@ export const GRAPHEMES: Grapheme[] = [
   { id: 'q',   display: 'q',   phoneme: 'k',   type: 'consonant', rare: true,  phase: 99 },
 
 
-  // ─── NAGYBETŰK (37–46. fázis) ────────────────────────────────────────────
+  // ─── NAGYBETŰK (36–45. fázis) ────────────────────────────────────────────
   // Forrás: Módszertan-meixner.pdf — nagybetűk sorrendje
   // Elv: „Nagybetűket később tanítunk — a módszer nem tanítja együtt
   //       a kis- és a nyomtatott nagybetűket." (Módszertan, 169. sor)
 
-  // Fázis 37 — A, I, Í, O, Ó, M, S, T
-  { id: 'A',   display: 'A',   phoneme: 'a',   type: 'vowel',     rare: false, phase: 37 },
-  { id: 'I',   display: 'I',   phoneme: 'i',   type: 'vowel',     rare: false, phase: 37 },
-  { id: 'II',  display: 'Í',   phoneme: 'í',   type: 'vowel',     rare: false, phase: 37 },
-  { id: 'O',   display: 'O',   phoneme: 'o',   type: 'vowel',     rare: false, phase: 37 },
-  { id: 'OO',  display: 'Ó',   phoneme: 'ó',   type: 'vowel',     rare: false, phase: 37 },
-  { id: 'M',   display: 'M',   phoneme: 'm',   type: 'consonant', rare: false, phase: 37 },
-  { id: 'S',   display: 'S',   phoneme: 's',   type: 'consonant', rare: false, phase: 37 },
-  { id: 'T',   display: 'T',   phoneme: 't',   type: 'consonant', rare: false, phase: 37 },
+  // Fázis 36 — A, I, Í, O, Ó, M, S, T
+  { id: 'A',   display: 'A',   phoneme: 'a',   type: 'vowel',     rare: false, phase: 36 },
+  { id: 'I',   display: 'I',   phoneme: 'i',   type: 'vowel',     rare: false, phase: 36 },
+  { id: 'II',  display: 'Í',   phoneme: 'í',   type: 'vowel',     rare: false, phase: 36 },
+  { id: 'O',   display: 'O',   phoneme: 'o',   type: 'vowel',     rare: false, phase: 36 },
+  { id: 'OO',  display: 'Ó',   phoneme: 'ó',   type: 'vowel',     rare: false, phase: 36 },
+  { id: 'M',   display: 'M',   phoneme: 'm',   type: 'consonant', rare: false, phase: 36 },
+  { id: 'S',   display: 'S',   phoneme: 's',   type: 'consonant', rare: false, phase: 36 },
+  { id: 'T',   display: 'T',   phoneme: 't',   type: 'consonant', rare: false, phase: 36 },
 
-  // Fázis 38 — Z, P, H
-  { id: 'Z',   display: 'Z',   phoneme: 'z',   type: 'consonant', rare: false, phase: 38 },
-  { id: 'P',   display: 'P',   phoneme: 'p',   type: 'consonant', rare: false, phase: 38 },
-  { id: 'H',   display: 'H',   phoneme: 'h',   type: 'consonant', rare: false, phase: 38 },
+  // Fázis 37 — Z, P, H
+  { id: 'Z',   display: 'Z',   phoneme: 'z',   type: 'consonant', rare: false, phase: 37 },
+  { id: 'P',   display: 'P',   phoneme: 'p',   type: 'consonant', rare: false, phase: 37 },
+  { id: 'H',   display: 'H',   phoneme: 'h',   type: 'consonant', rare: false, phase: 37 },
 
-  // Fázis 39 — U, Ú, E, Á, K, L, N
-  { id: 'U',   display: 'U',   phoneme: 'u',   type: 'vowel',     rare: false, phase: 39 },
-  { id: 'UU',  display: 'Ú',   phoneme: 'ú',   type: 'vowel',     rare: false, phase: 39 },
-  { id: 'E',   display: 'E',   phoneme: 'e',   type: 'vowel',     rare: false, phase: 39 },
-  { id: 'AA',  display: 'Á',   phoneme: 'á',   type: 'vowel',     rare: false, phase: 39 },
-  { id: 'K',   display: 'K',   phoneme: 'k',   type: 'consonant', rare: false, phase: 39 },
-  { id: 'L',   display: 'L',   phoneme: 'l',   type: 'consonant', rare: false, phase: 39 },
-  { id: 'N',   display: 'N',   phoneme: 'n',   type: 'consonant', rare: false, phase: 39 },
+  // Fázis 38 — U, Ú, E, Á, K, L, N
+  { id: 'U',   display: 'U',   phoneme: 'u',   type: 'vowel',     rare: false, phase: 38 },
+  { id: 'UU',  display: 'Ú',   phoneme: 'ú',   type: 'vowel',     rare: false, phase: 38 },
+  { id: 'E',   display: 'E',   phoneme: 'e',   type: 'vowel',     rare: false, phase: 38 },
+  { id: 'AA',  display: 'Á',   phoneme: 'á',   type: 'vowel',     rare: false, phase: 38 },
+  { id: 'K',   display: 'K',   phoneme: 'k',   type: 'consonant', rare: false, phase: 38 },
+  { id: 'L',   display: 'L',   phoneme: 'l',   type: 'consonant', rare: false, phase: 38 },
+  { id: 'N',   display: 'N',   phoneme: 'n',   type: 'consonant', rare: false, phase: 38 },
 
-  // Fázis 40 — Ö, Ő, É, V, B, C
-  { id: 'OE',  display: 'Ö',   phoneme: 'ö',   type: 'vowel',     rare: false, phase: 40 },
-  { id: 'OEE', display: 'Ő',   phoneme: 'ő',   type: 'vowel',     rare: false, phase: 40 },
-  { id: 'EE',  display: 'É',   phoneme: 'é',   type: 'vowel',     rare: false, phase: 40 },
-  { id: 'V',   display: 'V',   phoneme: 'v',   type: 'consonant', rare: false, phase: 40 },
-  { id: 'B',   display: 'B',   phoneme: 'b',   type: 'consonant', rare: false, phase: 40 },
-  { id: 'C',   display: 'C',   phoneme: 'c',   type: 'consonant', rare: false, phase: 40 },
+  // Fázis 39 — Ö, Ő, É, V, B, C
+  { id: 'OE',  display: 'Ö',   phoneme: 'ö',   type: 'vowel',     rare: false, phase: 39 },
+  { id: 'OEE', display: 'Ő',   phoneme: 'ő',   type: 'vowel',     rare: false, phase: 39 },
+  { id: 'EE',  display: 'É',   phoneme: 'é',   type: 'vowel',     rare: false, phase: 39 },
+  { id: 'V',   display: 'V',   phoneme: 'v',   type: 'consonant', rare: false, phase: 39 },
+  { id: 'B',   display: 'B',   phoneme: 'b',   type: 'consonant', rare: false, phase: 39 },
+  { id: 'C',   display: 'C',   phoneme: 'c',   type: 'consonant', rare: false, phase: 39 },
 
-  // Fázis 41 — Ü, Ű, F, G, J
-  { id: 'UE',  display: 'Ü',   phoneme: 'ü',   type: 'vowel',     rare: false, phase: 41 },
-  { id: 'UEE', display: 'Ű',   phoneme: 'ű',   type: 'vowel',     rare: false, phase: 41 },
-  { id: 'F',   display: 'F',   phoneme: 'f',   type: 'consonant', rare: false, phase: 41 },
-  { id: 'G',   display: 'G',   phoneme: 'g',   type: 'consonant', rare: false, phase: 41 },
-  { id: 'J',   display: 'J',   phoneme: 'j',   type: 'consonant', rare: false, phase: 41 },
+  // Fázis 40 — Ü, Ű, F, G, J
+  { id: 'UE',  display: 'Ü',   phoneme: 'ü',   type: 'vowel',     rare: false, phase: 40 },
+  { id: 'UEE', display: 'Ű',   phoneme: 'ű',   type: 'vowel',     rare: false, phase: 40 },
+  { id: 'F',   display: 'F',   phoneme: 'f',   type: 'consonant', rare: false, phase: 40 },
+  { id: 'G',   display: 'G',   phoneme: 'g',   type: 'consonant', rare: false, phase: 40 },
+  { id: 'J',   display: 'J',   phoneme: 'j',   type: 'consonant', rare: false, phase: 40 },
 
-  // Fázis 42 — D, R, Sz, Ty, Cs
-  { id: 'D',   display: 'D',   phoneme: 'd',   type: 'consonant', rare: false, phase: 42 },
-  { id: 'R',   display: 'R',   phoneme: 'r',   type: 'consonant', rare: false, phase: 42 },
-  { id: 'Sz',  display: 'Sz',  phoneme: 'sz',  type: 'digraph',   rare: false, phase: 42 },
-  { id: 'Ty',  display: 'Ty',  phoneme: 'ty',  type: 'digraph',   rare: false, phase: 42 },
-  { id: 'Cs',  display: 'Cs',  phoneme: 'cs',  type: 'digraph',   rare: false, phase: 42 },
+  // Fázis 41 — D, R, Sz, Ty, Cs
+  { id: 'D',   display: 'D',   phoneme: 'd',   type: 'consonant', rare: false, phase: 41 },
+  { id: 'R',   display: 'R',   phoneme: 'r',   type: 'consonant', rare: false, phase: 41 },
+  { id: 'Sz',  display: 'Sz',  phoneme: 'sz',  type: 'digraph',   rare: false, phase: 41 },
+  { id: 'Ty',  display: 'Ty',  phoneme: 'ty',  type: 'digraph',   rare: false, phase: 41 },
+  { id: 'Cs',  display: 'Cs',  phoneme: 'cs',  type: 'digraph',   rare: false, phase: 41 },
 
-  // Fázis 43 — Gy, Zs, Ny, Ly
-  { id: 'Gy',  display: 'Gy',  phoneme: 'gy',  type: 'digraph',   rare: false, phase: 43 },
-  { id: 'Zs',  display: 'Zs',  phoneme: 'zs',  type: 'digraph',   rare: false, phase: 43 },
-  { id: 'Ny',  display: 'Ny',  phoneme: 'ny',  type: 'digraph',   rare: false, phase: 43 },
-  { id: 'Ly',  display: 'Ly',  phoneme: 'j',   type: 'digraph',   rare: false, phase: 43 },
+  // Fázis 42 — Gy, Zs, Ny, Ly
+  { id: 'Gy',  display: 'Gy',  phoneme: 'gy',  type: 'digraph',   rare: false, phase: 42 },
+  { id: 'Zs',  display: 'Zs',  phoneme: 'zs',  type: 'digraph',   rare: false, phase: 42 },
+  { id: 'Ny',  display: 'Ny',  phoneme: 'ny',  type: 'digraph',   rare: false, phase: 42 },
+  { id: 'Ly',  display: 'Ly',  phoneme: 'j',   type: 'digraph',   rare: false, phase: 42 },
 
-  // Fázis 44 — Dz, Dzs
-  { id: 'Dz',  display: 'Dz',  phoneme: 'dz',  type: 'digraph',   rare: false, phase: 44 },
-  { id: 'Dzs', display: 'Dzs', phoneme: 'dzs', type: 'trigraph',  rare: false, phase: 44 },
+  // Fázis 43 — Dz, Dzs
+  { id: 'Dz',  display: 'Dz',  phoneme: 'dz',  type: 'digraph',   rare: false, phase: 43 },
+  { id: 'Dzs', display: 'Dzs', phoneme: 'dzs', type: 'trigraph',  rare: false, phase: 43 },
 
-  // Fázis 45 — X  (ritka)
-  { id: 'X',   display: 'X',   phoneme: 'ksz', type: 'consonant', rare: true,  phase: 45 },
+  // Fázis 44 — X  (ritka)
+  { id: 'X',   display: 'X',   phoneme: 'ksz', type: 'consonant', rare: true,  phase: 44 },
 
-  // Fázis 46 — W  (ritka)
-  { id: 'W',   display: 'W',   phoneme: 'v',   type: 'consonant', rare: true,  phase: 46 },
+  // Fázis 45 — W  (ritka)
+  { id: 'W',   display: 'W',   phoneme: 'v',   type: 'consonant', rare: true,  phase: 45 },
 
   // Fázis 99 — ritka nagybetűk (nem szerepelnek a Meixner-tananyagban)
   { id: 'Q',   display: 'Q',   phoneme: 'k',   type: 'consonant', rare: true,  phase: 99 },
