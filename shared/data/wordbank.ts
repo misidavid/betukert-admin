@@ -40,6 +40,7 @@ export const WORD_BANK: string[] = [
   'ló', 'les',
   'tele', 'illat',
   'alma', 'lila', 'leves', 'villa',
+  'villamos', 'emelet',
 
   // ----------------------------------------
   // Fázis 7 — ú
@@ -73,6 +74,7 @@ export const WORD_BANK: string[] = [
   'kakas', 'kalap', 'kupac',
   'pakol', 'iskola',
   'kupola', 'lakoma',
+  'kakaó',
   'kócos', 'pocak', 'vacak',
   'lepke', 'pók',
 
@@ -101,6 +103,7 @@ export const WORD_BANK: string[] = [
   'hó', 'hal', 'hús', 'hív', 'hát', 'has',
   'hull', 'homok', 'puha',
   'havas', 'hullik', 'hasít',
+  'hatalmas', 'homokos',
 
   // ----------------------------------------
   // Fázis 14 — z
@@ -108,6 +111,7 @@ export const WORD_BANK: string[] = [
   'víz', 'hoz', 'húz', 'íz',
   'ház', 'mozi',
   'hazai', 'kazal', 'fizet', 'lazac',
+  'víziló',
 
   // ----------------------------------------
   // Fázis 15 — ő
@@ -126,6 +130,7 @@ export const WORD_BANK: string[] = [
   'kesudió',
   'zöld', 'köp', 'köt', 'övez',
   'medál', 'vidám',
+  'valódi', 'lakodalom',
 
   // ----------------------------------------
   // Fázis 17 — j
@@ -151,6 +156,7 @@ export const WORD_BANK: string[] = [
   'levél', 'étel',
   'játék', 'útlevél',
   'főzés', 'dőlés', 'evés',
+  'télitök', 'édesapa',
 
   // ----------------------------------------
   // Fázis 19 — n
@@ -167,6 +173,8 @@ export const WORD_BANK: string[] = [
   'tehén', 'hiéna', 'málna',
   'fonál', 'kanál', 'ének',
   'lenéz', 'menő', 'honos', 'hajnal',
+  'elefánt', 'kalandos', 'vonatos',
+  'kalandozás', 'mandulafa',
 
   // ----------------------------------------
   // Fázis 20 — sz
@@ -182,6 +190,7 @@ export const WORD_BANK: string[] = [
   'asztal', 'szilva',
   'kaktusz', 'szőlő', 'észak',
   'úszik', 'íjász', 'díszít',
+  'szamóca', 'szilvafa', 'szalonna',
 
   // ----------------------------------------
   // Fázis 21 — g
@@ -198,6 +207,7 @@ export const WORD_BANK: string[] = [
   'cég', 'dolog', 'szalag',
   'gazda', 'fogás', 'újság',
   'zajog',
+  'flamingó',
 
   // ----------------------------------------
   // Fázis 22 — r
@@ -234,6 +244,8 @@ export const WORD_BANK: string[] = [
   'rovar', 'horror',
   'jár', 'juhar', 'egér', 'rugó', 'agár',
   'érez', 'írás', 'kérdez', 'túrós', 'kísér',
+  'kenguru', 'krokodil', 'oroszlán', 'gorilla', 'állatkert',
+  'rajzolás', 'kukorica', 'kirándulás',
 
   // ----------------------------------------
   // Fázis 23 — ü, ű
@@ -247,6 +259,7 @@ export const WORD_BANK: string[] = [
   'fűszer', 'szüret', 'repül',
   'üveg', 'ünnepe', 'ünnep', 'ütemes',
   'körül', 'tükör', 'füzet', 'szűrő', 'szükség',
+  'repülő', 'tűzijáték', 'repülőgép',
 
   // ----------------------------------------
   // Fázis 24 — b
@@ -265,6 +278,7 @@ export const WORD_BANK: string[] = [
   'bab', 'baba', 'bábu', 'barack', 'boldog',
   'labda', 'kabát', 'szabad', 'ebéd', 'ablak',
   'gomba', 'bogár', 'gömb', 'barát',
+  'bicikli', 'autóbusz',
 
   // ----------------------------------------
   // Fázis 25 — gy
@@ -300,6 +314,7 @@ export const WORD_BANK: string[] = [
   'cső', 'csók', 'csúcs',
   'csiga', 'csizma', 'csillag', 'csapat', 'csavar',
   'macska', 'kulcs', 'csempe', 'csöpög',
+  'palacsinta', 'csokoládé', 'narancsital',
 
   // ----------------------------------------
   // Fázis 27 — ny
@@ -317,6 +332,7 @@ export const WORD_BANK: string[] = [
   'szúnyog', 'fűnyíró', 'dinnye',
   'nyár', 'nyél', 'nyom', 'nyúl', 'nyírfa', 'nyakkendő',
   'banya', 'arány', 'kemény', 'könnyed', 'szenny',
+  'nyalóka',
 
   // ----------------------------------------
   // Fázis 28 — zs
@@ -339,6 +355,7 @@ export const WORD_BANK: string[] = [
   'boglya', 'fáklya', 'kályha',
   'bagoly', 'gólya', 'fogoly', 'tűzhely',
   'osztály', 'folyam', 'lyuk', 'gally',
+  'folyópart',
 
 
   // ----------------------------------------
