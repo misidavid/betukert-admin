@@ -57,6 +57,24 @@ export const splitNameIntoGraphemes = (word: string): string[] => {
 
 const isVowel = (g: string): boolean => VOWELS.includes(g);
 
+const DOUBLED_DIGRAPH_MAP: [string, string][] = [
+  ['dzsdzs', 'ddzs'],
+  ['dzdz', 'ddz'],
+  ['cscs', 'ccs'],
+  ['gygy', 'ggy'],
+  ['lyly', 'lly'],
+  ['nyny', 'nny'],
+  ['szsz', 'ssz'],
+  ['tyty', 'tty'],
+  ['zszs', 'zzs'],
+];
+
+const normalizeGeminate = (s: string): string => {
+  let r = s;
+  for (const [exp, comp] of DOUBLED_DIGRAPH_MAP) r = r.split(exp).join(comp);
+  return r;
+};
+
 export const splitIntoSyllables = (word: string): string[] => {
   const graphemes = splitIntoGraphemes(word.toLowerCase());
 
@@ -65,7 +83,7 @@ export const splitIntoSyllables = (word: string): string[] => {
     .filter(i => i !== -1);
 
   if (vowelPositions.length === 0) return [word];
-  if (vowelPositions.length === 1) return [graphemes.join('')];
+  if (vowelPositions.length === 1) return [normalizeGeminate(graphemes.join(''))];
 
   const syllables: string[] = [];
   let start = 0;
@@ -78,13 +96,21 @@ export const splitIntoSyllables = (word: string): string[] => {
     let cutPoint: number;
     if (consonantsBetween === 0) cutPoint = currentVowel + 1;
     else if (consonantsBetween === 1) cutPoint = currentVowel + 1;
-    else cutPoint = currentVowel + 2;
+    else if (
+      consonantsBetween >= 3 &&
+      graphemes[currentVowel + 1] === graphemes[currentVowel + 2]
+    ) {
+      // Megkettőzött msh. + harmadik msh.: a pár együtt marad (pl. meggy-fa)
+      cutPoint = currentVowel + 3;
+    } else {
+      cutPoint = currentVowel + 2;
+    }
 
-    syllables.push(graphemes.slice(start, cutPoint).join(''));
+    syllables.push(normalizeGeminate(graphemes.slice(start, cutPoint).join('')));
     start = cutPoint;
   }
 
-  syllables.push(graphemes.slice(start).join(''));
+  syllables.push(normalizeGeminate(graphemes.slice(start).join('')));
   return syllables.filter(s => s.length > 0);
 };
 
