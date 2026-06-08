@@ -33,6 +33,7 @@ export default function NavWrapper() {
           <Link href="/sounds" className="hover:text-yellow-300 transition-colors">Hangok</Link>
           <Link href="/curriculum" className="hover:text-yellow-300 transition-colors">Curriculum</Link>
           <Link href="/publish" className="hover:text-yellow-300 transition-colors">Publikálás</Link>
+          <Link href="/ui-kit" className="hover:text-yellow-300 transition-colors">UI Kit</Link>
           <button
             onClick={handleLogout}
             className="text-white/70 hover:text-white transition-colors ml-4 text-xs border border-white/30 px-3 py-1 rounded-lg hover:border-white/60"

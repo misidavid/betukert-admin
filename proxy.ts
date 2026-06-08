@@ -4,8 +4,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // A mobilapp által hívott publikus endpoint és a login oldal nem védett
-  if (pathname.startsWith('/api/content') || pathname.startsWith('/login')) {
+  // A mobilapp által hívott publikus endpoint, a login oldal és az UI kit nem védett
+  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit')) {
     return NextResponse.next();
   }
 
