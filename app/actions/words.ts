@@ -116,6 +116,34 @@ export async function insertWordsAction(words: WordInsertData[]): Promise<{ inse
   }
 }
 
+export async function addWordAction(text: string): Promise<{ error?: string }> {
+  try {
+    await requireAuth();
+    const word = text.trim();
+    if (!word || word.length < 2 || word.length > 100) return { error: 'Érvénytelen szó (2-100 karakter)' };
+    const syllables = splitIntoSyllables(word.toLowerCase());
+    const graphemes = splitIntoGraphemes(word.toLowerCase());
+    const { error } = await getSupabaseAdmin()
+      .from('words')
+      .insert({
+        text: word,
+        syllables,
+        syllable_count: syllables.length,
+        graphemes,
+        phase: getPhase(word),
+        difficulty: getDifficulty(word),
+        enabled: true,
+      });
+    if (error) {
+      if (error.code === '23505') return { error: 'Ez a szó már szerepel az adatbázisban' };
+      return { error: 'Adatbázis hiba' };
+    }
+    return {};
+  } catch (e) {
+    return { error: 'Szerverhiba' };
+  }
+}
+
 export async function deleteWordAction(id: string): Promise<{ error?: string }> {
   try {
     await requireAuth();

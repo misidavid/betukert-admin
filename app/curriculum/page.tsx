@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { seedWordsAction, deleteWordAction, toggleWordEnabledAction } from '../actions/words';
+import { seedWordsAction, deleteWordAction, toggleWordEnabledAction, addWordAction } from '../actions/words';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
 
@@ -27,6 +27,8 @@ export default function CurriculumPage() {
   const [message, setMessage] = useState('');
   const [searchWord, setSearchWord] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [newWord, setNewWord] = useState('');
+  const [addingWord, setAddingWord] = useState(false);
   const [sortBy, setSortBy] = useState<'created_at' | 'text' | 'phase'>('phase');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
@@ -71,6 +73,21 @@ export default function CurriculumPage() {
     if (result.error) setMessage(`❌ Hiba: ${result.error}`);
     else setWords(prev => prev.filter(w => w.id !== id));
     setDeletingId(null);
+  };
+
+  const handleAddWord = async () => {
+    if (!newWord.trim()) return;
+    setAddingWord(true);
+    setMessage('');
+    const result = await addWordAction(newWord);
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
+      setNewWord('');
+      setMessage(`✅ "${newWord.trim()}" hozzáadva.`);
+      loadWords();
+    }
+    setAddingWord(false);
   };
 
   const handleToggleEnabled = async (id: string, enabled: boolean) => {
@@ -180,6 +197,24 @@ export default function CurriculumPage() {
       {/* Szavak tab */}
       {tab === 'words' && (
         <div className="space-y-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Új szó hozzáadása..."
+              value={newWord}
+              onChange={e => setNewWord(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAddWord()}
+              className="border rounded-lg px-3 py-2 text-sm bg-white flex-1"
+            />
+            <button
+              onClick={handleAddWord}
+              disabled={addingWord || !newWord.trim()}
+              className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50 text-sm"
+            >
+              {addingWord ? 'Hozzáadás...' : '+ Szó hozzáadása'}
+            </button>
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="flex gap-3">
               <input
