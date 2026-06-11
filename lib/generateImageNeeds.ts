@@ -40,7 +40,7 @@ const getPhase = (word: string): number => {
 
 const getExerciseTypes = (word: string): string[] => {
   const syllables = splitIntoSyllables(word);
-  const types = ['image_word_match', 'first_sound'];
+  const types = ['image_word_match', 'image_word_drag', 'first_sound'];
   if (syllables.length >= 2) {
     types.push('syllable_clapping', 'word_builder');
   }
