@@ -17,6 +17,8 @@ const INSTRUCTIONS = [
   'Rakd ki a szót!',
   'Keresd meg a szótagpárokat!',
   'Rakd helyes sorrendbe a szavakat!',
+  'Húzd a szavakat a képekhez!',
+  'Húzd az ujjad balról jobbra a vonalon!',
 ];
 
 export async function generateSoundNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
