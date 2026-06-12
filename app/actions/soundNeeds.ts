@@ -73,6 +73,9 @@ export async function uploadSoundFileAction(
     }
     const safeName = record.text
       .toLowerCase()
+      .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
+      .replace(/ó/g, 'o').replace(/ö/g, 'o').replace(/ő/g, 'o')
+      .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
       .replace(/[!?,.:;]/g, '')
       .replace(/\s+/g, '_')
       .replace(/_+/g, '_')
