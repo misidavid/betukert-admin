@@ -1,0 +1,1 @@
+/Users/misidavid/Desktop/projektek/betukert-mobile/shared/data/sentencebank.ts
