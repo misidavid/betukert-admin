@@ -4,6 +4,13 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase, SoundNeed, SoundStatus } from '../../lib/supabase';
 import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction } from '../actions/soundNeeds';
 
+const GREEN = '#2F6B3F';
+const GREEN_DARK = '#234430';
+const GREEN_LIGHT = '#DCEBDC';
+const MUTED = '#8A8478';
+const TRACK = '#F1ECE0';
+const display = { fontFamily: 'var(--font-display)' };
+
 const STATUS_LABELS: Record<SoundStatus, string> = {
   missing: 'Hiányzó',
   uploaded: 'Feltöltve',
@@ -14,14 +21,14 @@ const STATUS_LABELS: Record<SoundStatus, string> = {
   needs_regeneration: 'Újragenerálás szükséges',
 };
 
-const STATUS_COLORS: Record<SoundStatus, string> = {
-  missing: 'bg-red-100 text-red-700',
-  uploaded: 'bg-blue-100 text-blue-700',
-  pending_review: 'bg-purple-100 text-purple-700',
-  approved: 'bg-yellow-100 text-yellow-700',
-  published: 'bg-green-100 text-green-700',
-  rejected: 'bg-gray-100 text-gray-700',
-  needs_regeneration: 'bg-orange-100 text-orange-700',
+const STATUS_COLORS: Record<SoundStatus, { bg: string; text: string }> = {
+  missing: { bg: '#FBE7E5', text: '#8A4A44' },
+  uploaded: { bg: '#E3EDF7', text: '#3A5A7A' },
+  pending_review: { bg: '#EDE3F5', text: '#6A4A8A' },
+  approved: { bg: '#FBF3DD', text: '#8A6A1F' },
+  published: { bg: GREEN_LIGHT, text: GREEN_DARK },
+  rejected: { bg: TRACK, text: MUTED },
+  needs_regeneration: { bg: '#FBE9DC', text: '#8A5A2F' },
 };
 
 export default function SoundsPage() {
@@ -113,22 +120,23 @@ export default function SoundsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2D5A27]">🔊 Hangok</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>🔊 Hangok</h1>
+          <p className="text-sm mt-1" style={{ color: MUTED }}>
             Feladatutasítások hangfelvételeinek kezelése
           </p>
         </div>
         <button
           onClick={handleGenerate}
           disabled={generating}
-          className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50"
+          className="px-5 py-2.5 rounded-2xl text-white transition-colors disabled:opacity-50"
+          style={{ ...display, fontWeight: 600, background: GREEN }}
         >
           {generating ? 'Generálás...' : '⚡ Utasítások generálása'}
         </button>
       </div>
 
       {message && (
-        <div className="bg-white border rounded-lg p-4 text-sm">
+        <div className="bg-white rounded-[24px] shadow-sm p-4 text-sm" style={{ color: GREEN_DARK }}>
           {message}
         </div>
       )}
@@ -136,25 +144,26 @@ export default function SoundsPage() {
       {/* Statisztikák */}
       <div className="grid grid-cols-5 gap-3">
         {[
-          { label: 'Összes', value: stats.total, color: 'bg-white' },
-          { label: 'Hiányzó', value: stats.missing, color: 'bg-red-50' },
-          { label: 'Ellenőrzésre vár', value: stats.pending, color: 'bg-purple-50' },
-          { label: 'Jóváhagyva', value: stats.approved, color: 'bg-yellow-50' },
-          { label: 'Publikált', value: stats.published, color: 'bg-green-50' },
+          { label: 'Összes', value: stats.total, bg: '#FFFFFF', color: GREEN_DARK },
+          { label: 'Hiányzó', value: stats.missing, bg: STATUS_COLORS.missing.bg, color: STATUS_COLORS.missing.text },
+          { label: 'Ellenőrzésre vár', value: stats.pending, bg: STATUS_COLORS.pending_review.bg, color: STATUS_COLORS.pending_review.text },
+          { label: 'Jóváhagyva', value: stats.approved, bg: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text },
+          { label: 'Publikált', value: stats.published, bg: GREEN_LIGHT, color: GREEN_DARK },
         ].map(stat => (
-          <div key={stat.label} className={`${stat.color} rounded-lg p-3 border text-center`}>
-            <div className="text-2xl font-bold text-[#2D5A27]">{stat.value}</div>
-            <div className="text-xs text-gray-500">{stat.label}</div>
+          <div key={stat.label} className="rounded-[20px] shadow-sm p-4 text-center" style={{ background: stat.bg }}>
+            <div className="text-2xl" style={{ ...display, fontWeight: 700, color: stat.color }}>{stat.value}</div>
+            <div className="text-xs mt-0.5" style={{ color: MUTED }}>{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Szűrő */}
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex gap-3 flex-wrap items-center">
         <select
           value={filter}
           onChange={e => setFilter(e.target.value as SoundStatus | 'all')}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
+          className="rounded-2xl px-4 py-2.5 text-sm outline-none"
+          style={{ background: '#FFFFFF', border: '1px solid #E3DCC9', color: GREEN_DARK }}
         >
           <option value="all">Minden státusz</option>
           {Object.entries(STATUS_LABELS).map(([value, label]) => (
@@ -162,36 +171,34 @@ export default function SoundsPage() {
           ))}
         </select>
 
-        <span className="text-sm text-gray-500 self-center">
+        <span className="text-sm" style={{ color: MUTED }}>
           {filtered.length} elem
         </span>
       </div>
 
       {/* Lista */}
       {loading ? (
-        <div className="text-center py-12 text-gray-400">Betöltés...</div>
+        <div className="text-center py-12" style={{ color: '#B5AE9E' }}>Betöltés...</div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12" style={{ color: '#B5AE9E' }}>
           Nincs elem. Kattints az "Utasítások generálása" gombra!
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {filtered.map(item => (
             <div
               key={item.id}
-              className="bg-white rounded-xl border p-4 flex items-center gap-4"
+              className="bg-white rounded-[24px] shadow-sm p-4 flex items-center gap-4"
             >
               {/* Lejátszás */}
               <button
                 onClick={() => handlePlay(item)}
                 disabled={!item.file_url}
-                className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
-                  item.file_url
-                    ? playingId === item.id
-                      ? 'bg-[#2D5A27] text-white'
-                      : 'bg-green-50 text-green-700 hover:bg-green-100'
-                    : 'bg-gray-50 text-gray-300'
-                }`}
+                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+                style={{
+                  background: !item.file_url ? TRACK : playingId === item.id ? GREEN : GREEN_LIGHT,
+                  color: !item.file_url ? '#D8D2C2' : playingId === item.id ? '#FFFFFF' : GREEN_DARK,
+                }}
               >
                 {playingId === item.id ? '⏸' : '▶'}
               </button>
@@ -199,10 +206,13 @@ export default function SoundsPage() {
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-gray-800">
+                  <span style={{ fontWeight: 600, color: GREEN_DARK }}>
                     {item.text}
                   </span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status]}`}>
+                  <span
+                    className="text-xs px-3 py-1 rounded-full"
+                    style={{ background: STATUS_COLORS[item.status].bg, color: STATUS_COLORS[item.status].text, fontWeight: 600 }}
+                  >
                     {STATUS_LABELS[item.status]}
                   </span>
                 </div>
@@ -222,7 +232,10 @@ export default function SoundsPage() {
                     }}
                     disabled={uploadingId === item.id}
                   />
-                  <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
+                  <span
+                    className="text-xs px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+                    style={{ background: STATUS_COLORS.uploaded.bg, color: STATUS_COLORS.uploaded.text, fontWeight: 600 }}
+                  >
                     {uploadingId === item.id ? 'Feltöltés...' : '⬆️ Feltöltés'}
                   </span>
                 </label>
@@ -231,13 +244,15 @@ export default function SoundsPage() {
                   <>
                     <button
                       onClick={() => handleStatusChange(item.id, 'approved')}
-                      className="bg-yellow-50 text-yellow-700 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-100 transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                      style={{ background: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text, fontWeight: 600 }}
                     >
                       ✓ Jóváhagyás
                     </button>
                     <button
                       onClick={() => handleStatusChange(item.id, 'needs_regeneration')}
-                      className="bg-orange-50 text-orange-700 text-xs px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                      style={{ background: STATUS_COLORS.needs_regeneration.bg, color: STATUS_COLORS.needs_regeneration.text, fontWeight: 600 }}
                     >
                       ↺ Újra
                     </button>
@@ -246,7 +261,8 @@ export default function SoundsPage() {
                 {item.status === 'approved' && (
                   <button
                     onClick={() => handleStatusChange(item.id, 'published')}
-                    className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
+                    className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                    style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }}
                   >
                     🚀 Publikálás
                   </button>

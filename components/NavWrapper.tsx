@@ -10,6 +10,8 @@ export default function NavWrapper() {
   const router = useRouter();
 
   if (pathname === '/login') return null;
+  if (pathname?.startsWith('/design-preview')) return null;
+  if (pathname?.startsWith('/landing')) return null;
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

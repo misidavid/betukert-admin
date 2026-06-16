@@ -5,6 +5,15 @@ import { supabase, ImageNeed, ImageStatus } from '../../lib/supabase';
 import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction } from '../actions/imageNeeds';
 import Link from 'next/link';
 
+const GREEN = '#2F6B3F';
+const GREEN_DARK = '#234430';
+const GREEN_LIGHT = '#DCEBDC';
+const MUTED = '#8A8478';
+const TRACK = '#F1ECE0';
+const RED_LIGHT = '#FBE7E5';
+const RED_TEXT = '#8A4A44';
+const display = { fontFamily: 'var(--font-display)' };
+
 const STATUS_LABELS: Record<ImageStatus, string> = {
   missing: 'Hiányzó',
   uploaded: 'Feltöltve',
@@ -14,14 +23,25 @@ const STATUS_LABELS: Record<ImageStatus, string> = {
   needs_replacement: 'Csere szükséges',
 };
 
-const STATUS_COLORS: Record<ImageStatus, string> = {
-  missing: 'bg-red-100 text-red-700',
-  uploaded: 'bg-blue-100 text-blue-700',
-  approved: 'bg-yellow-100 text-yellow-700',
-  published: 'bg-green-100 text-green-700',
-  rejected: 'bg-gray-100 text-gray-700',
-  needs_replacement: 'bg-orange-100 text-orange-700',
+const STATUS_COLORS: Record<ImageStatus, { bg: string; text: string }> = {
+  missing: { bg: RED_LIGHT, text: RED_TEXT },
+  uploaded: { bg: '#E3EDF7', text: '#3A5A7A' },
+  approved: { bg: '#FBF3DD', text: '#8A6A1F' },
+  published: { bg: GREEN_LIGHT, text: GREEN_DARK },
+  rejected: { bg: TRACK, text: MUTED },
+  needs_replacement: { bg: '#FBE9DC', text: '#8A5A2F' },
 };
+
+function StatusChip({ status }: { status: ImageStatus }) {
+  return (
+    <span
+      className="text-xs px-3 py-1 rounded-full"
+      style={{ background: STATUS_COLORS[status].bg, color: STATUS_COLORS[status].text, fontWeight: 600 }}
+    >
+      {STATUS_LABELS[status]}
+    </span>
+  );
+}
 
 interface ExerciseTypeConfig {
   id: string;
@@ -203,14 +223,15 @@ export default function ImagesPage() {
   };
 
   const renderItem = (item: ImageNeed) => (
-    <div key={item.id} className="bg-white rounded-xl border p-4 flex items-center gap-4">
+    <div key={item.id} className="bg-white rounded-[24px] shadow-sm p-4 flex items-center gap-4">
       <input
         type="checkbox"
         checked={selected.has(item.id)}
         onChange={() => toggleSelect(item.id)}
-        className="w-4 h-4 flex-shrink-0 cursor-pointer accent-[#2D5A27]"
+        className="w-4 h-4 flex-shrink-0 cursor-pointer"
+        style={{ accentColor: GREEN }}
       />
-      <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+      <div className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden" style={{ background: TRACK }}>
         {item.file_url ? (
           <img
             src={item.file_url}
@@ -225,16 +246,14 @@ export default function ImagesPage() {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-[#2D5A27] text-lg">{item.word}</span>
-          <span className="text-xs text-gray-400">{item.phase}. szint</span>
-          <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status]}`}>
-            {STATUS_LABELS[item.status]}
-          </span>
+          <span className="text-lg" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>{item.word}</span>
+          <span className="text-xs" style={{ color: '#B5AE9E' }}>{item.phase}. szint</span>
+          <StatusChip status={item.status} />
         </div>
-        <div className="text-sm text-gray-500 mt-1">
+        <div className="text-sm mt-1" style={{ color: MUTED }}>
           {item.syllables?.join('-')} • Első hang: {item.first_sound}
         </div>
-        <div className="text-xs text-gray-400 mt-1">{item.image_brief}</div>
+        <div className="text-xs mt-1" style={{ color: '#B5AE9E' }}>{item.image_brief}</div>
       </div>
 
       <div className="flex items-center gap-2 flex-shrink-0">
@@ -248,7 +267,10 @@ export default function ImagesPage() {
             }}
             disabled={uploadingId === item.id}
           />
-          <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
+          <span
+            className="text-xs px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+            style={{ background: STATUS_COLORS.uploaded.bg, color: STATUS_COLORS.uploaded.text, fontWeight: 600 }}
+          >
             {uploadingId === item.id ? 'Feltöltés...' : '⬆️ Feltöltés'}
           </span>
         </label>
@@ -257,13 +279,15 @@ export default function ImagesPage() {
           <>
             <button
               onClick={() => handleStatusChange(item.id, 'approved')}
-              className="bg-yellow-50 text-yellow-700 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-100 transition-colors"
+              className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+              style={{ background: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text, fontWeight: 600 }}
             >
               ✓ Jóváhagyás
             </button>
             <button
               onClick={() => handleStatusChange(item.id, 'rejected')}
-              className="bg-gray-50 text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+              className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+              style={{ background: TRACK, color: MUTED, fontWeight: 600 }}
             >
               ✕ Elutasítás
             </button>
@@ -272,7 +296,8 @@ export default function ImagesPage() {
         {item.status === 'approved' && (
           <button
             onClick={() => handleStatusChange(item.id, 'published')}
-            className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
+            className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+            style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }}
           >
             🚀 Publikálás
           </button>
@@ -281,7 +306,8 @@ export default function ImagesPage() {
           item.status === 'published' ? (
             <button
               onClick={() => setReplaceConfirm(item)}
-              className="bg-orange-50 text-orange-700 text-xs px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-colors"
+              className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+              style={{ background: STATUS_COLORS.needs_replacement.bg, color: STATUS_COLORS.needs_replacement.text, fontWeight: 600 }}
             >
               🔄 Csere
             </button>
@@ -289,7 +315,8 @@ export default function ImagesPage() {
             <button
               onClick={() => handleDelete(item)}
               disabled={deletingId === item.id}
-              className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+              className="text-xs px-3 py-1.5 rounded-xl transition-colors disabled:opacity-50"
+              style={{ background: RED_LIGHT, color: RED_TEXT, fontWeight: 600 }}
             >
               {deletingId === item.id ? '...' : '🗑️'}
             </button>
@@ -310,9 +337,9 @@ export default function ImagesPage() {
           <img
             src={lightbox.url}
             alt={lightbox.word}
-            className="max-w-full max-h-[80vh] rounded-xl object-contain shadow-2xl"
+            className="max-w-full max-h-[80vh] rounded-[24px] object-contain shadow-2xl"
           />
-          <div className="text-center text-white font-bold mt-2 text-lg">{lightbox.word}</div>
+          <div className="text-center text-white mt-2 text-lg" style={{ ...display, fontWeight: 700 }}>{lightbox.word}</div>
           <button
             onClick={() => setLightbox(null)}
             className="absolute top-2 right-2 text-white bg-black/50 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/80 transition-colors"
@@ -324,17 +351,18 @@ export default function ImagesPage() {
     )}
     {replaceConfirm && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl">
-          <h3 className="font-bold text-lg text-gray-800 mb-2">Publikált kép cseréje</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            A <strong>{replaceConfirm.word}</strong> képe jelenleg él a mobilalkalmazásban.
-            Közvetlen törlés helyett <strong>„Csere szükséges"</strong> státuszra állítjuk:
+        <div className="bg-white rounded-[24px] p-6 max-w-md mx-4 shadow-xl">
+          <h3 className="text-lg mb-2" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>Publikált kép cseréje</h3>
+          <p className="text-sm mb-4" style={{ color: MUTED }}>
+            A <strong style={{ color: GREEN_DARK }}>{replaceConfirm.word}</strong> képe jelenleg él a mobilalkalmazásban.
+            Közvetlen törlés helyett <strong style={{ color: GREEN_DARK }}>„Csere szükséges"</strong> státuszra állítjuk:
             a régi kép elérhető marad az appban, amíg feltöltesz egy újat és újra publikálsz.
           </p>
           <div className="flex gap-3 justify-end">
             <button
               onClick={() => setReplaceConfirm(null)}
-              className="text-gray-600 text-sm px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="text-sm px-4 py-2 rounded-2xl transition-colors"
+              style={{ color: MUTED, background: TRACK }}
             >
               Mégse
             </button>
@@ -344,7 +372,8 @@ export default function ImagesPage() {
                 setReplaceConfirm(null);
                 handleStatusChange(item.id, 'needs_replacement');
               }}
-              className="bg-orange-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+              className="text-white text-sm px-4 py-2 rounded-2xl transition-colors"
+              style={{ ...display, fontWeight: 600, background: '#C97B3E' }}
             >
               Csere szükségesre állítás
             </button>
@@ -358,26 +387,28 @@ export default function ImagesPage() {
       const toReplace = selectedItems.filter(i => i.status === 'published');
       return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl">
-            <h3 className="font-bold text-lg text-gray-800 mb-3">Tömeges törlés megerősítése</h3>
-            <ul className="text-sm text-gray-600 mb-4 space-y-1">
+          <div className="bg-white rounded-[24px] p-6 max-w-md mx-4 shadow-xl">
+            <h3 className="text-lg mb-3" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>Tömeges törlés megerősítése</h3>
+            <ul className="text-sm mb-4 space-y-1" style={{ color: MUTED }}>
               {toDelete.length > 0 && (
-                <li>• <strong>{toDelete.length} kép</strong> törlésre kerül a storage-ból (státusz: hiányzó)</li>
+                <li>• <strong style={{ color: GREEN_DARK }}>{toDelete.length} kép</strong> törlésre kerül a storage-ból (státusz: hiányzó)</li>
               )}
               {toReplace.length > 0 && (
-                <li>• <strong>{toReplace.length} publikált kép</strong> „Csere szükséges" státuszra kerül — a fájl megmarad az appban</li>
+                <li>• <strong style={{ color: GREEN_DARK }}>{toReplace.length} publikált kép</strong> „Csere szükséges" státuszra kerül — a fájl megmarad az appban</li>
               )}
             </ul>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setBulkDeleteConfirm(false)}
-                className="text-gray-600 text-sm px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="text-sm px-4 py-2 rounded-2xl transition-colors"
+                style={{ color: MUTED, background: TRACK }}
               >
                 Mégse
               </button>
               <button
                 onClick={() => { setBulkDeleteConfirm(false); handleBulkDelete(); }}
-                className="bg-red-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                className="text-white text-sm px-4 py-2 rounded-2xl transition-colors"
+                style={{ ...display, fontWeight: 600, background: '#C0473F' }}
               >
                 Törlés
               </button>
@@ -389,22 +420,24 @@ export default function ImagesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2D5A27]">🖼️ Képek</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>🖼️ Képek</h1>
+          <p className="text-sm mt-1" style={{ color: MUTED }}>
             Csak képköteles feladattípusokhoz tartozó szavak
           </p>
         </div>
         <div className="flex gap-2">
           <Link
             href="/images/settings"
-            className="border border-[#2D5A27] text-[#2D5A27] px-4 py-2 rounded-lg hover:bg-[#E8F0E5] transition-colors text-sm"
+            className="px-4 py-2.5 rounded-2xl text-sm transition-colors"
+            style={{ ...display, fontWeight: 600, color: GREEN_DARK, background: '#FFFFFF', border: `1px solid ${GREEN}` }}
           >
             ⚙️ Beállítások
           </Link>
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="bg-[#2D5A27] text-white px-4 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50"
+            className="px-4 py-2.5 rounded-2xl text-white transition-colors disabled:opacity-50"
+            style={{ ...display, fontWeight: 600, background: GREEN }}
           >
             {generating ? 'Generálás...' : '⚡ Generálás'}
           </button>
@@ -412,31 +445,32 @@ export default function ImagesPage() {
       </div>
 
       {message && (
-        <div className="bg-white border rounded-lg p-4 text-sm">{message}</div>
+        <div className="bg-white rounded-[24px] shadow-sm p-4 text-sm" style={{ color: GREEN_DARK }}>{message}</div>
       )}
 
       {/* Statisztikák */}
       <div className="grid grid-cols-5 gap-3">
         {[
-          { label: 'Releváns', value: stats.total, color: 'bg-white' },
-          { label: 'Hiányzó', value: stats.missing, color: 'bg-red-50' },
-          { label: 'Feltöltve', value: stats.uploaded, color: 'bg-blue-50' },
-          { label: 'Jóváhagyva', value: stats.approved, color: 'bg-yellow-50' },
-          { label: 'Publikált', value: stats.published, color: 'bg-green-50' },
+          { label: 'Releváns', value: stats.total, bg: '#FFFFFF', color: GREEN_DARK },
+          { label: 'Hiányzó', value: stats.missing, bg: STATUS_COLORS.missing.bg, color: STATUS_COLORS.missing.text },
+          { label: 'Feltöltve', value: stats.uploaded, bg: STATUS_COLORS.uploaded.bg, color: STATUS_COLORS.uploaded.text },
+          { label: 'Jóváhagyva', value: stats.approved, bg: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text },
+          { label: 'Publikált', value: stats.published, bg: GREEN_LIGHT, color: GREEN_DARK },
         ].map(stat => (
-          <div key={stat.label} className={`${stat.color} rounded-lg p-3 border text-center`}>
-            <div className="text-2xl font-bold text-[#2D5A27]">{stat.value}</div>
-            <div className="text-xs text-gray-500">{stat.label}</div>
+          <div key={stat.label} className="rounded-[20px] shadow-sm p-4 text-center" style={{ background: stat.bg }}>
+            <div className="text-2xl" style={{ ...display, fontWeight: 700, color: stat.color }}>{stat.value}</div>
+            <div className="text-xs mt-0.5" style={{ color: MUTED }}>{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Szűrők */}
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex gap-3 flex-wrap items-center">
         <select
           value={filter}
           onChange={e => setFilter(e.target.value as ImageStatus | 'all')}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
+          className="rounded-2xl px-4 py-2.5 text-sm outline-none"
+          style={{ background: '#FFFFFF', border: '1px solid #E3DCC9', color: GREEN_DARK }}
         >
           <option value="all">Minden státusz</option>
           {Object.entries(STATUS_LABELS).map(([value, label]) => (
@@ -447,7 +481,8 @@ export default function ImagesPage() {
         <select
           value={phaseFilter}
           onChange={e => setPhaseFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
+          className="rounded-2xl px-4 py-2.5 text-sm outline-none"
+          style={{ background: '#FFFFFF', border: '1px solid #E3DCC9', color: GREEN_DARK }}
         >
           <option value="all">Minden szint</option>
           {phases.map(phase => (
@@ -458,7 +493,8 @@ export default function ImagesPage() {
         <select
           value={typeFilter}
           onChange={e => setTypeFilter(e.target.value)}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
+          className="rounded-2xl px-4 py-2.5 text-sm outline-none"
+          style={{ background: '#FFFFFF', border: '1px solid #E3DCC9', color: GREEN_DARK }}
         >
           <option value="all">Minden feladattípus</option>
           {configs.map(c => (
@@ -471,22 +507,24 @@ export default function ImagesPage() {
             type="checkbox"
             checked={filtered.length > 0 && filtered.every(i => selected.has(i.id))}
             onChange={() => toggleSelectAll(filtered)}
-            className="w-4 h-4 cursor-pointer accent-[#2D5A27]"
+            className="w-4 h-4 cursor-pointer"
+            style={{ accentColor: GREEN }}
           />
-          <span className="text-sm text-gray-500">
+          <span className="text-sm" style={{ color: MUTED }}>
             {selected.size > 0 ? `${selected.size} / ${filtered.length} kijelölve` : `${filtered.length} elem`}
           </span>
         </label>
       </div>
 
       {selected.size > 0 && (
-        <div className="flex items-center gap-2 flex-wrap bg-[#f0f7ee] border border-[#2D5A27]/20 rounded-xl px-4 py-3">
-          <span className="text-sm font-medium text-[#2D5A27] mr-1">{selected.size} kijelölve</span>
+        <div className="flex items-center gap-2 flex-wrap rounded-[24px] px-4 py-3" style={{ background: GREEN_LIGHT }}>
+          <span className="text-sm mr-1" style={{ fontWeight: 700, color: GREEN_DARK }}>{selected.size} kijelölve</span>
           {filter === 'uploaded' && (
             <button
               onClick={() => handleBulkStatusChange('approved')}
               disabled={bulkWorking}
-              className="bg-yellow-100 text-yellow-800 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-200 transition-colors disabled:opacity-50"
+              className="text-xs px-3 py-1.5 rounded-xl transition-colors disabled:opacity-50"
+              style={{ background: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text, fontWeight: 600 }}
             >
               ✓ Jóváhagyás
             </button>
@@ -495,7 +533,8 @@ export default function ImagesPage() {
             <button
               onClick={() => handleBulkStatusChange('published')}
               disabled={bulkWorking}
-              className="bg-green-100 text-green-800 text-xs px-3 py-1.5 rounded-lg hover:bg-green-200 transition-colors disabled:opacity-50"
+              className="text-xs px-3 py-1.5 rounded-xl transition-colors disabled:opacity-50"
+              style={{ background: '#FFFFFF', color: GREEN_DARK, fontWeight: 600 }}
             >
               🚀 Publikálás
             </button>
@@ -504,7 +543,8 @@ export default function ImagesPage() {
             <button
               onClick={() => handleBulkStatusChange('needs_replacement')}
               disabled={bulkWorking}
-              className="bg-orange-100 text-orange-800 text-xs px-3 py-1.5 rounded-lg hover:bg-orange-200 transition-colors disabled:opacity-50"
+              className="text-xs px-3 py-1.5 rounded-xl transition-colors disabled:opacity-50"
+              style={{ background: STATUS_COLORS.needs_replacement.bg, color: STATUS_COLORS.needs_replacement.text, fontWeight: 600 }}
             >
               🔄 Csere szükséges
             </button>
@@ -512,13 +552,15 @@ export default function ImagesPage() {
           <button
             onClick={() => setBulkDeleteConfirm(true)}
             disabled={bulkWorking}
-            className="bg-red-100 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50"
+            className="text-xs px-3 py-1.5 rounded-xl transition-colors disabled:opacity-50"
+            style={{ background: RED_LIGHT, color: RED_TEXT, fontWeight: 600 }}
           >
             🗑️ Törlés
           </button>
           <button
             onClick={() => setSelected(new Set())}
-            className="text-gray-500 text-xs px-3 py-1.5 rounded-lg hover:bg-white transition-colors ml-auto"
+            className="text-xs px-3 py-1.5 rounded-xl transition-colors ml-auto"
+            style={{ color: GREEN_DARK }}
           >
             Kijelölés törlése
           </button>
@@ -526,11 +568,11 @@ export default function ImagesPage() {
       )}
 
       {loading ? (
-        <div className="text-center py-12 text-gray-400">Betöltés...</div>
+        <div className="text-center py-12" style={{ color: '#B5AE9E' }}>Betöltés...</div>
       ) : configs.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12" style={{ color: '#B5AE9E' }}>
           Nincs képköteles feladattípus beállítva.{' '}
-          <Link href="/images/settings" className="text-[#2D5A27] underline">
+          <Link href="/images/settings" style={{ color: GREEN, textDecoration: 'underline' }}>
             Beállítások
           </Link>
         </div>
@@ -556,41 +598,42 @@ export default function ImagesPage() {
             const publishedCount = filteredGroup.filter(i => i.status === 'published').length;
 
             return (
-              <div key={config.id} className="bg-white rounded-xl border overflow-hidden">
+              <div key={config.id} className="bg-white rounded-[24px] shadow-sm overflow-hidden">
                 <button
                   onClick={() => toggleSection(config.id)}
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-4 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="font-bold text-[#2D5A27]">{config.label}</span>
-                    <span className="text-sm text-gray-400">{filteredGroup.length} szó</span>
+                    <span style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>{config.label}</span>
+                    <span className="text-sm" style={{ color: '#B5AE9E' }}>{filteredGroup.length} szó</span>
                     {missingCount > 0 && (
-                      <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full">
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: RED_LIGHT, color: RED_TEXT, fontWeight: 600 }}>
                         {missingCount} hiányzó
                       </span>
                     )}
                     {publishedCount > 0 && (
-                      <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }}>
                         {publishedCount} publikált
                       </span>
                     )}
                   </div>
-                  <span className="text-gray-400 text-lg">
+                  <span className="text-lg" style={{ color: '#B5AE9E' }}>
                     {isOpen ? '▲' : '▼'}
                   </span>
                 </button>
 
                 {isOpen && (
-                  <div className="border-t divide-y">
+                  <div className="divide-y" style={{ borderTop: '1px solid #F1ECE0' }}>
                     {filteredGroup.map(item => (
-                      <div key={item.id} className="p-4 flex items-center gap-4">
+                      <div key={item.id} className="p-4 flex items-center gap-4" style={{ borderColor: '#F1ECE0' }}>
                         <input
                           type="checkbox"
                           checked={selected.has(item.id)}
                           onChange={() => toggleSelect(item.id)}
-                          className="w-4 h-4 flex-shrink-0 cursor-pointer accent-[#2D5A27]"
+                          className="w-4 h-4 flex-shrink-0 cursor-pointer"
+                          style={{ accentColor: GREEN }}
                         />
-                        <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden" style={{ background: TRACK }}>
                           {item.file_url ? (
                             <img
                               src={item.file_url}
@@ -605,13 +648,11 @@ export default function ImagesPage() {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-[#2D5A27]">{item.word}</span>
-                            <span className="text-xs text-gray-400">{item.phase}. szint</span>
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status]}`}>
-                              {STATUS_LABELS[item.status]}
-                            </span>
+                            <span style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>{item.word}</span>
+                            <span className="text-xs" style={{ color: '#B5AE9E' }}>{item.phase}. szint</span>
+                            <StatusChip status={item.status} />
                           </div>
-                          <div className="text-xs text-gray-400 mt-0.5">
+                          <div className="text-xs mt-0.5" style={{ color: '#B5AE9E' }}>
                             {item.syllables?.join('-')} • {item.image_brief}
                           </div>
                         </div>
@@ -627,7 +668,10 @@ export default function ImagesPage() {
                               }}
                               disabled={uploadingId === item.id}
                             />
-                            <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
+                            <span
+                              className="text-xs px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+                              style={{ background: STATUS_COLORS.uploaded.bg, color: STATUS_COLORS.uploaded.text, fontWeight: 600 }}
+                            >
                               {uploadingId === item.id ? 'Feltöltés...' : '⬆️ Feltöltés'}
                             </span>
                           </label>
@@ -636,13 +680,15 @@ export default function ImagesPage() {
                             <>
                               <button
                                 onClick={() => handleStatusChange(item.id, 'approved')}
-                                className="bg-yellow-50 text-yellow-700 text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-100 transition-colors"
+                                className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                                style={{ background: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text, fontWeight: 600 }}
                               >
                                 ✓ Jóváhagyás
                               </button>
                               <button
                                 onClick={() => handleStatusChange(item.id, 'rejected')}
-                                className="bg-gray-50 text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                                className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                                style={{ background: TRACK, color: MUTED, fontWeight: 600 }}
                               >
                                 ✕
                               </button>
@@ -651,7 +697,8 @@ export default function ImagesPage() {
                           {item.status === 'approved' && (
                             <button
                               onClick={() => handleStatusChange(item.id, 'published')}
-                              className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors"
+                              className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                              style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }}
                             >
                               🚀 Publikálás
                             </button>
@@ -660,7 +707,8 @@ export default function ImagesPage() {
                             item.status === 'published' ? (
                               <button
                                 onClick={() => setReplaceConfirm(item)}
-                                className="bg-orange-50 text-orange-700 text-xs px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-colors"
+                                className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                                style={{ background: STATUS_COLORS.needs_replacement.bg, color: STATUS_COLORS.needs_replacement.text, fontWeight: 600 }}
                               >
                                 🔄 Csere
                               </button>
@@ -668,7 +716,8 @@ export default function ImagesPage() {
                               <button
                                 onClick={() => handleDelete(item)}
                                 disabled={deletingId === item.id}
-                                className="bg-red-50 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+                                className="text-xs px-3 py-1.5 rounded-xl transition-colors disabled:opacity-50"
+                                style={{ background: RED_LIGHT, color: RED_TEXT, fontWeight: 600 }}
                               >
                                 {deletingId === item.id ? '...' : '🗑️'}
                               </button>

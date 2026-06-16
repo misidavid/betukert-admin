@@ -1,12 +1,32 @@
 'use client';
 
 import { useState } from 'react';
+import { Check, X } from 'lucide-react';
 import { SENTENCE_BANK, COMPREHENSION_BANK } from '../../shared/data/sentencebank';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 
 type Tab = 'mondatrendezes' | 'mondatertes';
 
+const GREEN = '#2F6B3F';
+const GREEN_DARK = '#234430';
+const GREEN_LIGHT = '#DCEBDC';
+const RED_LIGHT = '#FBE7E5';
+const RED_TEXT = '#8A4A44';
+const MUTED = '#8A8478';
+const display = { fontFamily: 'var(--font-display)' };
+
 const maxPhase = Math.max(...GRAPHEMES.filter(g => !g.rare).map(g => g.phase));
+
+function PhaseChip({ phase }: { phase: number }) {
+  return (
+    <span
+      className="text-xs px-3 py-1 rounded-full shrink-0"
+      style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 700 }}
+    >
+      {phase}. szint
+    </span>
+  );
+}
 
 export default function SentencesPage() {
   const [tab, setTab] = useState<Tab>('mondatrendezes');
@@ -24,17 +44,17 @@ export default function SentencesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[#2D5A27]">📝 Mondatok</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>📝 Mondatok</h1>
+        <p className="text-sm mt-1" style={{ color: MUTED }}>
           Mondatrendezés és mondatértés feladatok áttekintése
         </p>
       </div>
 
       {/* Szintcsúszka */}
-      <div className="bg-white rounded-xl border p-6 space-y-3">
+      <div className="bg-white rounded-[24px] shadow-sm p-6 space-y-3">
         <div className="flex items-center justify-between">
-          <label className="font-bold text-[#2D5A27]">Szint: {phaseFilter}</label>
-          <span className="text-sm text-gray-500">
+          <label style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>Szint: {phaseFilter}</label>
+          <span className="text-sm" style={{ color: MUTED }}>
             {tab === 'mondatrendezes'
               ? `${filteredSentences.length} mondat`
               : `${filteredComprehensions.length} feladat`}
@@ -46,25 +66,29 @@ export default function SentencesPage() {
           max={maxPhase}
           value={phaseFilter}
           onChange={e => setPhaseFilter(Number(e.target.value))}
-          className="w-full accent-[#2D5A27]"
+          className="w-full"
+          style={{ accentColor: GREEN }}
         />
       </div>
 
       {/* Keresés + Tabok */}
-      <div className="flex items-end justify-between gap-4">
-        <div className="flex gap-2 border-b flex-1">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex gap-2">
           {[
-            { id: 'mondatrendezes', label: 'Mondatrendezés' },
-            { id: 'mondatertes', label: 'Mondatértés' },
+            { id: 'mondatrendezes' as Tab, label: 'Mondatrendezés' },
+            { id: 'mondatertes' as Tab, label: 'Mondatértés' },
           ].map(t => (
             <button
               key={t.id}
-              onClick={() => { setTab(t.id as Tab); setSearch(''); }}
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                tab === t.id
-                  ? 'border-[#2D5A27] text-[#2D5A27]'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
+              onClick={() => { setTab(t.id); setSearch(''); }}
+              className="px-5 py-2.5 rounded-2xl text-sm transition-colors"
+              style={{
+                ...display,
+                fontWeight: 600,
+                background: tab === t.id ? GREEN : '#FFFFFF',
+                color: tab === t.id ? '#FFFFFF' : GREEN_DARK,
+                border: tab === t.id ? 'none' : '1px solid #E3DCC9',
+              }}
             >
               {t.label}
             </button>
@@ -75,42 +99,42 @@ export default function SentencesPage() {
           placeholder="Keresés..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="border rounded-lg px-3 py-2 text-sm bg-white w-48 mb-0.5"
+          className="rounded-2xl px-4 py-2.5 text-sm outline-none w-48"
+          style={{ background: '#FFFFFF', border: '1px solid #E3DCC9', color: GREEN_DARK }}
         />
       </div>
 
       {/* Mondatrendezés tab */}
       {tab === 'mondatrendezes' && (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {filteredSentences.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">Nincs találat.</div>
+            <div className="text-center py-12" style={{ color: '#B5AE9E' }}>Nincs találat.</div>
           ) : (
             filteredSentences.map(s => (
-              <div key={s.id} className="bg-white rounded-xl border p-4 flex items-start gap-4">
-                <span className="text-xs text-gray-400 w-10 pt-0.5 shrink-0">{s.id}</span>
+              <div key={s.id} className="bg-white rounded-[24px] shadow-sm p-5 flex items-start gap-4">
+                <span className="text-xs w-10 pt-0.5 shrink-0" style={{ color: '#B5AE9E' }}>{s.id}</span>
                 <div className="flex-1">
                   <div className="flex flex-wrap gap-2 mb-2">
                     {s.words.map((w, i) => (
                       <span
                         key={i}
-                        className="bg-[#E8F0E5] text-[#2D5A27] font-bold px-3 py-1 rounded-lg text-sm"
+                        className="px-3.5 py-1.5 rounded-2xl text-sm"
+                        style={{ ...display, background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }}
                       >
                         {w}
                       </span>
                     ))}
                   </div>
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs" style={{ color: '#B5AE9E' }}>
                     {s.acceptedOrders.length} elfogadott sorrend
                     {s.acceptedOrders.length > 1 && (
-                      <span className="ml-2 text-gray-300">
+                      <span className="ml-2" style={{ color: '#D8D2C2' }}>
                         ({s.acceptedOrders.map(o => o.join(' ')).join(' / ')})
                       </span>
                     )}
                   </div>
                 </div>
-                <span className="text-xs bg-[#E8F0E5] text-[#2D5A27] px-2 py-1 rounded-full shrink-0">
-                  {s.phase}. szint
-                </span>
+                <PhaseChip phase={s.phase} />
               </div>
             ))
           )}
@@ -121,30 +145,42 @@ export default function SentencesPage() {
       {tab === 'mondatertes' && (
         <div className="space-y-3">
           {filteredComprehensions.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">Nincs találat.</div>
+            <div className="text-center py-12" style={{ color: '#B5AE9E' }}>Nincs találat.</div>
           ) : (
             filteredComprehensions.map(c => (
-              <div key={c.id} className="bg-white rounded-xl border p-4 space-y-2">
+              <div key={c.id} className="bg-white rounded-[24px] shadow-sm p-5 space-y-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3 flex-1">
-                    <span className="text-xs text-gray-400 w-10 pt-0.5 shrink-0">{c.id}</span>
-                    <p className="font-medium text-gray-800">{c.sentence}</p>
+                    <span className="text-xs w-10 pt-0.5 shrink-0" style={{ color: '#B5AE9E' }}>{c.id}</span>
+                    <p style={{ ...display, fontWeight: 600, color: GREEN_DARK }}>{c.sentence}</p>
                   </div>
-                  <span className="text-xs bg-[#E8F0E5] text-[#2D5A27] px-2 py-1 rounded-full shrink-0">
-                    {c.phase}. szint
-                  </span>
+                  <PhaseChip phase={c.phase} />
                 </div>
-                <div className="ml-13 pl-10 space-y-1 text-sm">
-                  <div className="text-gray-500">
-                    <span className="font-medium text-gray-700">K:</span> {c.question}
+                <div className="ml-13 pl-10 space-y-2 text-sm">
+                  <div style={{ color: MUTED }}>
+                    <span style={{ fontWeight: 600, color: GREEN_DARK }}>K:</span> {c.question}
                   </div>
                   <div className="flex flex-wrap gap-2 pt-1">
-                    <span className="bg-green-50 text-green-700 border border-green-200 px-3 py-0.5 rounded-lg text-xs font-medium">
-                      ✓ {c.correctAnswer}
+                    <span
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm"
+                      style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 700 }}
+                    >
+                      <span
+                        className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                        style={{ background: GREEN }}
+                      >
+                        <Check size={12} color="white" strokeWidth={3} />
+                      </span>
+                      {c.correctAnswer}
                     </span>
                     {c.wrongAnswers.map((w, i) => (
-                      <span key={i} className="bg-red-50 text-red-600 border border-red-200 px-3 py-0.5 rounded-lg text-xs">
-                        ✗ {w}
+                      <span
+                        key={i}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm"
+                        style={{ background: RED_LIGHT, color: RED_TEXT }}
+                      >
+                        <X size={14} />
+                        {w}
                       </span>
                     ))}
                   </div>

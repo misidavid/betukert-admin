@@ -4,6 +4,13 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { publishPackageAction } from '../actions/publish';
 
+const GREEN = '#2F6B3F';
+const GREEN_DARK = '#234430';
+const MUTED = '#8A8478';
+const TRACK = '#F1ECE0';
+const cardStyle = 'bg-white rounded-[24px] shadow-sm p-6';
+const display = { fontFamily: 'var(--font-display)' };
+
 interface PackageStats {
   publishedImages: number;
   publishedSounds: number;
@@ -85,35 +92,36 @@ export default function PublishPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[#2D5A27]">🚀 Publikálás</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>🚀 Publikálás</h1>
+        <p className="text-sm mt-1" style={{ color: MUTED }}>
           Tartalom csomag összeállítása és publikálása az apphoz
         </p>
       </div>
 
       {message && (
-        <div className="bg-white border rounded-lg p-4 text-sm">
+        <div className="bg-white rounded-[24px] shadow-sm p-4 text-sm" style={{ color: GREEN_DARK }}>
           {message}
         </div>
       )}
 
       {/* Készültség */}
       {stats && (
-        <div className="bg-white rounded-xl border p-6 space-y-4">
-          <h2 className="font-bold text-[#2D5A27]">Tartalom készültség</h2>
+        <div className={`${cardStyle} space-y-4`}>
+          <h2 style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>Tartalom készültség</h2>
 
           <div className="space-y-3">
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span>Képek</span>
-                <span className="text-gray-500">
+                <span style={{ color: GREEN_DARK, fontWeight: 600 }}>Képek</span>
+                <span style={{ color: MUTED }}>
                   {stats.publishedImages} / {stats.totalImages} publikált
                 </span>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: TRACK }}>
                 <div
-                  className="h-full bg-[#2D5A27] rounded-full transition-all"
+                  className="h-full rounded-full transition-all"
                   style={{
+                    background: GREEN,
                     width: `${stats.totalImages > 0
                       ? (stats.publishedImages / stats.totalImages) * 100
                       : 0}%`
@@ -124,15 +132,16 @@ export default function PublishPage() {
 
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span>Hangok</span>
-                <span className="text-gray-500">
+                <span style={{ color: GREEN_DARK, fontWeight: 600 }}>Hangok</span>
+                <span style={{ color: MUTED }}>
                   {stats.publishedSounds} / {stats.totalSounds} publikált
                 </span>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: TRACK }}>
                 <div
-                  className="h-full bg-[#2D5A27] rounded-full transition-all"
+                  className="h-full rounded-full transition-all"
                   style={{
+                    background: GREEN,
                     width: `${stats.totalSounds > 0
                       ? (stats.publishedSounds / stats.totalSounds) * 100
                       : 0}%`
@@ -143,13 +152,14 @@ export default function PublishPage() {
           </div>
 
           <div className="flex items-center justify-between pt-2">
-            <div className="text-sm text-gray-500">
-              Összesített készültség: <span className="font-bold text-[#2D5A27]">{readinessPercent}%</span>
+            <div className="text-sm" style={{ color: MUTED }}>
+              Összesített készültség: <span style={{ fontWeight: 700, color: GREEN_DARK }}>{readinessPercent}%</span>
             </div>
             <button
               onClick={handlePublish}
               disabled={publishing}
-              className="bg-[#2D5A27] text-white px-6 py-2 rounded-lg hover:bg-[#4A7C42] transition-colors disabled:opacity-50"
+              className="px-6 py-2.5 rounded-2xl text-white transition-colors disabled:opacity-50"
+              style={{ ...display, fontWeight: 600, background: GREEN }}
             >
               {publishing ? 'Publikálás...' : '🚀 Csomag publikálása'}
             </button>
@@ -159,17 +169,17 @@ export default function PublishPage() {
 
       {/* Korábbi csomagok */}
       <div className="space-y-3">
-        <h2 className="font-bold text-[#2D5A27]">Korábbi csomagok</h2>
+        <h2 style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>Korábbi csomagok</h2>
         {packages.length === 0 ? (
-          <div className="bg-white rounded-xl border p-6 text-center text-gray-400">
+          <div className={`${cardStyle} text-center`} style={{ color: '#B5AE9E' }}>
             Még nincs publikált csomag
           </div>
         ) : (
           packages.map(pkg => (
-            <div key={pkg.id} className="bg-white rounded-xl border p-4 flex items-center gap-4">
+            <div key={pkg.id} className="bg-white rounded-[24px] shadow-sm p-4 flex items-center gap-4">
               <div className="flex-1">
-                <div className="font-bold text-[#2D5A27]">v{pkg.version}</div>
-                <div className="text-sm text-gray-500">
+                <div style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>v{pkg.version}</div>
+                <div className="text-sm" style={{ color: MUTED }}>
                   {new Date(pkg.created_at).toLocaleString('hu-HU')} •
                   {pkg.image_count} kép • {pkg.sound_count} hang
                 </div>
@@ -186,7 +196,8 @@ export default function PublishPage() {
                   a.download = `betukert-package-${pkg.version}.json`;
                   a.click();
                 }}
-                className="bg-gray-50 text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                style={{ background: TRACK, color: GREEN_DARK, fontWeight: 600 }}
               >
                 ⬇️ Letöltés
               </button>
@@ -196,12 +207,12 @@ export default function PublishPage() {
       </div>
 
       {/* SQL migráció */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-        <h3 className="font-bold text-yellow-800 mb-2">⚠️ Szükséges SQL migráció</h3>
-        <p className="text-sm text-yellow-700 mb-3">
+      <div className="rounded-[24px] p-5" style={{ background: '#FBF3DD' }}>
+        <h3 className="mb-2" style={{ ...display, fontWeight: 700, color: '#8A6A1F' }}>⚠️ Szükséges SQL migráció</h3>
+        <p className="text-sm mb-3" style={{ color: '#9A7A2F' }}>
           Ha a publikálás nem működik, futtasd le ezt a Supabase SQL Editorban:
         </p>
-        <pre className="bg-white rounded-lg p-3 text-xs overflow-x-auto text-gray-700">
+        <pre className="bg-white rounded-2xl p-3 text-xs overflow-x-auto" style={{ color: MUTED }}>
 {`CREATE TABLE published_packages (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   version TEXT NOT NULL,
