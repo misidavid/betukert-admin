@@ -42,8 +42,11 @@ export async function generateImageNeedsAction(): Promise<{ inserted: number; sk
     const { data: existing } = await getSupabaseAdmin().from('image_needs').select('word');
     const existingWords = new Set(existing?.map((e: any) => e.word) || []);
 
+    const { data: excludedRows } = await getSupabaseAdmin().from('excluded_words').select('text');
+    const excluded = new Set((excludedRows ?? []).map(r => r.text));
+
     const toInsert = WORD_BANK
-      .filter(word => word.length >= 2 && !existingWords.has(word))
+      .filter(word => word.length >= 2 && !existingWords.has(word) && !excluded.has(word))
       .map(word => {
         const syllables = splitIntoSyllables(word.toLowerCase());
         return {

@@ -182,6 +182,15 @@ export async function deleteWordAction(id: string): Promise<{ error?: string }> 
       console.error('[deleteWordAction] DB hiba:', error);
       return { error: 'Adatbázis hiba' };
     }
+
+    const { error: imageNeedError } = await getSupabaseAdmin()
+      .from('image_needs')
+      .delete()
+      .eq('word', word.text);
+    if (imageNeedError) {
+      console.error('[deleteWordAction] image_needs törlési hiba:', imageNeedError);
+    }
+
     return {};
   } catch (e) {
     console.error('[deleteWordAction]', e);
