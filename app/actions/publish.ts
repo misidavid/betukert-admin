@@ -7,10 +7,11 @@ import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 export async function publishPackageAction(): Promise<{ version: string; imageCount: number; soundCount: number; error?: string }> {
   try {
     await requireAuth();
-    const [{ data: images }, { data: sounds }, { data: words }] = await Promise.all([
+    const [{ data: images }, { data: sounds }, { data: words }, { data: sentenceImages }] = await Promise.all([
       getSupabaseAdmin().from('image_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('sound_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('words').select('*').eq('enabled', true).order('phase').order('text'),
+      getSupabaseAdmin().from('sentence_image_needs').select('*').eq('status', 'published'),
     ]);
 
     const version = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -29,6 +30,13 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
       graphemes: GRAPHEMES,
       images: images?.map((img: any) => ({ word: img.word, phase: img.phase, url: img.file_url, syllables: img.syllables })) || [],
       sounds: sounds?.map((snd: any) => ({ text: snd.text, type: snd.type, phase: snd.phase, url: snd.file_url })) || [],
+      sentence_images: sentenceImages?.map((si: any) => ({
+        sentence_id: si.sentence_id,
+        source: si.source,
+        sentence: si.sentence_text,
+        phase: si.phase,
+        url: si.file_url,
+      })) || [],
     };
 
     const { error } = await getSupabaseAdmin().from('published_packages').insert({

@@ -35,6 +35,7 @@ export default function NavWrapper() {
           <Link href="/sounds" className="hover:text-yellow-300 transition-colors">Hangok</Link>
           <Link href="/curriculum" className="hover:text-yellow-300 transition-colors">Curriculum</Link>
           <Link href="/sentences" className="hover:text-yellow-300 transition-colors">Mondatok</Link>
+          <Link href="/sentences/images" className="hover:text-yellow-300 transition-colors">Mondatképek</Link>
           <Link href="/publish" className="hover:text-yellow-300 transition-colors">Publikálás</Link>
           <Link href="/stats" className="hover:text-yellow-300 transition-colors">Statisztikák</Link>
           <Link href="/ui-kit" className="hover:text-yellow-300 transition-colors">UI Kit</Link>

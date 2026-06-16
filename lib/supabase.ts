@@ -40,6 +40,21 @@ export interface ImageNeed {
   updated_at: string;
 }
 
+export interface SentenceImageNeed {
+  id: string;
+  sentence_id: string;
+  source: 'sentence_order' | 'sentence_comprehension';
+  sentence_text: string;
+  phase: number;
+  exercise_type: string;
+  image_brief: string;
+  status: ImageStatus;
+  file_path?: string;
+  file_url?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface SoundNeed {
   id: string;
   text: string;
