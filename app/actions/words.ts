@@ -37,6 +37,15 @@ export async function seedWordsAction(): Promise<{ inserted: number; skipped: nu
   try {
     await requireAuth();
 
+    const { data: excludedRows, error: excludedError } = await getSupabaseAdmin()
+      .from('excluded_words')
+      .select('text');
+    if (excludedError) {
+      console.error('[seedWordsAction] Kizárt szavak lekérési hiba:', excludedError.message);
+      return { inserted: 0, skipped: 0, error: `Adatbázis hiba: ${excludedError.message}` };
+    }
+    const excluded = new Set((excludedRows ?? []).map(r => r.text));
+
     const { error: deleteError } = await getSupabaseAdmin()
       .from('words')
       .delete()
@@ -47,7 +56,7 @@ export async function seedWordsAction(): Promise<{ inserted: number; skipped: nu
     }
 
     const toInsert = [...new Set(WORD_BANK)]
-      .filter(word => word.length >= 2)
+      .filter(word => word.length >= 2 && !excluded.has(word))
       .map(word => {
         const syllables = splitIntoSyllables(word.toLowerCase());
         const graphemes = splitIntoGraphemes(word.toLowerCase());
@@ -66,7 +75,7 @@ export async function seedWordsAction(): Promise<{ inserted: number; skipped: nu
       inserted += batch.length;
     }
 
-    return { inserted, skipped: 0 };
+    return { inserted, skipped: excluded.size };
   } catch (e) {
     console.error('[seedWordsAction]', e);
     return { inserted: 0, skipped: 0, error: 'Szerverhiba' };
@@ -138,6 +147,7 @@ export async function addWordAction(text: string): Promise<{ error?: string }> {
       if (error.code === '23505') return { error: 'Ez a szó már szerepel az adatbázisban' };
       return { error: 'Adatbázis hiba' };
     }
+    await getSupabaseAdmin().from('excluded_words').delete().eq('text', word);
     return {};
   } catch (e) {
     return { error: 'Szerverhiba' };
@@ -148,6 +158,25 @@ export async function deleteWordAction(id: string): Promise<{ error?: string }> 
   try {
     await requireAuth();
     if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+
+    const { data: word, error: fetchError } = await getSupabaseAdmin()
+      .from('words')
+      .select('text')
+      .eq('id', id)
+      .single();
+    if (fetchError) {
+      console.error('[deleteWordAction] Lekérési hiba:', fetchError);
+      return { error: 'Adatbázis hiba' };
+    }
+
+    const { error: excludeError } = await getSupabaseAdmin()
+      .from('excluded_words')
+      .upsert({ text: word.text }, { onConflict: 'text' });
+    if (excludeError) {
+      console.error('[deleteWordAction] Kizárás hiba:', excludeError);
+      return { error: 'Adatbázis hiba' };
+    }
+
     const { error } = await getSupabaseAdmin().from('words').delete().eq('id', id);
     if (error) {
       console.error('[deleteWordAction] DB hiba:', error);
@@ -156,6 +185,39 @@ export async function deleteWordAction(id: string): Promise<{ error?: string }> 
     return {};
   } catch (e) {
     console.error('[deleteWordAction]', e);
+    return { error: 'Szerverhiba' };
+  }
+}
+
+export async function getExcludedWordsAction(): Promise<{ words: { text: string }[]; error?: string }> {
+  try {
+    await requireAuth();
+    const { data, error } = await getSupabaseAdmin()
+      .from('excluded_words')
+      .select('text')
+      .order('text');
+    if (error) {
+      console.error('[getExcludedWordsAction] DB hiba:', error);
+      return { words: [], error: 'Adatbázis hiba' };
+    }
+    return { words: data ?? [] };
+  } catch (e) {
+    console.error('[getExcludedWordsAction]', e);
+    return { words: [], error: 'Szerverhiba' };
+  }
+}
+
+export async function restoreExcludedWordAction(text: string): Promise<{ error?: string }> {
+  try {
+    await requireAuth();
+    const { error } = await getSupabaseAdmin().from('excluded_words').delete().eq('text', text);
+    if (error) {
+      console.error('[restoreExcludedWordAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
+    return {};
+  } catch (e) {
+    console.error('[restoreExcludedWordAction]', e);
     return { error: 'Szerverhiba' };
   }
 }

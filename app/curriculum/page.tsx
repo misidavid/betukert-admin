@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { seedWordsAction, deleteWordAction, toggleWordEnabledAction, addWordAction } from '../actions/words';
+import { seedWordsAction, deleteWordAction, toggleWordEnabledAction, addWordAction, getExcludedWordsAction, restoreExcludedWordAction } from '../actions/words';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
 
@@ -31,13 +31,19 @@ export default function CurriculumPage() {
   const [addingWord, setAddingWord] = useState(false);
   const [sortBy, setSortBy] = useState<'created_at' | 'text' | 'phase'>('phase');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [excludedWords, setExcludedWords] = useState<string[]>([]);
+  const [showExcluded, setShowExcluded] = useState(false);
+  const [restoringText, setRestoringText] = useState<string | null>(null);
 
   const graphemes = GRAPHEMES.filter(g => !g.rare && g.phase <= phaseFilter);
   const syllables = generateSyllables(phaseFilter).slice(0, 100);
   const maxPhase = Math.max(...GRAPHEMES.filter(g => !g.rare).map(g => g.phase));
 
   useEffect(() => {
-    if (tab === 'words') loadWords();
+    if (tab === 'words') {
+      loadWords();
+      loadExcludedWords();
+    }
   }, [tab, phaseFilter, sortBy, sortDir]);
 
   const loadWords = async () => {
@@ -50,6 +56,19 @@ export default function CurriculumPage() {
 
     if (!error && data) setWords(data);
     setLoadingWords(false);
+  };
+
+  const loadExcludedWords = async () => {
+    const result = await getExcludedWordsAction();
+    if (!result.error) setExcludedWords(result.words.map(w => w.text));
+  };
+
+  const handleRestoreExcluded = async (text: string) => {
+    setRestoringText(text);
+    const result = await restoreExcludedWordAction(text);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else setExcludedWords(prev => prev.filter(t => t !== text));
+    setRestoringText(null);
   };
 
   const handleSeed = async () => {
@@ -71,7 +90,10 @@ export default function CurriculumPage() {
     setDeletingId(id);
     const result = await deleteWordAction(id);
     if (result.error) setMessage(`❌ Hiba: ${result.error}`);
-    else setWords(prev => prev.filter(w => w.id !== id));
+    else {
+      setWords(prev => prev.filter(w => w.id !== id));
+      setExcludedWords(prev => [...prev, text].sort());
+    }
     setDeletingId(null);
   };
 
@@ -293,6 +315,36 @@ export default function CurriculumPage() {
                   </button>
                 </div>
               ))}
+            </div>
+          )}
+
+          {excludedWords.length > 0 && (
+            <div className="bg-white rounded-xl border p-4">
+              <button
+                onClick={() => setShowExcluded(s => !s)}
+                className="text-sm font-medium text-gray-600 hover:text-gray-800"
+              >
+                {showExcluded ? '▾' : '▸'} Kizárt szavak ({excludedWords.length}) — ezeket az "Alap szóbank visszaállítása" nem hozza vissza
+              </button>
+              {showExcluded && (
+                <div className="flex flex-wrap gap-2 pt-3">
+                  {excludedWords.map(text => (
+                    <span
+                      key={text}
+                      className="flex items-center gap-2 bg-gray-50 border rounded-lg px-3 py-1 text-sm"
+                    >
+                      {text}
+                      <button
+                        onClick={() => handleRestoreExcluded(text)}
+                        disabled={restoringText === text}
+                        className="text-[#2D5A27] hover:underline text-xs"
+                      >
+                        {restoringText === text ? '...' : 'visszaállít'}
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
