@@ -361,6 +361,53 @@
 
   /* Stats grid */
   .stats-grid { display: flex; justify-content: space-around; }
+
+  /* Image exercise */
+  .image-exercise-card {
+    background: var(--white); border-radius: 32px; padding: 24px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow);
+  }
+  .image-placeholder {
+    width: 180px; height: 180px; background: var(--cardGreen);
+    border-radius: 24px; display: flex; align-items: center;
+    justify-content: center; font-size: 48px; color: var(--textLight);
+  }
+  .pictures-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 0 24px; }
+  .picture-card {
+    width: 130px; height: 130px; background: var(--white);
+    border-radius: 20px; box-shadow: var(--shadow);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .picture-correct { border: 2px solid var(--primary); background: var(--cardGreen); }
+  .picture-incorrect { background: #FDE8E4; }
+  .sentence-target { font-size: 22px; font-weight: 700; color: var(--textDark); text-align: center; padding: 0 24px; line-height: 1.4; }
+
+  /* Drag-and-drop */
+  .drag-word-card {
+    background: var(--cardGreen); border-radius: 12px; padding: 12px 20px;
+    font-size: 18px; font-weight: 700; color: var(--primary); cursor: grab;
+  }
+  .drag-slot {
+    min-width: 100px; height: 48px; border: 2px dashed var(--primary);
+    border-radius: 12px; background: var(--bg); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 16px; color: var(--textLight); padding: 0 8px;
+  }
+  .drag-slot-filled { border-style: solid; background: var(--cardGreen); color: var(--primary); font-weight: 700; }
+  .drag-pair-row { display: flex; align-items: center; gap: 12px; }
+  .drag-image-thumb {
+    width: 72px; height: 72px; background: var(--cardGreen); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
+  }
+
+  /* Login */
+  .login-apple-btn {
+    background: #000; border-radius: 14px; padding: 17px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; color: #fff; font-size: 16px; font-weight: 600; width: 100%;
+  }
+  .signout-btn { font-size: 14px; color: var(--textLight); text-align: center; padding: 8px 0; }
 </style>
 </head>
 <body>
@@ -381,6 +428,7 @@
     <a href="#atoms">Apró elemek</a>
     <a href="#patterns">Minták</a>
     <div class="nav-section">Képernyők</div>
+    <a href="#screen-login">Bejelentkezés</a>
     <a href="#screen-profile-select">Profil választó</a>
     <a href="#screen-create-profile">Profil létrehozás</a>
     <a href="#screen-home">Főképernyő</a>
@@ -389,6 +437,9 @@
     <a href="#screen-exercise-settings">Feladat beállítások</a>
     <a href="#screen-free-pick">Szabad választás</a>
     <a href="#screen-practice">Gyakorlás</a>
+    <a href="#screen-practice-image-drag">Kép-szó drag&drop</a>
+    <a href="#screen-practice-sentence-picture">Mondat-kép párosítás</a>
+    <a href="#screen-practice-image-sentence">Kép-mondat (Mi történik)</a>
     <a href="#screen-practice-complete">Gyakorlás vége</a>
   </nav>
 </div>
@@ -921,6 +972,14 @@
       <div class="divider"></div>
       <div class="setting-row">
         <div class="setting-info">
+          <div class="setting-label">Automatikus felolvasás</div>
+          <div class="setting-desc">Feladatok utasításainak automatikus felolvasása</div>
+        </div>
+        <div class="toggle-track toggle-on"><div class="toggle-thumb"></div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="setting-row">
+        <div class="setting-info">
           <div class="setting-label">Szülői PIN</div>
           <div class="setting-desc">Jelenlegi PIN: ••••</div>
         </div>
@@ -1025,6 +1084,28 @@
 
   <div class="screens-grid">
 
+    <!-- LoginScreen -->
+    <div class="phone-wrap" id="screen-login">
+      <div class="phone-label">Bejelentkezés</div>
+      <div class="phone-sublabel">Apple Sign-In – első indításkor</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;">
+            <div style="font-size:72px;line-height:1;">🌱</div>
+            <div class="s-title">Betűkert</div>
+            <div class="text-body center">Olvasástanulás gyerekeknek</div>
+          </div>
+          <div style="padding:24px 24px 48px;display:flex;flex-direction:column;gap:12px;">
+            <div class="login-apple-btn">
+              <span style="font-size:20px;">🍎</span>
+              <span>Sign in with Apple</span>
+            </div>
+            <div class="signout-btn">A bejelentkezéssel elfogadod az alkalmazás feltételeit.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ProfileSelectScreen – with profiles -->
     <div class="phone-wrap" id="screen-profile-select-filled">
       <div class="phone-label">Profil választó</div>
@@ -1055,8 +1136,9 @@
               <span style="font-size:18px;color:var(--primaryLight);">›</span>
             </div>
           </div>
-          <div style="padding:16px 24px 32px;">
+          <div style="padding:16px 24px 32px;display:flex;flex-direction:column;gap:8px;">
             <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">+ Új gyerek hozzáadása</div>
+            <div class="signout-btn">Kijelentkezés</div>
           </div>
         </div>
       </div>
@@ -1126,7 +1208,7 @@
               <div class="text-small" style="margin-top:4px;">3. szint</div>
             </div>
             <div class="app-btn-primary" style="display:block;text-align:center;padding:20px;border-radius:32px;font-size:20px;">🎯 Gyakorlás kezdése</div>
-            <div class="app-btn-secondary" style="display:block;text-align:center;padding:16px;border-radius:32px;">🎮 Szabad gyakorlás</div>
+            <div class="app-btn-secondary" style="display:block;text-align:center;padding:16px;border-radius:32px;">🔍 Szabad gyakorlás</div>
             <div class="app-card">
               <div class="s-card-title">Betűk (12)</div>
               <div class="chip-row">
@@ -1253,6 +1335,14 @@
               <div class="divider" style="margin:8px 0;"></div>
               <div class="setting-row">
                 <div class="setting-info">
+                  <div class="setting-label">Automatikus felolvasás</div>
+                  <div class="setting-desc">Feladatok utasításainak automatikus felolvasása</div>
+                </div>
+                <div class="toggle-track toggle-on"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="divider" style="margin:8px 0;"></div>
+              <div class="setting-row">
+                <div class="setting-info">
                   <div class="setting-label">Szülői PIN</div>
                   <div class="setting-desc">Jelenlegi PIN: ••••</div>
                 </div>
@@ -1326,13 +1416,13 @@
             </div>
             <div class="exercise-card exercise-card-disabled">
               <div class="row-between">
-                <div style="font-size:18px;font-weight:700;color:var(--textLight);flex:1;">Mondatrendezés</div>
+                <div style="font-size:18px;font-weight:700;color:var(--textLight);flex:1;">Mondat rendezés</div>
                 <div class="toggle-track toggle-off"><div class="toggle-thumb"></div></div>
               </div>
             </div>
             <div class="exercise-card">
               <div class="row-between">
-                <div style="font-size:18px;font-weight:700;color:var(--textDark);flex:1;">Szótagolás</div>
+                <div style="font-size:18px;font-weight:700;color:var(--textDark);flex:1;">Szótagfelismerés</div>
                 <div class="toggle-track toggle-on"><div class="toggle-thumb"></div></div>
               </div>
               <div class="phase-ctrl">
@@ -1346,6 +1436,60 @@
               <div style="display:flex;align-items:center;gap:16px;">
                 <div class="text-small">Súlyozás:</div>
                 <div class="weight-badge" style="background:var(--correct);">Gyakori ↻</div>
+              </div>
+            </div>
+            <div class="exercise-card">
+              <div class="row-between">
+                <div style="font-size:18px;font-weight:700;color:var(--textDark);flex:1;">Kép-szó párosítás</div>
+                <div class="toggle-track toggle-on"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="phase-ctrl">
+                <div class="phase-ctrl-label">Megjelenik ettől:</div>
+                <div class="phase-ctrl-btns">
+                  <div class="phase-ctrl-btn">−</div>
+                  <div class="phase-ctrl-val">8. szint</div>
+                  <div class="phase-ctrl-btn">+</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:16px;">
+                <div class="text-small">Súlyozás:</div>
+                <div class="weight-badge" style="background:var(--accent);">Normál ↻</div>
+              </div>
+            </div>
+            <div class="exercise-card">
+              <div class="row-between">
+                <div style="font-size:18px;font-weight:700;color:var(--textDark);flex:1;">Mondat-kép párosítás</div>
+                <div class="toggle-track toggle-on"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="phase-ctrl">
+                <div class="phase-ctrl-label">Megjelenik ettől:</div>
+                <div class="phase-ctrl-btns">
+                  <div class="phase-ctrl-btn">−</div>
+                  <div class="phase-ctrl-val">20. szint</div>
+                  <div class="phase-ctrl-btn">+</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:16px;">
+                <div class="text-small">Súlyozás:</div>
+                <div class="weight-badge" style="background:var(--accent);">Normál ↻</div>
+              </div>
+            </div>
+            <div class="exercise-card">
+              <div class="row-between">
+                <div style="font-size:18px;font-weight:700;color:var(--textDark);flex:1;">Mi történik a képen</div>
+                <div class="toggle-track toggle-on"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="phase-ctrl">
+                <div class="phase-ctrl-label">Megjelenik ettől:</div>
+                <div class="phase-ctrl-btns">
+                  <div class="phase-ctrl-btn">−</div>
+                  <div class="phase-ctrl-val">20. szint</div>
+                  <div class="phase-ctrl-btn">+</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:16px;">
+                <div class="text-small">Súlyozás:</div>
+                <div class="weight-badge" style="background:var(--accent);">Normál ↻</div>
               </div>
             </div>
           </div>
@@ -1375,23 +1519,53 @@
                 <span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span>
               </div>
               <div class="type-card">
-                <div class="type-card-label">Betűsorozat</div>
+                <div class="type-card-label">Betűsor olvasás</div>
               </div>
               <div class="type-card type-card-selected">
-                <div class="type-card-label">Első hang</div>
+                <div class="type-card-label">Első hang felismerés</div>
                 <span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span>
               </div>
               <div class="type-card">
-                <div class="type-card-label">Szótagolás</div>
+                <div class="type-card-label">Szótagfelismerés</div>
+              </div>
+              <div class="type-card">
+                <div class="type-card-label">Szótag memória</div>
+              </div>
+              <div class="type-card">
+                <div class="type-card-label">Szótagszám felismerés</div>
+              </div>
+              <div class="type-card">
+                <div class="type-card-label">Szófelismerés</div>
               </div>
               <div class="type-card type-card-selected">
                 <div class="type-card-label">Szóépítés</div>
                 <span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span>
               </div>
+              <div class="type-card">
+                <div class="type-card-label">Mondat rendezés</div>
+              </div>
+              <div class="type-card">
+                <div class="type-card-label">Mondatértés</div>
+              </div>
+              <div class="type-card">
+                <div class="type-card-label">Irányvonal követés</div>
+              </div>
+              <div class="type-card type-card-selected">
+                <div class="type-card-label">Kép-szó párosítás</div>
+                <span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span>
+              </div>
+              <div class="type-card type-card-selected">
+                <div class="type-card-label">Mondat-kép párosítás</div>
+                <span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span>
+              </div>
+              <div class="type-card type-card-selected">
+                <div class="type-card-label">Mi történik a képen</div>
+                <span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span>
+              </div>
             </div>
           </div>
           <div class="footer-fixed">
-            <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Gyakorlás! (3 típus)</div>
+            <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Gyakorlás! (6 típus)</div>
           </div>
         </div>
       </div>
@@ -1482,6 +1656,106 @@
               <div class="app-btn-ghost" style="padding:14px 24px;font-size:16px;border-radius:24px;">↺ Újra</div>
               <div class="app-btn-primary" style="padding:14px 32px;font-size:16px;border-radius:24px;">Kész! ✓</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PracticeScreen – image-word drag -->
+    <div class="phone-wrap" id="screen-practice-image-drag">
+      <div class="phone-label">Kép-szó párosítás</div>
+      <div class="phone-sublabel">ImageWordDragExercise: drag&drop szót a képhez</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:50%;"></div></div>
+            <div class="progress-text">5/10</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px;gap:20px;">
+            <div class="text-body center">Húzd a szót a képhez!</div>
+            <!-- Párok: kép + slot -->
+            <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
+              <div class="drag-pair-row">
+                <div class="drag-image-thumb">🐱</div>
+                <div class="drag-slot drag-slot-filled">macska</div>
+              </div>
+              <div class="drag-pair-row">
+                <div class="drag-image-thumb">🌳</div>
+                <div class="drag-slot drag-slot-filled">fa</div>
+              </div>
+              <div class="drag-pair-row">
+                <div class="drag-image-thumb">🏠</div>
+                <div class="drag-slot">_</div>
+              </div>
+            </div>
+            <!-- Szókártyák -->
+            <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:8px;">
+              <div class="drag-word-card">ház</div>
+              <div style="width:80px;height:48px;opacity:0;"></div>
+            </div>
+          </div>
+          <div style="padding:16px 24px 32px;">
+            <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:16px;font-size:18px;">Kész! ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PracticeScreen – sentence-picture match -->
+    <div class="phone-wrap" id="screen-practice-sentence-picture">
+      <div class="phone-label">Mondat-kép párosítás</div>
+      <div class="phone-sublabel">SentencePictureMatchExercise: mondat → melyik kép illik hozzá?</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:30%;"></div></div>
+            <div class="progress-text">3/10</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:16px 0;">
+            <div class="sentence-target">A macska alszik a párnán.</div>
+            <div class="pictures-grid">
+              <div class="picture-card picture-correct">
+                <div style="font-size:48px;">🐱</div>
+              </div>
+              <div class="picture-card">
+                <div style="font-size:48px;">🐶</div>
+              </div>
+              <div class="picture-card">
+                <div style="font-size:48px;">🐠</div>
+              </div>
+              <div class="picture-card">
+                <div style="font-size:48px;">🐇</div>
+              </div>
+            </div>
+            <div class="feedback-correct">🌿 Igen, helyes!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PracticeScreen – image-sentence match -->
+    <div class="phone-wrap" id="screen-practice-image-sentence">
+      <div class="phone-label">Mi történik a képen</div>
+      <div class="phone-sublabel">ImageSentenceMatchExercise: kép → melyik mondat írja le?</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:70%;"></div></div>
+            <div class="progress-text">7/10</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px;gap:20px;">
+            <div class="image-exercise-card">
+              <div class="image-placeholder" style="font-size:64px;">🌧️</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;width:100%;">
+              <div class="option-card option-card-correct" style="font-size:16px;text-align:left;padding:14px 18px;">Esik az eső az ablakon.</div>
+              <div class="option-card" style="font-size:16px;text-align:left;padding:14px 18px;">Süt a nap a réten.</div>
+              <div class="option-card" style="font-size:16px;text-align:left;padding:14px 18px;">Fúj a szél az erdőn.</div>
+            </div>
+            <div class="feedback-correct">🌿 Igen, helyes!</div>
           </div>
         </div>
       </div>
