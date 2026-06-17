@@ -89,8 +89,9 @@ export default function ImagesPage() {
   const loadData = async (preserveScroll = false) => {
     if (preserveScroll) {
       savedScrollY.current = window.scrollY;
+    } else {
+      setLoading(true);
     }
-    setLoading(true);
 
     const [{ data: imageData }, { data: configData }] = await Promise.all([
       supabase.from('image_needs').select('*').order('phase', { ascending: true }),
@@ -99,7 +100,7 @@ export default function ImagesPage() {
 
     if (imageData) setItems(imageData);
     if (configData) setConfigs(configData);
-    setLoading(false);
+    if (!preserveScroll) setLoading(false);
   };
 
   useEffect(() => {
