@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase, ImageNeed, ImageStatus } from '../../lib/supabase';
 import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction } from '../actions/imageNeeds';
 import Link from 'next/link';
@@ -57,6 +57,7 @@ export default function ImagesPage() {
   const [filter, setFilter] = useState<ImageStatus | 'all'>('all');
   const [phaseFilter, setPhaseFilter] = useState<number | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [search, setSearch] = useState('');
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; word: string } | null>(null);
@@ -66,6 +67,7 @@ export default function ImagesPage() {
   const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
   const [message, setMessage] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
+  const savedScrollY = useRef<number | null>(null);
 
   const toggleSection = (id: string) => {
     setOpenSections(prev => {
@@ -84,7 +86,10 @@ export default function ImagesPage() {
     setSelected(new Set());
   }, [filter, phaseFilter, typeFilter]);
 
-  const loadData = async () => {
+  const loadData = async (preserveScroll = false) => {
+    if (preserveScroll) {
+      savedScrollY.current = window.scrollY;
+    }
     setLoading(true);
 
     const [{ data: imageData }, { data: configData }] = await Promise.all([
@@ -96,6 +101,14 @@ export default function ImagesPage() {
     if (configData) setConfigs(configData);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (savedScrollY.current !== null) {
+      const y = savedScrollY.current;
+      savedScrollY.current = null;
+      requestAnimationFrame(() => window.scrollTo({ top: y, behavior: 'instant' }));
+    }
+  });
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -122,7 +135,7 @@ export default function ImagesPage() {
       if (result.error) {
         setMessage(`❌ Feltöltési hiba: ${result.error}`);
       } else {
-        loadData();
+        loadData(true);
       }
     } catch (e: any) {
       setMessage(`❌ Feltöltési hiba: ${e?.message ?? 'Ismeretlen hiba'}`);
@@ -136,7 +149,7 @@ export default function ImagesPage() {
     try {
       const result = await deleteImageFileAction(item.id);
       if (result.error) setMessage(`❌ Törlési hiba: ${result.error}`);
-      else loadData();
+      else loadData(true);
     } catch (e: any) {
       setMessage(`❌ Törlési hiba: ${e?.message ?? 'Ismeretlen hiba'}`);
     }
@@ -146,7 +159,7 @@ export default function ImagesPage() {
   const handleStatusChange = async (id: string, status: ImageStatus) => {
     const result = await updateImageNeedStatusAction(id, status);
     if (result.error) setMessage(`❌ Hiba: ${result.error}`);
-    else loadData();
+    else loadData(true);
   };
 
   const toggleSelect = (id: string) => {
@@ -170,7 +183,7 @@ export default function ImagesPage() {
     await Promise.all(selectedItems.map(item => updateImageNeedStatusAction(item.id, status)));
     setSelected(new Set());
     setBulkWorking(false);
-    loadData();
+    loadData(true);
   };
 
   const handleBulkDelete = async () => {
@@ -184,7 +197,7 @@ export default function ImagesPage() {
     ]);
     setSelected(new Set());
     setBulkWorking(false);
-    loadData();
+    loadData(true);
   };
 
   // Csak képköteles feladattípusokhoz tartozó szavak
@@ -205,10 +218,13 @@ export default function ImagesPage() {
     }
   }
 
+  const searchTerm = search.trim().toLowerCase();
+
   const filtered = relevantItems.filter(item => {
     if (filter !== 'all' && item.status !== filter) return false;
     if (phaseFilter !== 'all' && item.phase !== phaseFilter) return false;
     if (typeFilter !== 'all' && !item.exercise_types?.includes(typeFilter)) return false;
+    if (searchTerm && !item.word.toLowerCase().includes(searchTerm)) return false;
     return true;
   });
 
@@ -466,6 +482,14 @@ export default function ImagesPage() {
 
       {/* Szűrők */}
       <div className="flex gap-3 flex-wrap items-center">
+        <input
+          type="search"
+          placeholder="Keresés szóra..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="rounded-2xl px-4 py-2.5 text-sm outline-none"
+          style={{ background: '#FFFFFF', border: '1px solid #E3DCC9', color: GREEN_DARK, minWidth: 180 }}
+        />
         <select
           value={filter}
           onChange={e => setFilter(e.target.value as ImageStatus | 'all')}
@@ -576,10 +600,13 @@ export default function ImagesPage() {
             Beállítások
           </Link>
         </div>
-      ) : typeFilter !== 'all' ? (
-        // Szűrt nézet
+      ) : typeFilter !== 'all' || searchTerm ? (
+        // Szűrt nézet (feladattípus-szűrő vagy keresés aktív)
         <div className="space-y-3">
-          {filtered.map(renderItem)}
+          {filtered.length === 0
+            ? <div className="text-center py-12" style={{ color: '#B5AE9E' }}>Nincs találat.</div>
+            : filtered.map(renderItem)
+          }
         </div>
       ) : (
         // Feladattípusonként csoportosítva — akkordion
