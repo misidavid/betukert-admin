@@ -16,13 +16,9 @@ CREATE TABLE IF NOT EXISTS sentence_image_needs (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-ALTER TABLE sentence_image_needs ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "sentence_image_needs: csak admin olvashat" ON sentence_image_needs
-  FOR SELECT USING (auth.email() = 'misi.david@gmail.com');
-
-CREATE POLICY "sentence_image_needs: csak admin írhat" ON sentence_image_needs
-  FOR ALL USING (auth.email() = 'misi.david@gmail.com');
+-- Megjegyzés: a többi tartalmi tábla (image_needs, words, sound_needs,
+-- exercise_type_config) ebben a projektben nincs RLS-sel védve, ezért itt sem
+-- kapcsoljuk be — az admin UI a sima anon kulcsos klienssel olvas/ír.
 
 INSERT INTO exercise_type_config (id, label, requires_image, updated_at)
 VALUES ('sentence_picture_match', 'Mondat-kép párosítás', true, now())
