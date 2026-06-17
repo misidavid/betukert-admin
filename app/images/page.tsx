@@ -468,17 +468,31 @@ export default function ImagesPage() {
       {/* Statisztikák */}
       <div className="grid grid-cols-5 gap-3">
         {[
-          { label: 'Releváns', value: stats.total, bg: '#FFFFFF', color: GREEN_DARK },
-          { label: 'Hiányzó', value: stats.missing, bg: STATUS_COLORS.missing.bg, color: STATUS_COLORS.missing.text },
-          { label: 'Feltöltve', value: stats.uploaded, bg: STATUS_COLORS.uploaded.bg, color: STATUS_COLORS.uploaded.text },
-          { label: 'Jóváhagyva', value: stats.approved, bg: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text },
-          { label: 'Publikált', value: stats.published, bg: GREEN_LIGHT, color: GREEN_DARK },
-        ].map(stat => (
-          <div key={stat.label} className="rounded-[20px] shadow-sm p-4 text-center" style={{ background: stat.bg }}>
-            <div className="text-2xl" style={{ ...display, fontWeight: 700, color: stat.color }}>{stat.value}</div>
-            <div className="text-xs mt-0.5" style={{ color: MUTED }}>{stat.label}</div>
-          </div>
-        ))}
+          { label: 'Releváns', value: stats.total, bg: '#FFFFFF', color: GREEN_DARK, filterValue: 'all' as const },
+          { label: 'Hiányzó', value: stats.missing, bg: STATUS_COLORS.missing.bg, color: STATUS_COLORS.missing.text, filterValue: 'missing' as const },
+          { label: 'Feltöltve', value: stats.uploaded, bg: STATUS_COLORS.uploaded.bg, color: STATUS_COLORS.uploaded.text, filterValue: 'uploaded' as const },
+          { label: 'Jóváhagyva', value: stats.approved, bg: STATUS_COLORS.approved.bg, color: STATUS_COLORS.approved.text, filterValue: 'approved' as const },
+          { label: 'Publikált', value: stats.published, bg: GREEN_LIGHT, color: GREEN_DARK, filterValue: 'published' as const },
+        ].map(stat => {
+          const isActive = filter === stat.filterValue;
+          return (
+            <button
+              key={stat.label}
+              onClick={() => setFilter(isActive ? 'all' : stat.filterValue)}
+              className="rounded-[20px] shadow-sm p-4 text-center transition-all"
+              style={{
+                background: stat.bg,
+                outline: isActive ? `2px solid ${GREEN}` : '2px solid transparent',
+                outlineOffset: 2,
+                opacity: filter !== 'all' && !isActive ? 0.5 : 1,
+                cursor: 'pointer',
+              }}
+            >
+              <div className="text-2xl" style={{ ...display, fontWeight: 700, color: stat.color }}>{stat.value}</div>
+              <div className="text-xs mt-0.5" style={{ color: MUTED }}>{stat.label}</div>
+            </button>
+          );
+        })}
       </div>
 
       {/* Szűrők */}
