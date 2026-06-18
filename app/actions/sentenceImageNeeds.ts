@@ -78,6 +78,7 @@ export async function uploadSentenceImageFileAction(
     const file = formData.get('file') as File;
 
     if (!file || !file.name) return { error: 'Hiányzó fájl' };
+    if (file.size > 5 * 1024 * 1024) return { error: 'Fájl túl nagy (max 5 MB)' };
 
     const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
     const ext = file.name.split('.').pop()?.toLowerCase();

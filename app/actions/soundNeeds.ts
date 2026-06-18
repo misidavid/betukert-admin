@@ -66,6 +66,7 @@ export async function uploadSoundFileAction(
 
     if (fetchError || !record?.text) return { error: 'Nem található a bejegyzés' };
 
+    if (file.size > 10 * 1024 * 1024) return { error: 'Fájl túl nagy (max 10 MB)' };
     const ALLOWED_SOUND_EXTENSIONS = ['mp3', 'wav', 'ogg', 'm4a'];
     const ext = file.name.split('.').pop()?.toLowerCase();
     if (!ext || !ALLOWED_SOUND_EXTENSIONS.includes(ext)) {
