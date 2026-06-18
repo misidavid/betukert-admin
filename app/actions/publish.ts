@@ -7,11 +7,13 @@ import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 export async function publishPackageAction(): Promise<{ version: string; imageCount: number; soundCount: number; error?: string }> {
   try {
     await requireAuth();
-    const [{ data: images }, { data: sounds }, { data: words }, { data: sentenceImages }] = await Promise.all([
+    const [{ data: images }, { data: sounds }, { data: words }, { data: sentenceImages }, { data: sentences }, { data: comprehensions }] = await Promise.all([
       getSupabaseAdmin().from('image_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('sound_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('words').select('*').eq('enabled', true).order('phase').order('text'),
       getSupabaseAdmin().from('sentence_image_needs').select('*').eq('status', 'published'),
+      getSupabaseAdmin().from('sentence_bank').select('*').order('phase').order('id'),
+      getSupabaseAdmin().from('comprehension_bank').select('*').order('phase').order('id'),
     ]);
 
     const version = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -36,6 +38,20 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
         sentence: si.sentence_text,
         phase: si.phase,
         url: si.file_url,
+      })) || [],
+      sentences: sentences?.map((s: any) => ({
+        id: s.id,
+        words: s.words,
+        accepted_orders: s.accepted_orders,
+        phase: s.phase,
+      })) || [],
+      comprehension: comprehensions?.map((c: any) => ({
+        id: c.id,
+        sentence: c.sentence,
+        question: c.question,
+        correct_answer: c.correct_answer,
+        wrong_answers: c.wrong_answers,
+        phase: c.phase,
       })) || [],
     };
 
