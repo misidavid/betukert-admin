@@ -383,7 +383,7 @@
   .picture-incorrect { background: #FDE8E4; }
   .sentence-target { font-size: 22px; font-weight: 700; color: var(--textDark); text-align: center; padding: 0 24px; line-height: 1.4; }
 
-  /* Drag-and-drop */
+  /* Drag-and-drop (régi stílus, visszafelé kompatibilitáshoz megtartva) */
   .drag-word-card {
     background: var(--cardGreen); border-radius: 12px; padding: 12px 20px;
     font-size: 18px; font-weight: 700; color: var(--primary); cursor: grab;
@@ -401,11 +401,45 @@
     display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
   }
 
-  /* Login */
-  .login-apple-btn {
-    background: #000; border-radius: 14px; padding: 17px;
+  /* Drag-and-drop v2 — ImageWordDragExercise (2×2 rács) */
+  .drag-grid-row { display: flex; gap: 16px; justify-content: center; }
+  .drag-grid-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; max-width: 140px; }
+  .drag-image-square {
+    width: 130px; height: 130px; border-radius: 24px; background: var(--card);
+    box-shadow: var(--shadow); display: flex; align-items: center;
+    justify-content: center; font-size: 40px; overflow: hidden;
+  }
+  .drag-slot-v2 {
+    width: 130px; height: 52px; border-radius: 16px;
+    border: 2px dashed var(--cardGreen); background: var(--white);
     display: flex; align-items: center; justify-content: center;
-    gap: 8px; color: #fff; font-size: 16px; font-weight: 600; width: 100%;
+    font-size: 18px; font-weight: 700; color: var(--textLight);
+  }
+  .drag-slot-v2-filled { border-style: solid; border-color: var(--primaryLight); background: var(--cardGreen); color: var(--textDark); }
+  .drag-slot-v2-correct { border-style: solid; border-color: var(--correct); background: #E8F5E9; color: var(--textDark); }
+  .drag-slot-v2-wrong { border-style: solid; border-color: var(--incorrect); background: #FDE8E4; color: var(--textDark); }
+  .drag-word-v2 {
+    width: 130px; height: 52px; background: var(--white); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: var(--textDark); box-shadow: var(--shadow); cursor: grab;
+  }
+  .drag-word-v2-placeholder { width: 130px; height: 52px; opacity: 0; }
+
+  /* Login */
+  .login-google-btn {
+    background: #4285F4; border-radius: 4px; padding: 0 17px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; color: #fff; font-size: 16px; font-weight: 500; width: 100%; height: 54px;
+  }
+  .login-google-logo {
+    width: 24px; height: 24px; background: #fff; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-size: 14px; font-weight: 700; color: #4285F4;
+  }
+  .login-apple-btn {
+    background: #000; border-radius: 14px; padding: 0 17px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; color: #fff; font-size: 16px; font-weight: 600; width: 100%; height: 54px;
   }
   .signout-btn { font-size: 14px; color: var(--textLight); text-align: center; padding: 8px 0; }
 
@@ -452,8 +486,49 @@
     padding: 0 24px 4px;
   }
   .replay-btn {
-    width: 36px; height: 36px; display: flex; align-items: center;
+    width: 36px; height: 36px; border-radius: 18px;
+    background: var(--cardGreen); display: flex; align-items: center;
     justify-content: center; font-size: 18px; cursor: pointer;
+  }
+
+  /* ── Option selected state ── */
+  .option-card-selected { background: var(--accent); border: 2px solid var(--primary); }
+
+  /* ── Exercise-specific ── */
+  .memory-card {
+    width: 72px; height: 72px; background: var(--primary); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: #fff; box-shadow: var(--shadow);
+  }
+  .memory-card-flipped { background: var(--white); border: 2px solid var(--primary); color: var(--primary); }
+  .memory-card-matched { background: var(--cardGreen); border: 2px solid var(--correct); color: var(--primary); }
+  .direction-track {
+    width: 100%; height: 80px; background: var(--cardGreen); border-radius: 32px;
+    position: relative; overflow: hidden; box-shadow: var(--shadow);
+    display: flex; align-items: center;
+  }
+  .track-progress {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--accent); opacity: 0.5;
+  }
+  .track-start-dot {
+    position: absolute; left: 16px; width: 40px; height: 40px; border-radius: 20px;
+    background: var(--primary); display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px; z-index: 1;
+  }
+  .track-end-star { position: absolute; right: 16px; font-size: 32px; z-index: 1; }
+  .sentence-card {
+    background: var(--white); border-radius: 24px; padding: 24px;
+    text-align: center; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px;
+  }
+  .sentence-label { font-size: 14px; color: var(--textMedium); }
+  .sentence-text { font-size: 24px; font-weight: 700; color: var(--primary); line-height: 1.5; }
+  .dot-grid { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 52px; }
+  .dot-item { width: 14px; height: 14px; border-radius: 7px; background: var(--primary); }
+  .word-chip {
+    background: var(--cardGreen); border-radius: 16px; padding: 8px 16px;
+    font-size: 18px; font-weight: 700; color: var(--primary); box-shadow: var(--shadow);
+    display: inline-block;
   }
 </style>
 </head>
@@ -490,6 +565,11 @@
     <a href="#screen-practice-sentence-picture">Mondat-kép párosítás</a>
     <a href="#screen-practice-image-sentence">Kép-mondat (Mi történik)</a>
     <a href="#screen-practice-complete">Gyakorlás vége</a>
+    <a href="#screen-practice-syllable-clapping">Szótagszámlálás</a>
+    <a href="#screen-practice-syllable-memory">Szótag memória</a>
+    <a href="#screen-practice-direction">Irányvonal követés</a>
+    <a href="#screen-practice-sentence-comprehension">Mondatértés</a>
+    <a href="#screen-practice-sentence-order">Mondat rendezés</a>
   </nav>
 </div>
 
@@ -750,6 +830,24 @@
       <div class="component-label">Vissza navigáció</div>
     </div>
   </div>
+
+  <div class="subsection-title">Bejelentkezés gombok</div>
+  <div class="component-row">
+    <div class="component-item" style="width:280px;">
+      <div class="login-google-btn">
+        <div class="login-google-logo">G</div>
+        <span>Sign in with Google</span>
+      </div>
+      <div class="component-label">Google · #4285F4 · radius: 4px · 54px magas</div>
+    </div>
+    <div class="component-item" style="width:280px;">
+      <div class="login-apple-btn">
+        <span style="font-size:20px;">🍎</span>
+        <span>Sign in with Apple</span>
+      </div>
+      <div class="component-label">Apple · #000 · radius: 14px · 54px magas</div>
+    </div>
+  </div>
 </div>
 
 <!-- ──────────────────────────────────────────── -->
@@ -994,8 +1092,8 @@
         <div class="profile-name">Anna</div>
         <div class="profile-phase">3. szint</div>
       </div>
-      <span style="font-size:18px;margin-right:8px;">🌱</span>
-      <span style="font-size:18px;color:var(--primaryLight);">›</span>
+      <span style="font-size:18px;padding:8px;color:#aaa;cursor:pointer;">🗑</span>
+      <span style="font-size:18px;color:var(--primaryLight);">→</span>
     </div>
     <div class="profile-card">
       <div class="avatar-circle">P</div>
@@ -1003,10 +1101,11 @@
         <div class="profile-name">Péter</div>
         <div class="profile-phase">7. szint</div>
       </div>
-      <span style="font-size:18px;margin-right:8px;">🌳</span>
-      <span style="font-size:18px;color:var(--primaryLight);">›</span>
+      <span style="font-size:18px;padding:8px;color:#aaa;cursor:pointer;">🗑</span>
+      <span style="font-size:18px;color:var(--primaryLight);">→</span>
     </div>
   </div>
+  <div style="margin-top:8px;font-family:monospace;font-size:12px;color:#666;">avatar: 56×56 cardGreen · delete 🗑 hitSlop · arrow: → primaryLight</div>
 
   <div class="subsection-title">Beállítás sor</div>
   <div style="width:360px;" class="app-card">
@@ -1076,6 +1175,10 @@
     <div class="component-item">
       <div class="option-card">ma</div>
       <div class="component-label">Normál</div>
+    </div>
+    <div class="component-item">
+      <div class="option-card option-card-selected">ma</div>
+      <div class="component-label">Kiválasztott<br>(accent + primary border)</div>
     </div>
     <div class="component-item">
       <div class="option-card option-card-correct">ma</div>
@@ -1190,7 +1293,7 @@
           <div class="replay-btn">🔊</div>
         </div>
       </div>
-      <div class="component-label">heartRow: szív (bal) + replay gomb (jobb)<br>padding: 0 24px 4px · space-between</div>
+      <div class="component-label">heartRow: szív (bal) + replay gomb (jobb)<br>replay: 36×36 · cardGreen · borderRadius 18 · padding: 0 24px 4px · space-between</div>
     </div>
   </div>
 </div>
@@ -1216,6 +1319,10 @@
             <div class="text-body center">Olvasástanulás gyerekeknek</div>
           </div>
           <div style="padding:24px 24px 48px;display:flex;flex-direction:column;gap:12px;">
+            <div class="login-google-btn">
+              <div class="login-google-logo">G</div>
+              <span>Sign in with Google</span>
+            </div>
             <div class="login-apple-btn">
               <span style="font-size:20px;">🍎</span>
               <span>Sign in with Apple</span>
@@ -1243,8 +1350,8 @@
                 <div class="profile-name">Anna</div>
                 <div class="profile-phase">3. szint</div>
               </div>
-              <span style="font-size:18px;margin-right:8px;color:#888;">🌱</span>
-              <span style="font-size:18px;color:var(--primaryLight);">›</span>
+              <span style="font-size:16px;padding:8px;color:#aaa;">🗑</span>
+              <span style="font-size:18px;color:var(--primaryLight);">→</span>
             </div>
             <div class="profile-card">
               <div class="avatar-circle">P</div>
@@ -1252,8 +1359,8 @@
                 <div class="profile-name">Péter</div>
                 <div class="profile-phase">7. szint</div>
               </div>
-              <span style="font-size:18px;margin-right:8px;color:#888;">🌳</span>
-              <span style="font-size:18px;color:var(--primaryLight);">›</span>
+              <span style="font-size:16px;padding:8px;color:#aaa;">🗑</span>
+              <span style="font-size:18px;color:var(--primaryLight);">→</span>
             </div>
           </div>
           <div style="padding:16px 24px 32px;display:flex;flex-direction:column;gap:8px;">
@@ -1835,39 +1942,49 @@
     <!-- PracticeScreen – image-word drag -->
     <div class="phone-wrap" id="screen-practice-image-drag">
       <div class="phone-label">Kép-szó párosítás</div>
-      <div class="phone-sublabel">ImageWordDragExercise: drag&drop szót a képhez</div>
+      <div class="phone-sublabel">ImageWordDragExercise: 2×2 rács, kép fölött slot, húzható fehér szó kártyák alul</div>
       <div class="phone-frame">
-        <div class="phone-screen" style="display:flex;flex-direction:column;">
-          <div class="practice-header">
+        <div class="phone-screen" style="display:flex;flex-direction:column;padding:16px;">
+          <div class="practice-header" style="padding:0 0 8px;">
             <div class="exit-btn">✕</div>
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:50%;"></div></div>
             <div class="progress-text">5/10</div>
           </div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px;gap:20px;">
-            <div class="text-body center">Húzd a szót a képhez!</div>
-            <!-- Párok: kép + slot -->
-            <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
-              <div class="drag-pair-row">
-                <div class="drag-image-thumb">🐱</div>
-                <div class="drag-slot drag-slot-filled">macska</div>
-              </div>
-              <div class="drag-pair-row">
-                <div class="drag-image-thumb">🌳</div>
-                <div class="drag-slot drag-slot-filled">fa</div>
-              </div>
-              <div class="drag-pair-row">
-                <div class="drag-image-thumb">🏠</div>
-                <div class="drag-slot">_</div>
-              </div>
+          <div class="heart-row" style="padding:0 0 8px;">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
+          <div class="text-body center" style="margin-bottom:16px;">Húzd a szót a képhez!</div>
+
+          <!-- 2×2 rács: sor1 -->
+          <div class="drag-grid-row" style="margin-bottom:12px;">
+            <div class="drag-grid-cell">
+              <div class="drag-image-square">🐱</div>
+              <div class="drag-slot-v2 drag-slot-v2-filled">macska</div>
             </div>
-            <!-- Szókártyák -->
-            <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:8px;">
-              <div class="drag-word-card">ház</div>
-              <div style="width:80px;height:48px;opacity:0;"></div>
+            <div class="drag-grid-cell">
+              <div class="drag-image-square">🌳</div>
+              <div class="drag-slot-v2 drag-slot-v2-filled">fa</div>
             </div>
           </div>
-          <div style="padding:16px 24px 32px;">
-            <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:16px;font-size:18px;">Kész! ✓</div>
+          <!-- sor2 -->
+          <div class="drag-grid-row" style="margin-bottom:16px;">
+            <div class="drag-grid-cell">
+              <div class="drag-image-square">🏠</div>
+              <div class="drag-slot-v2">_</div>
+            </div>
+            <div class="drag-grid-cell">
+              <div class="drag-image-square">🐶</div>
+              <div class="drag-slot-v2">_</div>
+            </div>
+          </div>
+
+          <!-- Húzható szó kártyák (fehér, 130×52) -->
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding-top:8px;">
+            <div class="drag-word-v2">ház</div>
+            <div class="drag-word-v2">kutya</div>
+            <div class="drag-word-v2-placeholder"></div>
+            <div class="drag-word-v2-placeholder"></div>
           </div>
         </div>
       </div>
@@ -1965,10 +2082,10 @@
       </div>
     </div>
 
-    <!-- PracticeCompleteScreen – new grapheme -->
+    <!-- PracticeCompleteScreen – new grapheme (1 db) -->
     <div class="phone-wrap">
-      <div class="phone-label">Gyakorlás vége – új betű</div>
-      <div class="phone-sublabel">Sárga reward kártya, új betű badge</div>
+      <div class="phone-label">Gyakorlás vége – 1 új betű</div>
+      <div class="phone-sublabel">Sárga reward kártya, 1 új betű badge</div>
       <div class="phone-frame">
         <div class="phone-screen">
           <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:24px;">
@@ -1996,6 +2113,224 @@
             <div style="width:100%;display:flex;flex-direction:column;gap:12px;">
               <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Vissza a kertbe 🌱</div>
               <div class="app-btn-secondary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Még egy kör! 🎯</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PracticeCompleteScreen – több új betű -->
+    <div class="phone-wrap">
+      <div class="phone-label">Gyakorlás vége – több új betű</div>
+      <div class="phone-sublabel">Sárga reward kártya, több betű badge (szóközzel elválasztva)</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:24px;">
+            <div class="reward-card reward-card-special" style="width:100%;">
+              <div class="reward-emoji">🌸</div>
+              <div class="reward-text">Új betűk!</div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:8px;">
+                <div style="font-size:14px;color:var(--textMedium);text-align:center;">Begyűjtöttél két új betűt!</div>
+                <div class="new-grapheme-badge">t  á</div>
+              </div>
+            </div>
+            <div class="result-card">
+              <div style="font-size:18px;font-weight:700;color:var(--textMedium);text-align:center;margin-bottom:16px;">Mai eredmény</div>
+              <div class="stats-row">
+                <div class="stat-item"><div class="stat-number">10</div><div class="stat-label">helyes</div></div>
+                <div class="stat-divider"></div>
+                <div class="stat-item"><div class="stat-number">0</div><div class="stat-label">gyakorolni</div></div>
+                <div class="stat-divider"></div>
+                <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">pontosság</div></div>
+              </div>
+              <div class="progress-bar-track" style="margin-top:16px;">
+                <div class="progress-bar-fill" style="width:100%;background:var(--correct);"></div>
+              </div>
+            </div>
+            <div style="width:100%;display:flex;flex-direction:column;gap:12px;">
+              <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Vissza a kertbe 🌱</div>
+              <div class="app-btn-secondary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Még egy kör! 🎯</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SyllableClappingExercise -->
+    <div class="phone-wrap" id="screen-practice-syllable-clapping">
+      <div class="phone-label">Szótagszámlálás</div>
+      <div class="phone-sublabel">SyllableClappingExercise: szó kártya + pontok (dot) számopciókon</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:30%;"></div></div>
+            <div class="progress-text">3/10</div>
+          </div>
+          <div class="heart-row">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
+          <div class="exercise-area" style="flex:1;gap:24px;">
+            <div class="text-body center">Hány szótagból áll a szó?</div>
+            <!-- Szó kártya -->
+            <div class="target-card" style="min-width:200px;min-height:120px;">
+              <div class="text-huge">alma</div>
+            </div>
+            <!-- Szám opciók pontokkal -->
+            <div style="display:flex;gap:16px;justify-content:center;">
+              <div style="width:72px;height:72px;background:var(--white);border-radius:24px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);">
+                <div class="dot-grid"><div class="dot-item"></div></div>
+              </div>
+              <div style="width:72px;height:72px;background:var(--accent);border:2px solid var(--primary);border-radius:24px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);">
+                <div class="dot-grid"><div class="dot-item"></div><div class="dot-item"></div></div>
+              </div>
+              <div style="width:72px;height:72px;background:var(--white);border-radius:24px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);">
+                <div class="dot-grid"><div class="dot-item"></div><div class="dot-item"></div><div class="dot-item"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SyllableMemoryExercise -->
+    <div class="phone-wrap" id="screen-practice-syllable-memory">
+      <div class="phone-label">Szótag memória</div>
+      <div class="phone-sublabel">SyllableMemoryExercise: párokra kell fordítani az egyező szótagokat</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:50%;"></div></div>
+            <div class="progress-text">5/10</div>
+          </div>
+          <div class="heart-row">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
+          <div class="exercise-area" style="flex:1;gap:16px;">
+            <div class="text-body center">Keresd meg az egyező szótagokat!</div>
+            <div style="font-size:14px;color:var(--textMedium);text-align:center;">Párok: 2/3 · Lépések: 5</div>
+            <!-- Kártya rács -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:320px;">
+              <div class="memory-card memory-card-matched">ma</div>
+              <div class="memory-card">?</div>
+              <div class="memory-card memory-card-matched">ma</div>
+              <div class="memory-card memory-card-matched">ta</div>
+              <div class="memory-card memory-card-flipped">la</div>
+              <div class="memory-card memory-card-matched">ta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DirectionTrackingExercise -->
+    <div class="phone-wrap" id="screen-practice-direction">
+      <div class="phone-label">Irányvonal követés</div>
+      <div class="phone-sublabel">DirectionTrackingExercise: balról jobbra húzd az ujjad a pályán</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:20%;"></div></div>
+            <div class="progress-text">2/10</div>
+          </div>
+          <div class="exercise-area" style="flex:1;gap:24px;padding:16px 24px;">
+            <div class="text-body center">Húzd végig az ujjad balról jobbra!</div>
+            <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--textLight);">
+              <span>← kezdd itt</span><span>végezd itt →</span>
+            </div>
+            <!-- Pálya -->
+            <div class="direction-track">
+              <div class="track-progress" style="width:55%;"></div>
+              <div class="track-start-dot">▶</div>
+              <div class="track-end-star">⭐</div>
+              <!-- mozgó pont -->
+              <div style="position:absolute;left:calc(55% - 20px);width:40px;height:40px;border-radius:20px;background:var(--primary);top:20px;z-index:2;"></div>
+            </div>
+            <div style="font-size:14px;color:var(--textMedium);text-align:center;">Tedd az ujjad a ▶ jelre és húzd jobbra!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SentenceComprehensionExercise -->
+    <div class="phone-wrap" id="screen-practice-sentence-comprehension">
+      <div class="phone-label">Mondatértés</div>
+      <div class="phone-sublabel">SentenceComprehensionExercise: olvasd el a mondatot, válaszolj a kérdésre</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:60%;"></div></div>
+            <div class="progress-text">6/10</div>
+          </div>
+          <div class="heart-row">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:16px 24px;gap:24px;">
+            <!-- Mondat kártya -->
+            <div class="sentence-card">
+              <div class="sentence-label">Olvasd el:</div>
+              <div class="sentence-text">A macska alszik a párnán.</div>
+            </div>
+            <!-- Kérdés -->
+            <div style="font-size:18px;font-weight:700;color:var(--textDark);text-align:center;">Hol alszik a macska?</div>
+            <!-- Opciók — teljes szélességű, szöveges -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="option-card option-card-correct" style="font-size:18px;text-align:center;">a párnán</div>
+              <div class="option-card" style="font-size:18px;text-align:center;">a kertben</div>
+              <div class="option-card" style="font-size:18px;text-align:center;">az ágyon</div>
+            </div>
+            <div class="feedback-correct">🌿 Igen, helyes!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SentenceOrderExercise -->
+    <div class="phone-wrap" id="screen-practice-sentence-order">
+      <div class="phone-label">Mondat rendezés</div>
+      <div class="phone-sublabel">SentenceOrderExercise: rakd össze a mondatot a szavakból</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:70%;"></div></div>
+            <div class="progress-text">7/10</div>
+          </div>
+          <div class="heart-row">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px;gap:24px;">
+            <div class="text-body">Rakd össze a mondatot!</div>
+            <!-- Build area -->
+            <div class="build-area" style="width:100%;">
+              <div style="font-size:14px;color:var(--textMedium);">Rakd össze a mondatot:</div>
+              <div class="slots-row">
+                <div class="slot"><span>A</span></div>
+                <div class="slot"><span>macska</span></div>
+                <div class="slot"><span class="slot-empty-text">_</span></div>
+              </div>
+              <div style="font-size:18px;color:var(--primaryLight);font-style:italic;">A macska</div>
+            </div>
+            <!-- Elérhető szavak -->
+            <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:14px;color:var(--textMedium);">Szavak:</div>
+              <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+                <div class="word-chip">alszik</div>
+                <div style="min-width:56px;height:40px;opacity:0;"></div>
+                <div style="min-width:56px;height:40px;opacity:0;"></div>
+              </div>
+            </div>
+            <!-- Gombok -->
+            <div style="display:flex;gap:12px;">
+              <div class="app-btn-ghost" style="padding:14px 20px;font-size:16px;border-radius:24px;">↺ Újra</div>
+              <div class="app-btn-primary" style="padding:14px 28px;font-size:16px;border-radius:24px;opacity:0.4;">Kész! ✓</div>
             </div>
           </div>
         </div>
