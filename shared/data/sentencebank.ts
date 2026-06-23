@@ -19,7 +19,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
     id: 's1',
     words: ['a', 'mama', 'mos'],
     acceptedOrders: [['a', 'mama', 'mos'], ['mos', 'a', 'mama']],
-    phase: 3,
+    phase: 8,
   },
   {
     id: 's2',
@@ -401,8 +401,8 @@ export const SENTENCE_BANK: SentenceItem[] = [
   },
   {
     id: 's63',
-    words: ['A', 'kisgyerek', 'gyorsan', 'szalad', 'haza'],
-    acceptedOrders: [['A', 'kisgyerek', 'gyorsan', 'szalad', 'haza']],
+    words: ['a', 'kisgyerek', 'gyorsan', 'szalad', 'haza'],
+    acceptedOrders: [['a', 'kisgyerek', 'gyorsan', 'szalad', 'haza']],
     phase: 25,
   },
 

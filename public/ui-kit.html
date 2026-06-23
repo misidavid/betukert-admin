@@ -408,6 +408,53 @@
     gap: 8px; color: #fff; font-size: 16px; font-weight: 600; width: 100%;
   }
   .signout-btn { font-size: 14px; color: var(--textLight); text-align: center; padding: 8px 0; }
+
+  /* ── Bottom Sheet (HomeMenuSheet) ── */
+  .sheet-frame {
+    background: var(--white); border-top-left-radius: 32px; border-top-right-radius: 32px;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+  }
+  .sheet-handle {
+    width: 40px; height: 4px; border-radius: 2px; background: #D0CDC8;
+    margin: 14px auto 4px;
+  }
+  .sheet-backdrop {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.4);
+  }
+  .sheet-row {
+    display: flex; align-items: center; gap: 16px; padding: 24px 0;
+    border-bottom: 1px solid #EDEDEA;
+  }
+  .sheet-avatar {
+    width: 48px; height: 48px; border-radius: 24px; background: var(--cardGreen);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: var(--primary); flex-shrink: 0;
+  }
+  .sheet-icon-wrap {
+    width: 48px; height: 48px; border-radius: 24px; background: #F0EDE6;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 22px;
+  }
+  .sheet-section-title {
+    font-size: 11px; font-weight: 700; color: var(--textLight); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-top: 24px; margin-bottom: 16px;
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 5px; display: inline-block; }
+  .legend-dot-learning { background: var(--cardGreen); border: 1px solid var(--textLight); }
+  .expand-btn {
+    background: #F0EDE6; border-radius: 8px; padding: 8px 16px;
+    font-size: 14px; font-weight: 700; color: var(--textMedium); cursor: pointer; display: inline-block;
+  }
+
+  /* ── Practice heartRow ── */
+  .heart-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 24px 4px;
+  }
+  .replay-btn {
+    width: 36px; height: 36px; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -427,11 +474,13 @@
     <a href="#chips">Chip-ek &amp; Badge-ek</a>
     <a href="#atoms">Apró elemek</a>
     <a href="#patterns">Minták</a>
+    <a href="#bottom-sheet">Bottom Sheet</a>
     <div class="nav-section">Képernyők</div>
     <a href="#screen-login">Bejelentkezés</a>
     <a href="#screen-profile-select">Profil választó</a>
     <a href="#screen-create-profile">Profil létrehozás</a>
     <a href="#screen-home">Főképernyő</a>
+    <a href="#screen-home-menu">Menüsheet</a>
     <a href="#screen-parent-gate">Szülői kapu</a>
     <a href="#screen-parent-dashboard">Szülői irányítópult</a>
     <a href="#screen-exercise-settings">Feladat beállítások</a>
@@ -1076,6 +1125,77 @@
 </div>
 
 <!-- ──────────────────────────────────────────── -->
+<!-- BOTTOM SHEET -->
+<!-- ──────────────────────────────────────────── -->
+<div class="section" id="bottom-sheet">
+  <div class="section-title">Bottom Sheet (HomeMenuSheet)</div>
+  <div class="section-desc">Alulról felcsúszó panel. Spring animáció, 85% max magasság. Backdrop: rgba(0,0,0,0.4).</div>
+
+  <div class="subsection-title">Fogódzó (handle)</div>
+  <div style="background:var(--card);border-radius:16px;padding:24px;width:320px;">
+    <div class="sheet-handle" style="position:relative;"></div>
+  </div>
+  <div style="margin-top:8px;font-family:monospace;font-size:12px;color:#666;">width: 40px · height: 4px · radius: 2px · color: #D0CDC8 · marginTop: 14 · marginBottom: 4</div>
+
+  <div class="subsection-title">Sheet keret</div>
+  <div style="font-family:monospace;font-size:12px;color:#666;margin-bottom:16px;">borderTopLeftRadius: 32 · borderTopRightRadius: 32 · shadowColor: #000 · shadowOffset: 0/-4 · shadowOpacity: 12% · shadowRadius: 16</div>
+
+  <div class="subsection-title">Profil sor</div>
+  <div style="width:360px;background:var(--white);border-radius:16px;padding:0 24px;">
+    <div class="sheet-row">
+      <div class="sheet-avatar">A</div>
+      <div style="flex:1;">
+        <div style="font-size:18px;font-weight:700;color:var(--textDark);">Anna</div>
+        <div style="font-size:14px;color:var(--textLight);margin-top:2px;">3. szint · Profil váltás</div>
+      </div>
+      <div style="font-size:24px;color:var(--textLight);">›</div>
+    </div>
+    <div class="sheet-row">
+      <div class="sheet-icon-wrap">🔒</div>
+      <div>
+        <div style="font-size:18px;font-weight:700;color:var(--textDark);">Szülői mód</div>
+        <div style="font-size:14px;color:var(--textLight);margin-top:2px;">Beállítások, haladás, szint</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;font-family:monospace;font-size:12px;color:#666;">border-bottom: 1px solid #EDEDEA · avatar: 48×48 cardGreen · parentIcon: 48×48 #F0EDE6</div>
+
+  <div class="subsection-title">Betűk szekció fejléc</div>
+  <div style="width:360px;background:var(--white);border-radius:16px;padding:0 24px;">
+    <div class="sheet-section-title">Ismert betűk (12 db)</div>
+    <div class="chip-row">
+      <div class="grapheme-chip"><span>m</span></div>
+      <div class="grapheme-chip grapheme-chip-stable"><span>a</span><div class="stable-badge">✓</div></div>
+      <div class="grapheme-chip"><span>t</span></div>
+      <div class="expand-btn">+ 5 további ▾</div>
+    </div>
+    <div style="display:flex;gap:16px;margin-top:16px;padding-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:4px;">
+        <div class="legend-dot" style="background:var(--correct);"></div>
+        <div style="font-size:14px;color:var(--textMedium);">stabil</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <div class="legend-dot legend-dot-learning"></div>
+        <div style="font-size:14px;color:var(--textMedium);">tanulás alatt</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-title">Replay gomb (heartRow)</div>
+  <div class="component-row">
+    <div class="component-item">
+      <div style="width:327px;background:var(--bg);border-radius:8px;padding:4px 0;">
+        <div class="heart-row">
+          <div style="font-size:20px;">❤️</div>
+          <div class="replay-btn">🔊</div>
+        </div>
+      </div>
+      <div class="component-label">heartRow: szív (bal) + replay gomb (jobb)<br>padding: 0 24px 4px · space-between</div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────── -->
 <!-- SCREENS -->
 <!-- ──────────────────────────────────────────── -->
 <div class="section" id="screen-profile-select">
@@ -1194,37 +1314,85 @@
     <!-- HomeScreen -->
     <div class="phone-wrap" id="screen-home">
       <div class="phone-label">Főképernyő</div>
-      <div class="phone-sublabel">Üdvözlő, kert, gombok, betűk</div>
+      <div class="phone-sublabel">Fejléc menügombbal, betűkert kártya, CTA gombok</div>
       <div class="phone-frame">
         <div class="phone-screen">
-          <div class="s-scroll" style="padding-top:8px;">
-            <div class="s-header" style="padding:24px 0 8px;">
-              <div class="s-greeting">Szia, Anna! 👋</div>
-              <div class="s-subtitle">Készen állsz a betűkertbe?</div>
+          <div class="s-scroll">
+            <!-- Fejléc: köszöntő + menü gomb -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:32px 0 8px;">
+              <div>
+                <div class="s-greeting">Szia, Anna! 👋</div>
+                <div class="s-subtitle">Készen állsz a betűkertbe?</div>
+              </div>
+              <div style="width:48px;height:48px;border-radius:24px;background:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);font-size:22px;flex-shrink:0;">👤</div>
             </div>
+            <!-- Betűkert kártya -->
             <div class="app-card-green" style="border-radius:32px;">
-              <div style="font-size:40px;margin-bottom:12px;">🌱🌿🌸</div>
+              <div style="font-size:48px;margin-bottom:16px;">🌱🌿🌸</div>
               <div class="text-heading">A te betűkerted</div>
-              <div class="text-small" style="margin-top:4px;">3. szint</div>
+              <div style="font-size:14px;color:var(--primaryLight);margin-top:4px;">3. szint</div>
             </div>
-            <div class="app-btn-primary" style="display:block;text-align:center;padding:20px;border-radius:32px;font-size:20px;">🎯 Gyakorlás kezdése</div>
-            <div class="app-btn-secondary" style="display:block;text-align:center;padding:16px;border-radius:32px;">🔍 Szabad gyakorlás</div>
-            <div class="app-card">
-              <div class="s-card-title">Betűk (12)</div>
+            <!-- CTA: Gyakorlás -->
+            <div class="app-btn-primary" style="display:block;text-align:center;padding:24px;border-radius:32px;font-size:24px;">🎯 Gyakorlás kezdése</div>
+            <!-- Másodlagos: Szabad -->
+            <div class="app-btn-secondary" style="display:block;text-align:center;padding:18px;border-radius:32px;">🔍 Szabad gyakorlás</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HomeMenuSheet -->
+    <div class="phone-wrap" id="screen-home-menu">
+      <div class="phone-label">Főképernyő – menü nyitva</div>
+      <div class="phone-sublabel">HomeMenuSheet: alulról csúszik fel (spring animáció)</div>
+      <div class="phone-frame">
+        <div class="phone-screen" style="position:relative;overflow:hidden;">
+          <!-- Dimmed backdrop -->
+          <div class="sheet-backdrop"></div>
+          <!-- Bottom sheet -->
+          <div class="sheet-frame" style="position:absolute;bottom:0;left:0;right:0;">
+            <div class="sheet-handle"></div>
+            <div style="padding:0 24px 32px;">
+              <!-- Profil sor -->
+              <div class="sheet-row">
+                <div class="sheet-avatar">A</div>
+                <div style="flex:1;">
+                  <div style="font-size:18px;font-weight:700;color:var(--textDark);">Anna</div>
+                  <div style="font-size:14px;color:var(--textLight);margin-top:2px;">3. szint · Profil váltás</div>
+                </div>
+                <div style="font-size:24px;color:var(--textLight);">›</div>
+              </div>
+              <!-- Szülői mód sor -->
+              <div class="sheet-row">
+                <div class="sheet-icon-wrap">🔒</div>
+                <div>
+                  <div style="font-size:18px;font-weight:700;color:var(--textDark);">Szülői mód</div>
+                  <div style="font-size:14px;color:var(--textLight);margin-top:2px;">Beállítások, haladás, szint</div>
+                </div>
+              </div>
+              <!-- Betűk szekció -->
+              <div class="sheet-section-title">Ismert betűk (12 db)</div>
               <div class="chip-row">
                 <div class="grapheme-chip"><span>m</span></div>
-                <div class="grapheme-chip"><span>á</span></div>
                 <div class="grapheme-chip grapheme-chip-stable"><span>a</span><div class="stable-badge">✓</div></div>
                 <div class="grapheme-chip grapheme-chip-stable"><span>e</span><div class="stable-badge">✓</div></div>
                 <div class="grapheme-chip"><span>t</span></div>
                 <div class="grapheme-chip grapheme-chip-stable"><span>i</span><div class="stable-badge">✓</div></div>
                 <div class="grapheme-chip"><span>l</span></div>
                 <div class="grapheme-chip"><span>o</span></div>
+                <div class="expand-btn">+ 5 további ▾</div>
               </div>
-            </div>
-            <div style="display:flex;gap:12px;">
-              <div class="app-btn-small" style="flex:1;text-align:center;">👤 Profil váltás</div>
-              <div class="app-btn-small" style="flex:1;text-align:center;">🔒 Szülői mód</div>
+              <!-- Legenda -->
+              <div style="display:flex;gap:16px;margin-top:16px;">
+                <div style="display:flex;align-items:center;gap:4px;">
+                  <div class="legend-dot" style="background:var(--correct);"></div>
+                  <div style="font-size:14px;color:var(--textMedium);">stabil</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:4px;">
+                  <div class="legend-dot legend-dot-learning"></div>
+                  <div style="font-size:14px;color:var(--textMedium);">tanulás alatt</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1574,7 +1742,7 @@
     <!-- PracticeScreen – standard -->
     <div class="phone-wrap" id="screen-practice">
       <div class="phone-label">Gyakorlás – standard</div>
-      <div class="phone-sublabel">Progress bar, célkártya, opciók</div>
+      <div class="phone-sublabel">Progress bar, heartRow (szív + replay gomb), célkártya, opciók</div>
       <div class="phone-frame">
         <div class="phone-screen" style="display:flex;flex-direction:column;">
           <div class="practice-header">
@@ -1582,7 +1750,10 @@
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:40%;"></div></div>
             <div class="progress-text">4/10</div>
           </div>
-          <div style="padding-left:24px;font-size:20px;">❤️</div>
+          <div class="heart-row">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
           <div class="exercise-area" style="flex:1;">
             <div class="text-body">Melyik betű ez?</div>
             <div class="target-card">
