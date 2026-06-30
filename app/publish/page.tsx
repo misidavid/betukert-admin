@@ -48,7 +48,7 @@ export default function PublishPage() {
     if (result.error) {
       setMessage(`❌ Hiba: ${result.error}`);
     } else {
-      setMessage(`✅ Csomag publikálva! Verzió: ${result.version} | ${result.imageCount} kép, ${result.soundCount} hang`);
+      setMessage(`✅ Csomag publikálva! Verzió: ${result.version} | ${result.imageCount} kép, ${result.soundCount} hang, ${result.loadingScreenCount} loading screen`);
       loadData();
     }
     setPublishing(false);

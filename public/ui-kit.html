@@ -500,6 +500,40 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .spinner { width: 40px; height: 40px; border: 3px solid var(--cardGreen); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-center { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; }
+
+/* Tablet frame */
+.tablet-frame {
+  width: 680px; min-height: 960px; background: var(--bg);
+  border-radius: 32px; overflow: hidden; position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  border: 8px solid #1a1a1a;
+  flex-shrink: 0; display: inline-flex; flex-direction: column;
+}
+.tablet-screen {
+  flex: 1; padding-top: 20px; padding-bottom: 72px;
+  overflow: hidden; display: flex; flex-direction: column;
+  position: relative;
+}
+.tablet-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.tablet-label { font-size: 13px; font-weight: 600; color: #444; text-align: center; }
+.tablet-sublabel { font-size: 11px; color: #888; text-align: center; max-width: 340px; line-height: 1.4; }
+.tablet-progress {
+  display: flex; align-items: center; gap: 16px;
+  padding: 12px 32px 24px;
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: var(--bg); z-index: 10;
+}
+.tablet-word-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; padding: 0 48px 24px; width: 100%;
+}
+.tablet-option-card {
+  background: var(--white); border-radius: 28px; padding: 32px 24px;
+  text-align: center; box-shadow: var(--shadow);
+  font-size: 32px; font-weight: 700; color: var(--textDark); cursor: pointer;
+}
+.tablet-option-correct { background: var(--cardGreen); border: 2px solid var(--primary); color: var(--primary); }
+.tablet-option-incorrect { background: var(--errorBg); }
 </style>
 </head>
 <body>
@@ -550,6 +584,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <a href="#ex-image-word-drag">4.11 Kép-szó húzós</a>
     <a href="#ex-sentence-picture">4.12 Mondat-kép párosítás</a>
     <a href="#ex-image-sentence">4.13 Kép-mondat párosítás</a>
+    <a href="#ex-word-recognition">4.14 Szófelismerés (tablet)</a>
     <div class="nav-section">5. Egyéb</div>
     <a href="#home-menu-sheet">5.1 HomeMenuSheet</a>
     <a href="#exercise-progress-bar">5.2 ExerciseProgressBar</a>
@@ -2537,6 +2572,124 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <!-- ═══════════════════════════════════ -->
 <!-- 5. EGYÉB KOMPONENSEK -->
 <!-- ═══════════════════════════════════ -->
+
+<!-- 4.14 Szófelismerés – tablet nézet -->
+<div class="section" id="ex-word-recognition">
+  <div class="subsection-title">4.14 Szófelismerés – tablet nézet (image_word_match)</div>
+  <div class="section-desc">680×960px portrait tablet frame. Kép jelenik meg, a gyerek négy szó közül kiválasztja a helyes írott alakot. Tablet elrendezés: bal oldalon nagy kép, jobb oldalon utasítás + 2×2-es szórács.</div>
+  <div class="screens-grid">
+
+    <!-- Alap állapot -->
+    <div class="tablet-wrap">
+      <div class="tablet-frame">
+        <div class="tablet-screen" style="display:flex;flex-direction:column;">
+          <div class="heart-row" style="padding:20px 32px 12px;">
+            <div style="font-size:22px;">❤️</div>
+            <div class="replay-btn" style="width:52px;height:52px;font-size:26px;border-radius:26px;">🔊</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:row;gap:24px;padding:8px 32px 0;align-items:center;">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+              <div style="width:260px;height:260px;background:var(--card);border-radius:32px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:96px;">🍎</div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:20px;justify-content:center;">
+              <div style="font-size:22px;font-weight:600;color:var(--textMedium);text-align:center;">Melyik szót látod a képen?</div>
+              <div class="tablet-word-grid" style="padding:0;">
+                <div class="tablet-option-card">al-ma</div>
+                <div class="tablet-option-card">kör-te</div>
+                <div class="tablet-option-card">szi-lva</div>
+                <div class="tablet-option-card">ba-rack</div>
+              </div>
+            </div>
+          </div>
+          <div class="tablet-progress">
+            <div class="exit-btn" style="width:44px;height:44px;font-size:22px;">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:42%;"></div></div>
+            <div style="font-size:15px;color:var(--textMedium);width:48px;text-align:right;">5/12</div>
+          </div>
+        </div>
+      </div>
+      <div class="tablet-label">Alap állapot</div>
+      <div class="tablet-sublabel">Kép bal oldalon (260×260), 2×2-es szókártyák jobb oldalon. Szótagkötőjel alacsony fázisoknál.</div>
+    </div>
+
+    <!-- Helyes válasz -->
+    <div class="tablet-wrap">
+      <div class="tablet-frame">
+        <div class="tablet-screen" style="display:flex;flex-direction:column;">
+          <div class="heart-row" style="padding:20px 32px 12px;">
+            <div style="font-size:22px;">❤️</div>
+            <div class="replay-btn" style="width:52px;height:52px;font-size:26px;border-radius:26px;">🔊</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:row;gap:24px;padding:8px 32px 0;align-items:center;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;justify-content:center;">
+              <div style="width:260px;height:260px;background:var(--card);border-radius:32px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:96px;">🍎</div>
+              <div class="feedback-correct" style="font-size:20px;">🌿 Igen, helyes!</div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:20px;justify-content:center;">
+              <div style="font-size:22px;font-weight:600;color:var(--textMedium);text-align:center;">Melyik szót látod a képen?</div>
+              <div class="tablet-word-grid" style="padding:0;">
+                <div class="tablet-option-card tablet-option-correct">al-ma</div>
+                <div class="tablet-option-card">kör-te</div>
+                <div class="tablet-option-card">szi-lva</div>
+                <div class="tablet-option-card">ba-rack</div>
+              </div>
+            </div>
+          </div>
+          <div class="tablet-progress">
+            <div class="exit-btn" style="width:44px;height:44px;font-size:22px;">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:50%;"></div></div>
+            <div style="font-size:15px;color:var(--textMedium);width:48px;text-align:right;">6/12</div>
+          </div>
+        </div>
+      </div>
+      <div class="tablet-label">Helyes válasz</div>
+      <div class="tablet-sublabel">Helyes kártya: cardGreen + primary border. Visszajelzés a kép alatt.</div>
+    </div>
+
+    <!-- Helytelen válasz -->
+    <div class="tablet-wrap">
+      <div class="tablet-frame">
+        <div class="tablet-screen" style="display:flex;flex-direction:column;">
+          <div class="heart-row" style="padding:20px 32px 12px;">
+            <div style="font-size:22px;">❤️</div>
+            <div class="replay-btn" style="width:52px;height:52px;font-size:26px;border-radius:26px;">🔊</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:row;gap:24px;padding:8px 32px 0;align-items:center;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;justify-content:center;">
+              <div style="width:260px;height:260px;background:var(--card);border-radius:32px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:96px;">🍎</div>
+              <div class="feedback-incorrect" style="font-size:20px;">Nézzük meg újra.</div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:20px;justify-content:center;">
+              <div style="font-size:22px;font-weight:600;color:var(--textMedium);text-align:center;">Melyik szót látod a képen?</div>
+              <div class="tablet-word-grid" style="padding:0;">
+                <div class="tablet-option-card tablet-option-correct">al-ma</div>
+                <div class="tablet-option-card tablet-option-incorrect">kör-te</div>
+                <div class="tablet-option-card">szi-lva</div>
+                <div class="tablet-option-card">ba-rack</div>
+              </div>
+            </div>
+          </div>
+          <div class="tablet-progress">
+            <div class="exit-btn" style="width:44px;height:44px;font-size:22px;">✕</div>
+            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:42%;"></div></div>
+            <div style="font-size:15px;color:var(--textMedium);width:48px;text-align:right;">5/12</div>
+          </div>
+        </div>
+      </div>
+      <div class="tablet-label">Helytelen válasz</div>
+      <div class="tablet-sublabel">Helyes kártya zölddel kiemelve, helytelen errorBg-vel. Visszajelzés a kép alatt.</div>
+    </div>
+
+  </div>
+  <div style="margin-top:24px;font-size:12px;color:#888;font-family:monospace;line-height:2;">
+    tablet-frame: 680×960px · border 8px #1a1a1a · border-radius 32px<br>
+    elrendezés: side-by-side flex-row · kép bal (260×260 · radius 32) · opciók jobb (flex:1)<br>
+    tablet-option-card: white · radius 28px · padding 32/24 · 32px bold textDark<br>
+    tablet-word-grid: 2 columns · gap 20px · szótagkötőjel alacsony fázisoknál<br>
+    visszajelzés: kép alatt (feedback-correct / feedback-incorrect · 20px)<br>
+    tablet-progress: fixed bottom · padding 12/32/24 · ✕ 44×44 · counter 15px
+  </div>
+</div>
 
 <!-- 5.1 HomeMenuSheet (already shown in 2.12, but show in context here too) -->
 <div class="section" id="home-menu-sheet">

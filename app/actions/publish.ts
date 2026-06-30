@@ -51,16 +51,17 @@ export async function fetchPublishDataAction(): Promise<PublishPageData> {
   }
 }
 
-export async function publishPackageAction(): Promise<{ version: string; imageCount: number; soundCount: number; error?: string }> {
+export async function publishPackageAction(): Promise<{ version: string; imageCount: number; soundCount: number; loadingScreenCount: number; error?: string }> {
   try {
     await requireAuth();
-    const [{ data: images }, { data: sounds }, { data: words }, { data: sentenceImages }, { data: sentences }, { data: comprehensions }] = await Promise.all([
+    const [{ data: images }, { data: sounds }, { data: words }, { data: sentenceImages }, { data: sentences }, { data: comprehensions }, { data: loadingScreens }] = await Promise.all([
       getSupabaseAdmin().from('image_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('sound_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('words').select('*').eq('enabled', true).order('phase').order('text'),
       getSupabaseAdmin().from('sentence_image_needs').select('*').eq('status', 'published'),
       getSupabaseAdmin().from('sentence_bank').select('*').order('phase').order('id'),
       getSupabaseAdmin().from('comprehension_bank').select('*').order('phase').order('id'),
+      getSupabaseAdmin().from('loading_screens').select('file_url, sort_order').order('sort_order').order('created_at'),
     ]);
 
     const version = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -100,12 +101,14 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
         wrong_answers: c.wrong_answers,
         phase: c.phase,
       })) || [],
+      loading_screens: loadingScreens?.map((ls: any) => ({ url: ls.file_url })) || [],
     };
 
     const { error } = await getSupabaseAdmin().from('published_packages').insert({
       version,
       image_count: images?.length || 0,
       sound_count: sounds?.length || 0,
+      loading_screen_count: loadingScreens?.length || 0,
       manifest,
     });
 
@@ -129,9 +132,9 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
       return { version: '', imageCount: 0, soundCount: 0, error: 'Tárhely hiba (az adatbázisba mentés sikeres volt)' };
     }
 
-    return { version, imageCount: images?.length || 0, soundCount: sounds?.length || 0 };
+    return { version, imageCount: images?.length || 0, soundCount: sounds?.length || 0, loadingScreenCount: loadingScreens?.length || 0 };
   } catch (e) {
     console.error('[publishPackageAction]', e);
-    return { version: '', imageCount: 0, soundCount: 0, error: 'Szerverhiba' };
+    return { version: '', imageCount: 0, soundCount: 0, loadingScreenCount: 0, error: 'Szerverhiba' };
   }
 }
