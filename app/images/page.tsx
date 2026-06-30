@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { supabase, ImageNeed, ImageStatus } from '../../lib/supabase';
-import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction } from '../actions/imageNeeds';
+import { ImageNeed, ImageStatus } from '../../lib/supabase';
+import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction, fetchImageNeedsAction } from '../actions/imageNeeds';
+import { ExerciseTypeConfig } from '../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
 const GREEN = '#2F6B3F';
@@ -41,12 +42,6 @@ function StatusChip({ status }: { status: ImageStatus }) {
       {STATUS_LABELS[status]}
     </span>
   );
-}
-
-interface ExerciseTypeConfig {
-  id: string;
-  label: string;
-  requires_image: boolean;
 }
 
 export default function ImagesPage() {
@@ -93,13 +88,10 @@ export default function ImagesPage() {
       setLoading(true);
     }
 
-    const [{ data: imageData }, { data: configData }] = await Promise.all([
-      supabase.from('image_needs').select('*').order('phase', { ascending: true }),
-      supabase.from('exercise_type_config').select('*').eq('requires_image', true),
-    ]);
+    const { items: imageData, configs: configData } = await fetchImageNeedsAction();
 
-    if (imageData) setItems(imageData);
-    if (configData) setConfigs(configData);
+    setItems(imageData);
+    setConfigs(configData);
     if (!preserveScroll) setLoading(false);
   };
 

@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '../../../lib/supabase';
-import { toggleRequiresImageAction } from '../../actions/exerciseTypeConfig';
+import { toggleRequiresImageAction, fetchExerciseTypeConfigsAction, ExerciseTypeConfig } from '../../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
 const GREEN = '#2F6B3F';
@@ -11,13 +10,6 @@ const GREEN_LIGHT = '#DCEBDC';
 const MUTED = '#8A8478';
 const TRACK = '#F1ECE0';
 const display = { fontFamily: 'var(--font-display)' };
-
-interface ExerciseTypeConfig {
-  id: string;
-  label: string;
-  requires_image: boolean;
-  updated_at: string;
-}
 
 export default function ImageSettingsPage() {
   const [configs, setConfigs] = useState<ExerciseTypeConfig[]>([]);
@@ -31,11 +23,8 @@ export default function ImageSettingsPage() {
 
   const loadConfigs = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('exercise_type_config')
-      .select('*')
-      .order('id');
-    if (!error && data) setConfigs(data);
+    const { configs } = await fetchExerciseTypeConfigsAction();
+    setConfigs(configs);
     setLoading(false);
   };
 

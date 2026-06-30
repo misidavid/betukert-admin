@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Baloo_2, Quicksand } from 'next/font/google';
-import { supabase } from '../lib/supabase';
+import { fetchHomeStatsAction } from './actions/stats';
 
 const displayFont = Baloo_2({
   subsets: ['latin', 'latin-ext'],
@@ -65,28 +65,11 @@ export default function Home() {
   }, []);
 
   const loadStats = async () => {
-    const [
-      { count: missingImages },
-      { count: missingSounds },
-      { count: publishedPackages },
-    ] = await Promise.all([
-      supabase
-        .from('image_needs')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'missing'),
-      supabase
-        .from('sound_needs')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'missing'),
-      supabase
-        .from('published_packages')
-        .select('*', { count: 'exact', head: true }),
-    ]);
-
+    const data = await fetchHomeStatsAction();
     setStats({
-      missingImages: missingImages || 0,
-      missingSounds: missingSounds || 0,
-      publishedPackages: publishedPackages || 0,
+      missingImages: data.missingImages,
+      missingSounds: data.missingSounds,
+      publishedPackages: data.publishedPackages,
     });
     setLoading(false);
   };

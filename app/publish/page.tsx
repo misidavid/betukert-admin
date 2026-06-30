@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import { publishPackageAction } from '../actions/publish';
+import { publishPackageAction, fetchPublishDataAction, PublishedPackage } from '../actions/publish';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';
@@ -18,15 +17,6 @@ interface PackageStats {
   totalSounds: number;
 }
 
-interface PublishedPackage {
-  id: string;
-  version: string;
-  created_at: string;
-  image_count: number;
-  sound_count: number;
-  manifest: any;
-}
-
 export default function PublishPage() {
   const [stats, setStats] = useState<PackageStats | null>(null);
   const [packages, setPackages] = useState<PublishedPackage[]>([]);
@@ -40,34 +30,14 @@ export default function PublishPage() {
 
   const loadData = async () => {
     setLoading(true);
-
-    const [
-      { count: totalImages },
-      { count: publishedImages },
-      { count: totalSounds },
-      { count: publishedSounds },
-    ] = await Promise.all([
-      supabase.from('image_needs').select('*', { count: 'exact', head: true }),
-      supabase.from('image_needs').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-      supabase.from('sound_needs').select('*', { count: 'exact', head: true }),
-      supabase.from('sound_needs').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-    ]);
-
+    const data = await fetchPublishDataAction();
     setStats({
-      totalImages: totalImages || 0,
-      publishedImages: publishedImages || 0,
-      totalSounds: totalSounds || 0,
-      publishedSounds: publishedSounds || 0,
+      totalImages: data.totalImages,
+      publishedImages: data.publishedImages,
+      totalSounds: data.totalSounds,
+      publishedSounds: data.publishedSounds,
     });
-
-    // Publikált csomagok betöltése
-    const { data: pkgs } = await supabase
-      .from('published_packages')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    if (pkgs) setPackages(pkgs);
+    setPackages(data.packages);
     setLoading(false);
   };
 

@@ -1,8 +1,24 @@
 'use server';
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
-import { SoundStatus } from '../../lib/supabase';
+import { SoundStatus, SoundNeed } from '../../lib/supabase';
 import { requireAuth } from '../../lib/requireAuth';
+
+export async function fetchSoundNeedsAction(): Promise<{ items: SoundNeed[]; error?: string }> {
+  try {
+    await requireAuth();
+    const { data, error } = await getSupabaseAdmin()
+      .from('sound_needs')
+      .select('*')
+      .eq('type', 'instruction')
+      .order('created_at', { ascending: true });
+    if (error) return { items: [], error: 'Adatbázis hiba' };
+    return { items: (data ?? []) as SoundNeed[] };
+  } catch (e) {
+    console.error('[fetchSoundNeedsAction]', e);
+    return { items: [], error: 'Szerverhiba' };
+  }
+}
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_SOUND_STATUSES = new Set<SoundStatus>(['missing', 'uploaded', 'pending_review', 'approved', 'published', 'rejected', 'needs_regeneration']);

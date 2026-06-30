@@ -1,8 +1,23 @@
 'use server';
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
-import { ImageStatus } from '../../lib/supabase';
+import { ImageStatus, SentenceImageNeed } from '../../lib/supabase';
 import { requireAuth } from '../../lib/requireAuth';
+
+export async function fetchSentenceImageNeedsAction(): Promise<{ items: SentenceImageNeed[]; error?: string }> {
+  try {
+    await requireAuth();
+    const { data, error } = await getSupabaseAdmin()
+      .from('sentence_image_needs')
+      .select('*')
+      .order('phase', { ascending: true });
+    if (error) return { items: [], error: 'Adatbázis hiba' };
+    return { items: (data ?? []) as SentenceImageNeed[] };
+  } catch (e) {
+    console.error('[fetchSentenceImageNeedsAction]', e);
+    return { items: [], error: 'Szerverhiba' };
+  }
+}
 import { SENTENCE_BANK, COMPREHENSION_BANK } from '../../shared/data/sentencebank';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

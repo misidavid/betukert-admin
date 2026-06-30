@@ -1,8 +1,27 @@
 'use server';
 
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
-import { ImageStatus } from '../../lib/supabase';
+import { ImageStatus, ImageNeed } from '../../lib/supabase';
 import { requireAuth } from '../../lib/requireAuth';
+import { ExerciseTypeConfig } from './exerciseTypeConfig';
+
+export async function fetchImageNeedsAction(): Promise<{
+  items: ImageNeed[];
+  configs: ExerciseTypeConfig[];
+  error?: string;
+}> {
+  try {
+    await requireAuth();
+    const [{ data: items }, { data: configs }] = await Promise.all([
+      getSupabaseAdmin().from('image_needs').select('*').order('phase', { ascending: true }),
+      getSupabaseAdmin().from('exercise_type_config').select('*').eq('requires_image', true),
+    ]);
+    return { items: (items ?? []) as ImageNeed[], configs: (configs ?? []) as ExerciseTypeConfig[] };
+  } catch (e) {
+    console.error('[fetchImageNeedsAction]', e);
+    return { items: [], configs: [], error: 'Szerverhiba' };
+  }
+}
 import { WORD_BANK } from '../../shared/data/wordbank';
 import { splitIntoSyllables, splitIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';

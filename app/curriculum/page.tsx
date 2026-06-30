@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Search, RotateCcw, Trash2 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
-import { seedWordsAction, deleteWordAction, toggleWordEnabledAction, addWordAction, getExcludedWordsAction, restoreExcludedWordAction } from '../actions/words';
+import { seedWordsAction, deleteWordAction, toggleWordEnabledAction, addWordAction, getExcludedWordsAction, restoreExcludedWordAction, fetchWordsAction, WordItem } from '../actions/words';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
 
@@ -17,16 +16,6 @@ const RED_TEXT = '#8A4A44';
 const MUTED = '#8A8478';
 const TRACK = '#F1ECE0';
 const display = { fontFamily: 'var(--font-display)' };
-
-interface WordItem {
-  id: string;
-  text: string;
-  syllables: string[];
-  syllable_count: number;
-  phase: number;
-  difficulty: number;
-  enabled: boolean;
-}
 
 function PhaseChip({ phase }: { phase: number }) {
   return (
@@ -69,13 +58,8 @@ export default function CurriculumPage() {
 
   const loadWords = async () => {
     setLoadingWords(true);
-    const { data, error } = await supabase
-      .from('words')
-      .select('*')
-      .lte('phase', phaseFilter)
-      .order(sortBy, { ascending: sortDir === 'asc' });
-
-    if (!error && data) setWords(data);
+    const { words: data } = await fetchWordsAction(phaseFilter, sortBy, sortDir);
+    setWords(data);
     setLoadingWords(false);
   };
 

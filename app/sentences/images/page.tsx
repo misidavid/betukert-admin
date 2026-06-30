@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase, SentenceImageNeed, ImageStatus } from '../../../lib/supabase';
+import { SentenceImageNeed, ImageStatus } from '../../../lib/supabase';
 import {
   generateSentenceImageNeedsAction,
   uploadSentenceImageFileAction,
   updateSentenceImageNeedStatusAction,
   deleteSentenceImageFileAction,
+  fetchSentenceImageNeedsAction,
 } from '../../actions/sentenceImageNeeds';
 
 const GREEN = '#2F6B3F';
@@ -88,8 +89,8 @@ export default function SentenceImagesPage() {
 
   const loadData = async () => {
     setLoading(true);
-    const { data } = await supabase.from('sentence_image_needs').select('*').order('phase', { ascending: true });
-    if (data) setItems(data);
+    const { items } = await fetchSentenceImageNeedsAction();
+    setItems(items);
     setLoading(false);
   };
 

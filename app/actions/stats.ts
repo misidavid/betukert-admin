@@ -3,6 +3,34 @@
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { requireAuth } from '../../lib/requireAuth';
 
+export async function fetchHomeStatsAction(): Promise<{
+  missingImages: number;
+  missingSounds: number;
+  publishedPackages: number;
+  error?: string;
+}> {
+  try {
+    await requireAuth();
+    const [
+      { count: missingImages },
+      { count: missingSounds },
+      { count: publishedPackages },
+    ] = await Promise.all([
+      getSupabaseAdmin().from('image_needs').select('*', { count: 'exact', head: true }).eq('status', 'missing'),
+      getSupabaseAdmin().from('sound_needs').select('*', { count: 'exact', head: true }).eq('status', 'missing'),
+      getSupabaseAdmin().from('published_packages').select('*', { count: 'exact', head: true }),
+    ]);
+    return {
+      missingImages: missingImages ?? 0,
+      missingSounds: missingSounds ?? 0,
+      publishedPackages: publishedPackages ?? 0,
+    };
+  } catch (e) {
+    console.error('[fetchHomeStatsAction]', e);
+    return { missingImages: 0, missingSounds: 0, publishedPackages: 0, error: 'Szerverhiba' };
+  }
+}
+
 export interface WordStat {
   item_id: string;
   item_type: string;

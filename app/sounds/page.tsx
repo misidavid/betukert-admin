@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { supabase, SoundNeed, SoundStatus } from '../../lib/supabase';
-import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction } from '../actions/soundNeeds';
+import { SoundNeed, SoundStatus } from '../../lib/supabase';
+import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction, fetchSoundNeedsAction } from '../actions/soundNeeds';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';
@@ -47,13 +47,8 @@ export default function SoundsPage() {
 
   const loadItems = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('sound_needs')
-      .select('*')
-      .eq('type', 'instruction')
-      .order('created_at', { ascending: true });
-
-    if (!error && data) setItems(data);
+    const { items } = await fetchSoundNeedsAction();
+    setItems(items);
     setLoading(false);
   };
 

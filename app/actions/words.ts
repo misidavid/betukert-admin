@@ -3,6 +3,36 @@
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { requireAuth } from '../../lib/requireAuth';
 import { WORD_BANK } from '../../shared/data/wordbank';
+
+export interface WordItem {
+  id: string;
+  text: string;
+  syllables: string[];
+  syllable_count: number;
+  phase: number;
+  difficulty: number;
+  enabled: boolean;
+}
+
+export async function fetchWordsAction(
+  phase: number,
+  sortBy: 'created_at' | 'text' | 'phase',
+  sortDir: 'asc' | 'desc',
+): Promise<{ words: WordItem[]; error?: string }> {
+  try {
+    await requireAuth();
+    const { data, error } = await getSupabaseAdmin()
+      .from('words')
+      .select('*')
+      .lte('phase', phase)
+      .order(sortBy, { ascending: sortDir === 'asc' });
+    if (error) return { words: [], error: 'Adatbázis hiba' };
+    return { words: (data ?? []) as WordItem[] };
+  } catch (e) {
+    console.error('[fetchWordsAction]', e);
+    return { words: [], error: 'Szerverhiba' };
+  }
+}
 import { splitIntoSyllables, splitIntoGraphemes, splitNameIntoGraphemes, DISPLAY_TO_ID } from '../../shared/curriculum/wordFilter';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 

@@ -4,6 +4,53 @@ import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { requireAuth } from '../../lib/requireAuth';
 import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 
+export interface PublishedPackage {
+  id: string;
+  version: string;
+  created_at: string;
+  image_count: number;
+  sound_count: number;
+  manifest: any;
+}
+
+export interface PublishPageData {
+  totalImages: number;
+  publishedImages: number;
+  totalSounds: number;
+  publishedSounds: number;
+  packages: PublishedPackage[];
+  error?: string;
+}
+
+export async function fetchPublishDataAction(): Promise<PublishPageData> {
+  try {
+    await requireAuth();
+    const [
+      { count: totalImages },
+      { count: publishedImages },
+      { count: totalSounds },
+      { count: publishedSounds },
+      { data: packages },
+    ] = await Promise.all([
+      getSupabaseAdmin().from('image_needs').select('*', { count: 'exact', head: true }),
+      getSupabaseAdmin().from('image_needs').select('*', { count: 'exact', head: true }).eq('status', 'published'),
+      getSupabaseAdmin().from('sound_needs').select('*', { count: 'exact', head: true }),
+      getSupabaseAdmin().from('sound_needs').select('*', { count: 'exact', head: true }).eq('status', 'published'),
+      getSupabaseAdmin().from('published_packages').select('*').order('created_at', { ascending: false }).limit(10),
+    ]);
+    return {
+      totalImages: totalImages ?? 0,
+      publishedImages: publishedImages ?? 0,
+      totalSounds: totalSounds ?? 0,
+      publishedSounds: publishedSounds ?? 0,
+      packages: (packages ?? []) as PublishedPackage[],
+    };
+  } catch (e) {
+    console.error('[fetchPublishDataAction]', e);
+    return { totalImages: 0, publishedImages: 0, totalSounds: 0, publishedSounds: 0, packages: [], error: 'Szerverhiba' };
+  }
+}
+
 export async function publishPackageAction(): Promise<{ version: string; imageCount: number; soundCount: number; error?: string }> {
   try {
     await requireAuth();
