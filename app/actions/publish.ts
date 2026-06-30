@@ -114,7 +114,7 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
 
     if (error) {
       console.error('[publishPackageAction] DB hiba:', error);
-      return { version: '', imageCount: 0, soundCount: 0, error: 'Adatbázis hiba' };
+      return { version: '', imageCount: 0, soundCount: 0, loadingScreenCount: 0, error: 'Adatbázis hiba' };
     }
 
     const supabase = getSupabaseAdmin();
@@ -129,7 +129,7 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
 
     if (storageError) {
       console.error('[publishPackageAction] Storage hiba:', storageError);
-      return { version: '', imageCount: 0, soundCount: 0, error: 'Tárhely hiba (az adatbázisba mentés sikeres volt)' };
+      return { version: '', imageCount: 0, soundCount: 0, loadingScreenCount: 0, error: 'Tárhely hiba (az adatbázisba mentés sikeres volt)' };
     }
 
     return { version, imageCount: images?.length || 0, soundCount: sounds?.length || 0, loadingScreenCount: loadingScreens?.length || 0 };
