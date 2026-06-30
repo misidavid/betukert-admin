@@ -171,14 +171,19 @@ export default function LoadingScreensPage() {
           Futtasd le ezt a Supabase SQL Editorban, ha még nem tetted meg:
         </p>
         <pre className="bg-white rounded-2xl p-3 text-xs overflow-x-auto" style={{ color: MUTED }}>
-{`CREATE TABLE loading_screens (
+{`-- 1. Loading screens tábla
+CREATE TABLE IF NOT EXISTS loading_screens (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   filename TEXT NOT NULL,
   file_path TEXT NOT NULL,
   file_url TEXT NOT NULL,
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);`}
+);
+
+-- 2. published_packages tábla új kolumna
+ALTER TABLE published_packages
+  ADD COLUMN IF NOT EXISTS loading_screen_count INTEGER DEFAULT 0;`}
         </pre>
         <p className="text-sm mt-3" style={{ color: '#9A7A2F' }}>
           A feltöltött képek a következő <strong>Csomag publikálása</strong> után kerülnek az appba.
