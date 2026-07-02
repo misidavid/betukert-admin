@@ -288,9 +288,23 @@ export default function SentencesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>📝 Mondatok</h1>
-        <p className="text-sm mt-1" style={{ color: MUTED }}>Mondatrendezés és mondatértés feladatok szerkesztése</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>📝 Mondatok</h1>
+          <p className="text-sm mt-1" style={{ color: MUTED }}>Mondatrendezés és mondatértés feladatok szerkesztése</p>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <button onClick={handleSeedSentences} disabled={seeding}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm text-white disabled:opacity-50"
+            style={{ background: GREEN, ...display, fontWeight: 600 }}>
+            <RotateCcw size={14} /> {seeding ? '...' : 'Mondatrendezés sync'}
+          </button>
+          <button onClick={handleSeedComprehensions} disabled={seeding}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm text-white disabled:opacity-50"
+            style={{ background: GREEN, ...display, fontWeight: 600 }}>
+            <RotateCcw size={14} /> {seeding ? '...' : 'Mondatértés sync'}
+          </button>
+        </div>
       </div>
 
       {toast && (
