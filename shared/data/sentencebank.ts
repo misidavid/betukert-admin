@@ -897,6 +897,1612 @@ export const SENTENCE_BANK: SentenceItem[] = [
     acceptedOrders: [['Kata', 'a', 'folyóban', 'lassan', 'úszik']],
     phase: 38,
   },
+
+  // ── FELADATLAPOK I. MONDATOK (Meixner Ildikó) ───────────────────────────────
+
+  // Fázis 14
+  {
+    id: 's144',
+    words: ['ez', 'az', 'iskola'],
+    acceptedOrders: [['ez', 'az', 'iskola']],
+    phase: 14,
+  },
+
+  // Fázis 16
+  {
+    id: 's145',
+    words: ['a', 'mókus', 'diót', 'kap'],
+    acceptedOrders: [['a', 'mókus', 'diót', 'kap'], ['diót', 'kap', 'a', 'mókus']],
+    phase: 16,
+  },
+
+  // Fázis 17
+  {
+    id: 's146',
+    words: ['a', 'cica', 'tejet', 'kap'],
+    acceptedOrders: [['a', 'cica', 'tejet', 'kap'], ['tejet', 'kap', 'a', 'cica']],
+    phase: 17,
+  },
+  {
+    id: 's147',
+    words: ['apu', 'autót', 'javít'],
+    acceptedOrders: [['apu', 'autót', 'javít'], ['autót', 'javít', 'apu']],
+    phase: 17,
+  },
+  {
+    id: 's148',
+    words: ['hívja', 'a', 'pajtását'],
+    acceptedOrders: [['hívja', 'a', 'pajtását']],
+    phase: 17,
+  },
+
+  // Fázis 18
+  {
+    id: 's149',
+    words: ['a', 'cica', 'fél'],
+    acceptedOrders: [['a', 'cica', 'fél'], ['fél', 'a', 'cica']],
+    phase: 18,
+  },
+  {
+    id: 's150',
+    words: ['késő', 'este', 'van'],
+    acceptedOrders: [['késő', 'este', 'van']],
+    phase: 19,
+  },
+  {
+    id: 's151',
+    words: ['apu', 'tévét', 'javít'],
+    acceptedOrders: [['apu', 'tévét', 'javít'], ['tévét', 'javít', 'apu']],
+    phase: 18,
+  },
+  {
+    id: 's152',
+    words: ['az', 'éjjel', 'sok', 'hó', 'esett'],
+    acceptedOrders: [['az', 'éjjel', 'sok', 'hó', 'esett']],
+    phase: 18,
+  },
+
+  // Fázis 19
+  {
+    id: 's153',
+    words: ['most', 'siet', 'az', 'utcán'],
+    acceptedOrders: [['most', 'siet', 'az', 'utcán'], ['az', 'utcán', 'most', 'siet']],
+    phase: 19,
+  },
+  {
+    id: 's154',
+    words: ['apu', 'fújja', 'fel', 'neki'],
+    acceptedOrders: [['apu', 'fújja', 'fel', 'neki']],
+    phase: 19,
+  },
+
+  // Fázis 20
+  {
+    id: 's155',
+    words: ['úszik', 'a', 'hajó'],
+    acceptedOrders: [['úszik', 'a', 'hajó'], ['a', 'hajó', 'úszik']],
+    phase: 20,
+  },
+  {
+    id: 's156',
+    words: ['nem', 'lehet', 'kint', 'játszani'],
+    acceptedOrders: [['nem', 'lehet', 'kint', 'játszani']],
+    phase: 20,
+  },
+  {
+    id: 's157',
+    words: ['színesek', 'a', 'falevelek'],
+    acceptedOrders: [['színesek', 'a', 'falevelek'], ['a', 'falevelek', 'színesek']],
+    phase: 20,
+  },
+  {
+    id: 's158',
+    words: ['a', 'néni', 'vizet', 'iszik'],
+    acceptedOrders: [['a', 'néni', 'vizet', 'iszik'], ['vizet', 'iszik', 'a', 'néni']],
+    phase: 20,
+  },
+  {
+    id: 's159',
+    words: ['a', 'néni', 'kávét', 'iszik'],
+    acceptedOrders: [['a', 'néni', 'kávét', 'iszik'], ['kávét', 'iszik', 'a', 'néni']],
+    phase: 20,
+  },
+  {
+    id: 's160',
+    words: ['a', 'fiúk', 'előveszik', 'a', 'vonatot'],
+    acceptedOrders: [['a', 'fiúk', 'előveszik', 'a', 'vonatot']],
+    phase: 20,
+  },
+  {
+    id: 's161',
+    words: ['a', 'padlón', 'sok', 'a', 'szemét'],
+    acceptedOrders: [['a', 'padlón', 'sok', 'a', 'szemét']],
+    phase: 20,
+  },
+  {
+    id: 's162',
+    words: ['kiflit', 'eszik', 'hozzá'],
+    acceptedOrders: [['kiflit', 'eszik', 'hozzá']],
+    phase: 20,
+  },
+
+  // Fázis 21
+  {
+    id: 's163',
+    words: ['a', 'tehén', 'legel'],
+    acceptedOrders: [['a', 'tehén', 'legel'], ['legel', 'a', 'tehén']],
+    phase: 21,
+  },
+  {
+    id: 's164',
+    words: ['apa', 'fát', 'vág'],
+    acceptedOrders: [['apa', 'fát', 'vág'], ['fát', 'vág', 'apa']],
+    phase: 21,
+  },
+
+  // Fázis 22
+  {
+    id: 's165',
+    words: ['az', 'örömmel', 'szalad', 'vele'],
+    acceptedOrders: [['az', 'örömmel', 'szalad', 'vele']],
+    phase: 22,
+  },
+  {
+    id: 's166',
+    words: ['vérzik', 'a', 'térde'],
+    acceptedOrders: [['vérzik', 'a', 'térde'], ['a', 'térde', 'vérzik']],
+    phase: 22,
+  },
+  {
+    id: 's167',
+    words: ['felkeni', 'a', 'lekvárt'],
+    acceptedOrders: [['felkeni', 'a', 'lekvárt']],
+    phase: 22,
+  },
+
+  // Fázis 36 — T, M, A, S nagybetű
+  {
+    id: 's168',
+    words: ['Tomi', 'sót', 'hoz'],
+    acceptedOrders: [['Tomi', 'sót', 'hoz'], ['sót', 'hoz', 'Tomi']],
+    phase: 36,
+  },
+  {
+    id: 's169',
+    words: ['Tomi', 'húzza', 'a', 'macit'],
+    acceptedOrders: [['Tomi', 'húzza', 'a', 'macit']],
+    phase: 36,
+  },
+  {
+    id: 's170',
+    words: ['Magda', 'lepkét', 'fog'],
+    acceptedOrders: [['Magda', 'lepkét', 'fog'], ['lepkét', 'fog', 'Magda']],
+    phase: 36,
+  },
+  {
+    id: 's171',
+    words: ['Magdi', 'tévét', 'néz'],
+    acceptedOrders: [['Magdi', 'tévét', 'néz'], ['tévét', 'néz', 'Magdi']],
+    phase: 36,
+  },
+  {
+    id: 's172',
+    words: ['Anna', 'almát', 'vett'],
+    acceptedOrders: [['Anna', 'almát', 'vett'], ['almát', 'vett', 'Anna']],
+    phase: 36,
+  },
+
+  // Fázis 37 — Z, P, H nagybetű
+  {
+    id: 's173',
+    words: ['Zoli', 'tolja', 'a', 'padot'],
+    acceptedOrders: [['Zoli', 'tolja', 'a', 'padot']],
+    phase: 37,
+  },
+  {
+    id: 's174',
+    words: ['Zita', 'áll', 'a', 'fa', 'alatt'],
+    acceptedOrders: [['Zita', 'áll', 'a', 'fa', 'alatt']],
+    phase: 37,
+  },
+  {
+    id: 's175',
+    words: ['Zoli', 'kék', 'luftot', 'kapott'],
+    acceptedOrders: [['Zoli', 'kék', 'luftot', 'kapott']],
+    phase: 37,
+  },
+
+  // Fázis 38 — K, L, N, E, Á nagybetű
+  {
+    id: 's176',
+    words: ['Laci', 'lovat', 'húz'],
+    acceptedOrders: [['Laci', 'lovat', 'húz'], ['lovat', 'húz', 'Laci']],
+    phase: 38,
+  },
+  {
+    id: 's177',
+    words: ['Lili', 'keze', 'fáj'],
+    acceptedOrders: [['Lili', 'keze', 'fáj']],
+    phase: 38,
+  },
+  {
+    id: 's178',
+    words: ['Kati', 'áll', 'a', 'ló', 'mellett'],
+    acceptedOrders: [['Kati', 'áll', 'a', 'ló', 'mellett']],
+    phase: 38,
+  },
+  {
+    id: 's179',
+    words: ['Enikő', 'későn', 'kelt', 'fel'],
+    acceptedOrders: [['Enikő', 'későn', 'kelt', 'fel']],
+    phase: 38,
+  },
+  {
+    id: 's180',
+    words: ['Laci', 'cipőt', 'húz'],
+    acceptedOrders: [['Laci', 'cipőt', 'húz'], ['cipőt', 'húz', 'Laci']],
+    phase: 38,
+  },
+  {
+    id: 's181',
+    words: ['Kati', 'hajat', 'mos'],
+    acceptedOrders: [['Kati', 'hajat', 'mos'], ['hajat', 'mos', 'Kati']],
+    phase: 38,
+  },
+  {
+    id: 's182',
+    words: ['Ági', 'kezet', 'mos'],
+    acceptedOrders: [['Ági', 'kezet', 'mos'], ['kezet', 'mos', 'Ági']],
+    phase: 38,
+  },
+  {
+    id: 's183',
+    words: ['Ági', 'fogat', 'mos'],
+    acceptedOrders: [['Ági', 'fogat', 'mos'], ['fogat', 'mos', 'Ági']],
+    phase: 38,
+  },
+  {
+    id: 's184',
+    words: ['Laci', 'készíti', 'el', 'a', 'reggelit'],
+    acceptedOrders: [['Laci', 'készíti', 'el', 'a', 'reggelit']],
+    phase: 38,
+  },
+  {
+    id: 's185',
+    words: ['itt', 'tanul', 'Nusi'],
+    acceptedOrders: [['itt', 'tanul', 'Nusi'], ['Nusi', 'itt', 'tanul']],
+    phase: 38,
+  },
+
+  // Fázis 39 — É, V, B, C nagybetű
+  {
+    id: 's186',
+    words: ['a', 'kis', 'Éva', 'cumit', 'kap'],
+    acceptedOrders: [['a', 'kis', 'Éva', 'cumit', 'kap']],
+    phase: 39,
+  },
+  {
+    id: 's187',
+    words: ['Éva', 'eteti', 'Misit'],
+    acceptedOrders: [['Éva', 'eteti', 'Misit']],
+    phase: 39,
+  },
+  {
+    id: 's188',
+    words: ['Évi', 'szilvát', 'szedett'],
+    acceptedOrders: [['Évi', 'szilvát', 'szedett'], ['szilvát', 'szedett', 'Évi']],
+    phase: 39,
+  },
+
+  // Fázis 40 — F, G, J nagybetű
+  {
+    id: 's189',
+    words: ['Juci', 'feje', 'fáj'],
+    acceptedOrders: [['Juci', 'feje', 'fáj']],
+    phase: 40,
+  },
+  {
+    id: 's190',
+    words: ['Géza', 'viszi', 'a', 'kapát'],
+    acceptedOrders: [['Géza', 'viszi', 'a', 'kapát']],
+    phase: 40,
+  },
+
+  // Fázis 41 — D, R, Sz nagybetű
+  {
+    id: 's191',
+    words: ['Szilvi', 'előveszi', 'a', 'szánkót'],
+    acceptedOrders: [['Szilvi', 'előveszi', 'a', 'szánkót']],
+    phase: 41,
+  },
+  {
+    id: 's192',
+    words: ['alszik', 'Szusi', 'is'],
+    acceptedOrders: [['alszik', 'Szusi', 'is'], ['Szusi', 'is', 'alszik']],
+    phase: 41,
+  },
+  {
+    id: 's193',
+    words: ['Dani', 'cipőt', 'kefél'],
+    acceptedOrders: [['Dani', 'cipőt', 'kefél'], ['cipőt', 'kefél', 'Dani']],
+    phase: 41,
+  },
+  {
+    id: 's194',
+    words: ['Rozi', 'kávét', 'iszik'],
+    acceptedOrders: [['Rozi', 'kávét', 'iszik'], ['kávét', 'iszik', 'Rozi']],
+    phase: 41,
+  },
+
+  // ── KÉPES OLVASÓKÖNYV (Meixner Ildikó): 8–27. fázis ─────────────────────
+
+  // Fázis 8
+  {
+    id: 's195',
+    words: ['itt', 'a', 'toll'],
+    acceptedOrders: [['itt', 'a', 'toll'], ['a', 'toll', 'itt']],
+    phase: 8,
+  },
+
+  // Fázis 11
+  {
+    id: 's196',
+    words: ['apu', 'is', 'ás'],
+    acceptedOrders: [['apu', 'is', 'ás']],
+    phase: 11,
+  },
+
+  // Fázis 13
+  {
+    id: 's197',
+    words: ['a', 'kefe', 'puha'],
+    acceptedOrders: [['a', 'kefe', 'puha'], ['puha', 'a', 'kefe']],
+    phase: 13,
+  },
+  {
+    id: 's198',
+    words: ['ott', 'áll', 'hat', 'fiú'],
+    acceptedOrders: [['ott', 'áll', 'hat', 'fiú']],
+    phase: 13,
+  },
+
+  // Fázis 14
+  {
+    id: 's199',
+    words: ['a', 'ló', 'húz'],
+    acceptedOrders: [['a', 'ló', 'húz'], ['húz', 'a', 'ló']],
+    phase: 14,
+  },
+  {
+    id: 's200',
+    words: ['a', 'fiú', 'fát', 'hoz'],
+    acceptedOrders: [['a', 'fiú', 'fát', 'hoz'], ['fát', 'hoz', 'a', 'fiú']],
+    phase: 14,
+  },
+  {
+    id: 's201',
+    words: ['a', 'házikó', 'pici'],
+    acceptedOrders: [['a', 'házikó', 'pici'], ['pici', 'a', 'házikó']],
+    phase: 14,
+  },
+  {
+    id: 's202',
+    words: ['itt', 'áll', 'a', 'váza'],
+    acceptedOrders: [['itt', 'áll', 'a', 'váza'], ['a', 'váza', 'itt', 'áll']],
+    phase: 14,
+  },
+
+  // Fázis 15
+  {
+    id: 's203',
+    words: ['a', 'mama', 'főz'],
+    acceptedOrders: [['a', 'mama', 'főz'], ['főz', 'a', 'mama']],
+    phase: 15,
+  },
+  {
+    id: 's204',
+    words: ['az', 'őz', 'fut'],
+    acceptedOrders: [['az', 'őz', 'fut'], ['fut', 'az', 'őz']],
+    phase: 15,
+  },
+
+  // Fázis 16
+  {
+    id: 's205',
+    words: ['ez', 'tíz', 'deka', 'dió'],
+    acceptedOrders: [['ez', 'tíz', 'deka', 'dió']],
+    phase: 16,
+  },
+  {
+    id: 's206',
+    words: ['ez', 'hat', 'deci', 'tea'],
+    acceptedOrders: [['ez', 'hat', 'deci', 'tea']],
+    phase: 16,
+  },
+  {
+    id: 's207',
+    words: ['ott', 'a', 'híd'],
+    acceptedOrders: [['ott', 'a', 'híd'], ['a', 'híd', 'ott']],
+    phase: 16,
+  },
+  {
+    id: 's208',
+    words: ['a', 'víz', 'felemelkedett'],
+    acceptedOrders: [['a', 'víz', 'felemelkedett']],
+    phase: 16,
+  },
+
+  // Fázis 17
+  {
+    id: 's209',
+    words: ['ott', 'az', 'ajtó'],
+    acceptedOrders: [['ott', 'az', 'ajtó'], ['az', 'ajtó', 'ott']],
+    phase: 17,
+  },
+
+  // Fázis 18
+  {
+    id: 's210',
+    words: ['itt', 'a', 'kés'],
+    acceptedOrders: [['itt', 'a', 'kés'], ['a', 'kés', 'itt']],
+    phase: 18,
+  },
+  {
+    id: 's211',
+    words: ['ott', 'a', 'fék'],
+    acceptedOrders: [['ott', 'a', 'fék'], ['a', 'fék', 'ott']],
+    phase: 18,
+  },
+  {
+    id: 's212',
+    words: ['a', 'méz', 'jó'],
+    acceptedOrders: [['a', 'méz', 'jó'], ['jó', 'a', 'méz']],
+    phase: 18,
+  },
+  {
+    id: 's213',
+    words: ['ott', 'a', 'fél', 'alma'],
+    acceptedOrders: [['ott', 'a', 'fél', 'alma'], ['a', 'fél', 'alma', 'ott']],
+    phase: 18,
+  },
+  {
+    id: 's214',
+    words: ['a', 'pipi', 'pihés'],
+    acceptedOrders: [['a', 'pipi', 'pihés'], ['pihés', 'a', 'pipi']],
+    phase: 18,
+  },
+  {
+    id: 's215',
+    words: ['a', 'pamut', 'kék'],
+    acceptedOrders: [['a', 'pamut', 'kék'], ['kék', 'a', 'pamut']],
+    phase: 18,
+  },
+  {
+    id: 's216',
+    words: ['a', 'vetés', 'zöld'],
+    acceptedOrders: [['a', 'vetés', 'zöld'], ['zöld', 'a', 'vetés']],
+    phase: 18,
+  },
+  {
+    id: 's217',
+    words: ['a', 'cica', 'is', 'éhes'],
+    acceptedOrders: [['a', 'cica', 'is', 'éhes']],
+    phase: 18,
+  },
+
+  // Fázis 19
+  {
+    id: 's218',
+    words: ['a', 'póni', 'kis', 'ló'],
+    acceptedOrders: [['a', 'póni', 'kis', 'ló']],
+    phase: 19,
+  },
+  {
+    id: 's219',
+    words: ['a', 'puli', 'vonít'],
+    acceptedOrders: [['a', 'puli', 'vonít'], ['vonít', 'a', 'puli']],
+    phase: 19,
+  },
+  {
+    id: 's220',
+    words: ['a', 'fonal', 'fekete'],
+    acceptedOrders: [['a', 'fonal', 'fekete'], ['fekete', 'a', 'fonal']],
+    phase: 19,
+  },
+  {
+    id: 's221',
+    words: ['a', 'vonat', 'fékez'],
+    acceptedOrders: [['a', 'vonat', 'fékez'], ['fékez', 'a', 'vonat']],
+    phase: 19,
+  },
+  {
+    id: 's222',
+    words: ['az', 'úton', 'két', 'ló', 'jön'],
+    acceptedOrders: [['az', 'úton', 'két', 'ló', 'jön']],
+    phase: 19,
+  },
+  {
+    id: 's223',
+    words: ['a', 'lapon', 'öt', 'kép', 'van'],
+    acceptedOrders: [['a', 'lapon', 'öt', 'kép', 'van']],
+    phase: 19,
+  },
+  {
+    id: 's224',
+    words: ['jön', 'a', 'kenu'],
+    acceptedOrders: [['jön', 'a', 'kenu'], ['a', 'kenu', 'jön']],
+    phase: 19,
+  },
+  {
+    id: 's225',
+    words: ['a', 'mama', 'kiflit', 'ad', 'neki'],
+    acceptedOrders: [['a', 'mama', 'kiflit', 'ad', 'neki']],
+    phase: 19,
+  },
+  {
+    id: 's226',
+    words: ['a', 'mama', 'kölnit', 'kapott'],
+    acceptedOrders: [['a', 'mama', 'kölnit', 'kapott'], ['kölnit', 'kapott', 'a', 'mama']],
+    phase: 19,
+  },
+
+  // Fázis 20
+  {
+    id: 's227',
+    words: ['száll', 'a', 'lufi'],
+    acceptedOrders: [['száll', 'a', 'lufi'], ['a', 'lufi', 'száll']],
+    phase: 20,
+  },
+  {
+    id: 's228',
+    words: ['a', 'szén', 'fekete'],
+    acceptedOrders: [['a', 'szén', 'fekete'], ['fekete', 'a', 'szén']],
+    phase: 20,
+  },
+  {
+    id: 's229',
+    words: ['a', 'lila', 'szép', 'szín'],
+    acceptedOrders: [['a', 'lila', 'szép', 'szín']],
+    phase: 20,
+  },
+  {
+    id: 's230',
+    words: ['apu', 'kávét', 'vesz'],
+    acceptedOrders: [['apu', 'kávét', 'vesz'], ['kávét', 'vesz', 'apu']],
+    phase: 20,
+  },
+  {
+    id: 's231',
+    words: ['köszönöm', 'szépen', 'a', 'lufit'],
+    acceptedOrders: [['köszönöm', 'szépen', 'a', 'lufit']],
+    phase: 20,
+  },
+  {
+    id: 's232',
+    words: ['készen', 'van', 'a', 'leves'],
+    acceptedOrders: [['készen', 'van', 'a', 'leves'], ['a', 'leves', 'készen', 'van']],
+    phase: 20,
+  },
+  {
+    id: 's233',
+    words: ['mama', 'a', 'széken', 'áll'],
+    acceptedOrders: [['mama', 'a', 'széken', 'áll'], ['a', 'széken', 'áll', 'mama']],
+    phase: 20,
+  },
+  {
+    id: 's234',
+    words: ['a', 'halász', 'hálót', 'vet', 'ki'],
+    acceptedOrders: [['a', 'halász', 'hálót', 'vet', 'ki']],
+    phase: 20,
+  },
+  {
+    id: 's235',
+    words: ['sok', 'homokot', 'visz'],
+    acceptedOrders: [['sok', 'homokot', 'visz']],
+    phase: 20,
+  },
+  {
+    id: 's236',
+    words: ['a', 'mama', 'messze', 'lakik'],
+    acceptedOrders: [['a', 'mama', 'messze', 'lakik']],
+    phase: 20,
+  },
+  {
+    id: 's237',
+    words: ['a', 'tó', 'vize', 'tiszta'],
+    acceptedOrders: [['a', 'tó', 'vize', 'tiszta']],
+    phase: 20,
+  },
+
+  // Fázis 21
+  {
+    id: 's238',
+    words: ['a', 'tea', 'gőzölög'],
+    acceptedOrders: [['a', 'tea', 'gőzölög'], ['gőzölög', 'a', 'tea']],
+    phase: 21,
+  },
+  {
+    id: 's239',
+    words: ['a', 'sas', 'magasan', 'szállt'],
+    acceptedOrders: [['a', 'sas', 'magasan', 'szállt']],
+    phase: 21,
+  },
+  {
+    id: 's240',
+    words: ['jó', 'szaga', 'van'],
+    acceptedOrders: [['jó', 'szaga', 'van']],
+    phase: 21,
+  },
+  {
+    id: 's241',
+    words: ['sok', 'halat', 'fog'],
+    acceptedOrders: [['sok', 'halat', 'fog']],
+    phase: 21,
+  },
+  {
+    id: 's242',
+    words: ['jó', 'meleg', 'lesz'],
+    acceptedOrders: [['jó', 'meleg', 'lesz']],
+    phase: 21,
+  },
+  {
+    id: 's243',
+    words: ['tejet', 'meg', 'vajat', 'vesz'],
+    acceptedOrders: [['tejet', 'meg', 'vajat', 'vesz']],
+    phase: 21,
+  },
+
+  // Fázis 22
+  {
+    id: 's244',
+    words: ['gurul', 'a', 'pénz'],
+    acceptedOrders: [['gurul', 'a', 'pénz'], ['a', 'pénz', 'gurul']],
+    phase: 22,
+  },
+  {
+    id: 's245',
+    words: ['a', 'lavór', 'tele', 'van'],
+    acceptedOrders: [['a', 'lavór', 'tele', 'van']],
+    phase: 22,
+  },
+  {
+    id: 's246',
+    words: ['eltört', 'a', 'pohár'],
+    acceptedOrders: [['eltört', 'a', 'pohár'], ['a', 'pohár', 'eltört']],
+    phase: 22,
+  },
+  {
+    id: 's247',
+    words: ['ez', 'a', 'puli', 'nem', 'harap'],
+    acceptedOrders: [['ez', 'a', 'puli', 'nem', 'harap']],
+    phase: 22,
+  },
+  {
+    id: 's248',
+    words: ['a', 'sátor', 'erős'],
+    acceptedOrders: [['a', 'sátor', 'erős'], ['erős', 'a', 'sátor']],
+    phase: 22,
+  },
+  {
+    id: 's249',
+    words: ['forog', 'a', 'kerék'],
+    acceptedOrders: [['forog', 'a', 'kerék'], ['a', 'kerék', 'forog']],
+    phase: 22,
+  },
+  {
+    id: 's250',
+    words: ['dörög', 'az', 'ég'],
+    acceptedOrders: [['dörög', 'az', 'ég'], ['az', 'ég', 'dörög']],
+    phase: 22,
+  },
+  {
+    id: 's251',
+    words: ['piros', 'a', 'torka'],
+    acceptedOrders: [['piros', 'a', 'torka'], ['a', 'torka', 'piros']],
+    phase: 22,
+  },
+  {
+    id: 's252',
+    words: ['apa', 'orvoshoz', 'viszi'],
+    acceptedOrders: [['apa', 'orvoshoz', 'viszi']],
+    phase: 22,
+  },
+  {
+    id: 's253',
+    words: ['ez', 'az', 'alma', 'apró'],
+    acceptedOrders: [['ez', 'az', 'alma', 'apró']],
+    phase: 22,
+  },
+  {
+    id: 's254',
+    words: ['este', 'enni', 'kérek'],
+    acceptedOrders: [['este', 'enni', 'kérek']],
+    phase: 22,
+  },
+  {
+    id: 's255',
+    words: ['jó', 'volt', 'hazaérni'],
+    acceptedOrders: [['jó', 'volt', 'hazaérni']],
+    phase: 22,
+  },
+  {
+    id: 's256',
+    words: ['a', 'rönk', 'a', 'földön', 'fekszik'],
+    acceptedOrders: [['a', 'rönk', 'a', 'földön', 'fekszik']],
+    phase: 22,
+  },
+  {
+    id: 's257',
+    words: ['vannak', 'más', 'országok', 'is'],
+    acceptedOrders: [['vannak', 'más', 'országok', 'is']],
+    phase: 22,
+  },
+  {
+    id: 's258',
+    words: ['a', 'varjú', 'szomjas', 'volt'],
+    acceptedOrders: [['a', 'varjú', 'szomjas', 'volt']],
+    phase: 22,
+  },
+  {
+    id: 's259',
+    words: ['darálom', 'a', 'húst'],
+    acceptedOrders: [['darálom', 'a', 'húst']],
+    phase: 22,
+  },
+
+  // Fázis 23
+  {
+    id: 's260',
+    words: ['az', 'üst', 'tele', 'van'],
+    acceptedOrders: [['az', 'üst', 'tele', 'van']],
+    phase: 23,
+  },
+  {
+    id: 's261',
+    words: ['a', 'néni', 'fűt'],
+    acceptedOrders: [['a', 'néni', 'fűt'], ['fűt', 'a', 'néni']],
+    phase: 23,
+  },
+  {
+    id: 's262',
+    words: ['ég', 'a', 'tűz'],
+    acceptedOrders: [['ég', 'a', 'tűz'], ['a', 'tűz', 'ég']],
+    phase: 23,
+  },
+  {
+    id: 's263',
+    words: ['a', 'sün', 'háta', 'tüskés'],
+    acceptedOrders: [['a', 'sün', 'háta', 'tüskés']],
+    phase: 23,
+  },
+  {
+    id: 's264',
+    words: ['leül', 'a', 'székre'],
+    acceptedOrders: [['leül', 'a', 'székre']],
+    phase: 23,
+  },
+  {
+    id: 's265',
+    words: ['a', 'néni', 'húst', 'süt'],
+    acceptedOrders: [['a', 'néni', 'húst', 'süt'], ['húst', 'süt', 'a', 'néni']],
+    phase: 23,
+  },
+  {
+    id: 's266',
+    words: ['az', 'ing', 'ujja', 'szűk'],
+    acceptedOrders: [['az', 'ing', 'ujja', 'szűk']],
+    phase: 23,
+  },
+  {
+    id: 's267',
+    words: ['kiderül', 'az', 'ég'],
+    acceptedOrders: [['kiderül', 'az', 'ég'], ['az', 'ég', 'kiderül']],
+    phase: 23,
+  },
+
+  // Fázis 24
+  {
+    id: 's268',
+    words: ['van', 'mérges', 'gomba', 'is'],
+    acceptedOrders: [['van', 'mérges', 'gomba', 'is']],
+    phase: 24,
+  },
+  {
+    id: 's269',
+    words: ['az', 'új', 'kabát', 'szürke'],
+    acceptedOrders: [['az', 'új', 'kabát', 'szürke']],
+    phase: 24,
+  },
+  {
+    id: 's270',
+    words: ['a', 'mama', 'borsóból', 'készít', 'levest'],
+    acceptedOrders: [['a', 'mama', 'borsóból', 'készít', 'levest']],
+    phase: 24,
+  },
+  {
+    id: 's271',
+    words: ['a', 'falu', 'szélén', 'domb', 'van'],
+    acceptedOrders: [['a', 'falu', 'szélén', 'domb', 'van']],
+    phase: 24,
+  },
+
+  // Fázis 25
+  {
+    id: 's272',
+    words: ['az', 'ágy', 'puha'],
+    acceptedOrders: [['az', 'ágy', 'puha'], ['puha', 'az', 'ágy']],
+    phase: 25,
+  },
+  {
+    id: 's273',
+    words: ['a', 'gyűrű', 'szép'],
+    acceptedOrders: [['a', 'gyűrű', 'szép'], ['szép', 'a', 'gyűrű']],
+    phase: 25,
+  },
+  {
+    id: 's274',
+    words: ['apu', 'deszkát', 'gyújt'],
+    acceptedOrders: [['apu', 'deszkát', 'gyújt'], ['deszkát', 'gyújt', 'apu']],
+    phase: 25,
+  },
+  {
+    id: 's275',
+    words: ['gyorsan', 'épülnek', 'a', 'házak'],
+    acceptedOrders: [['gyorsan', 'épülnek', 'a', 'házak']],
+    phase: 25,
+  },
+  {
+    id: 's276',
+    words: ['nagyapának', 'nagy', 'kertje', 'van'],
+    acceptedOrders: [['nagyapának', 'nagy', 'kertje', 'van']],
+    phase: 25,
+  },
+  {
+    id: 's277',
+    words: ['nagyon', 'nagyon', 'ízlik'],
+    acceptedOrders: [['nagyon', 'nagyon', 'ízlik']],
+    phase: 25,
+  },
+  {
+    id: 's278',
+    words: ['nagyon', 'féltette', 'őket'],
+    acceptedOrders: [['nagyon', 'féltette', 'őket']],
+    phase: 25,
+  },
+  {
+    id: 's279',
+    words: ['gyúrom', 'a', 'tésztát'],
+    acceptedOrders: [['gyúrom', 'a', 'tésztát']],
+    phase: 25,
+  },
+
+  // Fázis 26
+  {
+    id: 's280',
+    words: ['kicsi', 'csibék', 'mennek', 'a', 'mezőn'],
+    acceptedOrders: [['kicsi', 'csibék', 'mennek', 'a', 'mezőn']],
+    phase: 26,
+  },
+  {
+    id: 's281',
+    words: ['a', 'csibék', 'kíváncsiak'],
+    acceptedOrders: [['a', 'csibék', 'kíváncsiak'], ['kíváncsiak', 'a', 'csibék']],
+    phase: 26,
+  },
+  {
+    id: 's282',
+    words: ['itt', 'csupa', 'fekete', 'csibe', 'van'],
+    acceptedOrders: [['itt', 'csupa', 'fekete', 'csibe', 'van']],
+    phase: 26,
+  },
+  {
+    id: 's283',
+    words: ['belül', 'csupa', 'korom'],
+    acceptedOrders: [['belül', 'csupa', 'korom']],
+    phase: 26,
+  },
+  {
+    id: 's284',
+    words: ['minden', 'nap', 'locsolják'],
+    acceptedOrders: [['minden', 'nap', 'locsolják']],
+    phase: 30,
+  },
+  {
+    id: 's285',
+    words: ['a', 'kacsák', 'a', 'tóhoz', 'mentek'],
+    acceptedOrders: [['a', 'kacsák', 'a', 'tóhoz', 'mentek']],
+    phase: 26,
+  },
+  {
+    id: 's286',
+    words: ['pancsoltak', 'a', 'vízben'],
+    acceptedOrders: [['pancsoltak', 'a', 'vízben']],
+    phase: 26,
+  },
+  {
+    id: 's287',
+    words: ['robog', 'a', 'kocsi'],
+    acceptedOrders: [['robog', 'a', 'kocsi'], ['a', 'kocsi', 'robog']],
+    phase: 26,
+  },
+  {
+    id: 's288',
+    words: ['csobog', 'a', 'víz'],
+    acceptedOrders: [['csobog', 'a', 'víz'], ['a', 'víz', 'csobog']],
+    phase: 26,
+  },
+
+  // Fázis 27
+  {
+    id: 's289',
+    words: ['anyu', 'süteményt', 'süt'],
+    acceptedOrders: [['anyu', 'süteményt', 'süt'], ['süteményt', 'süt', 'anyu']],
+    phase: 27,
+  },
+  {
+    id: 's290',
+    words: ['a', 'szőnyeg', 'sáros', 'lett'],
+    acceptedOrders: [['a', 'szőnyeg', 'sáros', 'lett']],
+    phase: 27,
+  },
+  {
+    id: 's291',
+    words: ['az', 'anyó', 'befűtött'],
+    acceptedOrders: [['az', 'anyó', 'befűtött'], ['befűtött', 'az', 'anyó']],
+    phase: 27,
+  },
+  {
+    id: 's292',
+    words: ['füstöl', 'a', 'kémény'],
+    acceptedOrders: [['füstöl', 'a', 'kémény'], ['a', 'kémény', 'füstöl']],
+    phase: 27,
+  },
+  {
+    id: 's293',
+    words: ['a', 'kenyéren', 'lekvár', 'van'],
+    acceptedOrders: [['a', 'kenyéren', 'lekvár', 'van']],
+    phase: 27,
+  },
+  {
+    id: 's294',
+    words: ['alma', 'van', 'a', 'tányéron'],
+    acceptedOrders: [['alma', 'van', 'a', 'tányéron'], ['a', 'tányéron', 'alma', 'van']],
+    phase: 27,
+  },
+  {
+    id: 's295',
+    words: ['a', 'szoknyán', 'folt', 'van'],
+    acceptedOrders: [['a', 'szoknyán', 'folt', 'van']],
+    phase: 27,
+  },
+  {
+    id: 's296',
+    words: ['a', 'labda', 'a', 'szőnyegen', 'van'],
+    acceptedOrders: [['a', 'labda', 'a', 'szőnyegen', 'van']],
+    phase: 27,
+  },
+  {
+    id: 's297',
+    words: ['a', 'nyaraló', 'fából', 'épül'],
+    acceptedOrders: [['a', 'nyaraló', 'fából', 'épül']],
+    phase: 27,
+  },
+  {
+    id: 's298',
+    words: ['a', 'tányér', 'porcelánból', 'van'],
+    acceptedOrders: [['a', 'tányér', 'porcelánból', 'van']],
+    phase: 27,
+  },
+  {
+    id: 's299',
+    words: ['a', 'könyv', 'papírból', 'van'],
+    acceptedOrders: [['a', 'könyv', 'papírból', 'van']],
+    phase: 27,
+  },
+  {
+    id: 's300',
+    words: ['a', 'kocsonya', 'disznóhúsból', 'főzik'],
+    acceptedOrders: [['a', 'kocsonya', 'disznóhúsból', 'főzik']],
+    phase: 27,
+  },
+  {
+    id: 's301',
+    words: ['anyu', 'a', 'hús', 'mellé', 'adja'],
+    acceptedOrders: [['anyu', 'a', 'hús', 'mellé', 'adja']],
+    phase: 27,
+  },
+  {
+    id: 's302',
+    words: ['kezdődik', 'a', 'verseny'],
+    acceptedOrders: [['kezdődik', 'a', 'verseny'], ['a', 'verseny', 'kezdődik']],
+    phase: 27,
+  },
+  {
+    id: 's303',
+    words: ['csillog', 'anya', 'gyűrűje'],
+    acceptedOrders: [['csillog', 'anya', 'gyűrűje'], ['anya', 'gyűrűje', 'csillog']],
+    phase: 27,
+  },
+
+  // ── KÉPES OLVASÓKÖNYV: 28–42. fázis ─────────────────────────────────────
+
+  // Fázis 28
+  {
+    id: 's304',
+    words: ['a', 'parkban', 'zöld', 'a', 'pázsit'],
+    acceptedOrders: [['a', 'parkban', 'zöld', 'a', 'pázsit']],
+    phase: 28,
+  },
+  {
+    id: 's305',
+    words: ['fő', 'a', 'rizs', 'a', 'lábosban'],
+    acceptedOrders: [['fő', 'a', 'rizs', 'a', 'lábosban']],
+    phase: 28,
+  },
+  {
+    id: 's306',
+    words: ['a', 'ház', 'előtt', 'rózsák', 'nőnek'],
+    acceptedOrders: [['a', 'ház', 'előtt', 'rózsák', 'nőnek']],
+    phase: 28,
+  },
+
+  // Fázis 29
+  {
+    id: 's307',
+    words: ['a', 'tyúknak', 'két', 'lába', 'van'],
+    acceptedOrders: [['a', 'tyúknak', 'két', 'lába', 'van']],
+    phase: 29,
+  },
+  {
+    id: 's308',
+    words: ['a', 'kutyának', 'négy', 'lába', 'van'],
+    acceptedOrders: [['a', 'kutyának', 'négy', 'lába', 'van']],
+    phase: 29,
+  },
+  {
+    id: 's309',
+    words: ['a', 'szatyor', 'füle', 'van'],
+    acceptedOrders: [['a', 'szatyor', 'füle', 'van']],
+    phase: 29,
+  },
+  {
+    id: 's310',
+    words: ['a', 'kártya', 'kerek'],
+    acceptedOrders: [['a', 'kártya', 'kerek'], ['kerek', 'a', 'kártya']],
+    phase: 29,
+  },
+  {
+    id: 's311',
+    words: ['a', 'pinty', 'tud', 'úszni'],
+    acceptedOrders: [['a', 'pinty', 'tud', 'úszni']],
+    phase: 29,
+  },
+  {
+    id: 's312',
+    words: ['a', 'ponty', 'tud', 'úszni'],
+    acceptedOrders: [['a', 'ponty', 'tud', 'úszni']],
+    phase: 29,
+  },
+  {
+    id: 's313',
+    words: ['a', 'gyertya', 'viaszból', 'van'],
+    acceptedOrders: [['a', 'gyertya', 'viaszból', 'van']],
+    phase: 29,
+  },
+  {
+    id: 's314',
+    words: ['a', 'kártya', 'is', 'papírból', 'van'],
+    acceptedOrders: [['a', 'kártya', 'is', 'papírból', 'van']],
+    phase: 29,
+  },
+  {
+    id: 's315',
+    words: ['az', 'én', 'kesztyűm', 'bőrből', 'van'],
+    acceptedOrders: [['az', 'én', 'kesztyűm', 'bőrből', 'van']],
+    phase: 29,
+  },
+
+  // Fázis 30
+  {
+    id: 's316',
+    words: ['olyan', 'kék', 'mint', 'az', 'ég'],
+    acceptedOrders: [['olyan', 'kék', 'mint', 'az', 'ég']],
+    phase: 30,
+  },
+  {
+    id: 's317',
+    words: ['olyan', 'puha', 'mint', 'a', 'selyem'],
+    acceptedOrders: [['olyan', 'puha', 'mint', 'a', 'selyem']],
+    phase: 30,
+  },
+  {
+    id: 's318',
+    words: ['olyan', 'édes', 'mint', 'a', 'méz'],
+    acceptedOrders: [['olyan', 'édes', 'mint', 'a', 'méz']],
+    phase: 30,
+  },
+  {
+    id: 's319',
+    words: ['olyan', 'nehéz', 'mint', 'a', 'só'],
+    acceptedOrders: [['olyan', 'nehéz', 'mint', 'a', 'só']],
+    phase: 30,
+  },
+  {
+    id: 's320',
+    words: ['a', 'pálya', 'lefelé', 'vezet'],
+    acceptedOrders: [['a', 'pálya', 'lefelé', 'vezet']],
+    phase: 30,
+  },
+  {
+    id: 's321',
+    words: ['lyukas', 'a', 'zoknim'],
+    acceptedOrders: [['lyukas', 'a', 'zoknim'], ['a', 'zoknim', 'lyukas']],
+    phase: 30,
+  },
+  {
+    id: 's322',
+    words: ['négy', 'kis', 'kölyke', 'volt'],
+    acceptedOrders: [['négy', 'kis', 'kölyke', 'volt']],
+    phase: 30,
+  },
+  {
+    id: 's323',
+    words: ['recseg', 'a', 'száraz', 'gally'],
+    acceptedOrders: [['recseg', 'a', 'száraz', 'gally']],
+    phase: 30,
+  },
+
+  // Nagybetű 36 — A, I, Í, O, Ó, M, S, T
+  {
+    id: 's324',
+    words: ['Ica', 'is', 'főz'],
+    acceptedOrders: [['Ica', 'is', 'főz']],
+    phase: 36,
+  },
+  {
+    id: 's325',
+    words: ['Imi', 'is', 'áll'],
+    acceptedOrders: [['Imi', 'is', 'áll']],
+    phase: 36,
+  },
+  {
+    id: 's326',
+    words: ['Tóni', 'is', 'nevet'],
+    acceptedOrders: [['Tóni', 'is', 'nevet']],
+    phase: 36,
+  },
+  {
+    id: 's327',
+    words: ['Ica', 'néni', 'főz'],
+    acceptedOrders: [['Ica', 'néni', 'főz'], ['főz', 'Ica', 'néni']],
+    phase: 36,
+  },
+  {
+    id: 's328',
+    words: ['Misi', 'sok', 'tejet', 'vesz'],
+    acceptedOrders: [['Misi', 'sok', 'tejet', 'vesz']],
+    phase: 36,
+  },
+  {
+    id: 's329',
+    words: ['Mari', 'diót', 'tör'],
+    acceptedOrders: [['Mari', 'diót', 'tör'], ['diót', 'tör', 'Mari']],
+    phase: 36,
+  },
+  {
+    id: 's330',
+    words: ['Anna', 'mégis', 'kint', 'játszott'],
+    acceptedOrders: [['Anna', 'mégis', 'kint', 'játszott']],
+    phase: 36,
+  },
+  {
+    id: 's331',
+    words: ['Anna', 'hozza', 'a', 'füzetét'],
+    acceptedOrders: [['Anna', 'hozza', 'a', 'füzetét']],
+    phase: 36,
+  },
+  {
+    id: 's332',
+    words: ['Sári', 'ruhát', 'varr'],
+    acceptedOrders: [['Sári', 'ruhát', 'varr'], ['ruhát', 'varr', 'Sári']],
+    phase: 36,
+  },
+  {
+    id: 's333',
+    words: ['Ottó', 'viszi', 'vissza', 'a', 'füzeteket'],
+    acceptedOrders: [['Ottó', 'viszi', 'vissza', 'a', 'füzeteket']],
+    phase: 36,
+  },
+  {
+    id: 's334',
+    words: ['Magyarország', 'a', 'mi', 'hazánk'],
+    acceptedOrders: [['Magyarország', 'a', 'mi', 'hazánk']],
+    phase: 36,
+  },
+  {
+    id: 's335',
+    words: ['Sabina', 'látogatóba', 'jött'],
+    acceptedOrders: [['Sabina', 'látogatóba', 'jött']],
+    phase: 36,
+  },
+  {
+    id: 's336',
+    words: ['Misi', 'már', 'jobban', 'van'],
+    acceptedOrders: [['Misi', 'már', 'jobban', 'van']],
+    phase: 36,
+  },
+
+  // Nagybetű 37 — Z, P, H
+  {
+    id: 's337',
+    words: ['Peti', 'jót', 'nevet'],
+    acceptedOrders: [['Peti', 'jót', 'nevet']],
+    phase: 37,
+  },
+  {
+    id: 's338',
+    words: ['apu', 'neveli', 'Petit'],
+    acceptedOrders: [['apu', 'neveli', 'Petit']],
+    phase: 37,
+  },
+  {
+    id: 's339',
+    words: ['Petike', 'éhes', 'volt'],
+    acceptedOrders: [['Petike', 'éhes', 'volt']],
+    phase: 37,
+  },
+  {
+    id: 's340',
+    words: ['Zoli', 'sonkát', 'vett'],
+    acceptedOrders: [['Zoli', 'sonkát', 'vett'], ['sonkát', 'vett', 'Zoli']],
+    phase: 37,
+  },
+  {
+    id: 's341',
+    words: ['Zita', 'hideg', 'szódavizet', 'ivott'],
+    acceptedOrders: [['Zita', 'hideg', 'szódavizet', 'ivott']],
+    phase: 37,
+  },
+  {
+    id: 's342',
+    words: ['Peti', 'sípja', 'szépen', 'szól'],
+    acceptedOrders: [['Peti', 'sípja', 'szépen', 'szól']],
+    phase: 37,
+  },
+  {
+    id: 's343',
+    words: ['Piri', 'befűzi', 'a', 'tűt'],
+    acceptedOrders: [['Piri', 'befűzi', 'a', 'tűt']],
+    phase: 37,
+  },
+  {
+    id: 's344',
+    words: ['Zoli', 'fújja', 'a', 'tüzet'],
+    acceptedOrders: [['Zoli', 'fújja', 'a', 'tüzet']],
+    phase: 37,
+  },
+  {
+    id: 's345',
+    words: ['Peti', 'tányérokat', 'töröget'],
+    acceptedOrders: [['Peti', 'tányérokat', 'töröget']],
+    phase: 37,
+  },
+  {
+    id: 's346',
+    words: ['Pista', 'papírral', 'játszik'],
+    acceptedOrders: [['Pista', 'papírral', 'játszik']],
+    phase: 37,
+  },
+  {
+    id: 's347',
+    words: ['Pityu', 'falun', 'lakik'],
+    acceptedOrders: [['Pityu', 'falun', 'lakik']],
+    phase: 37,
+  },
+
+  // Nagybetű 38 — U, Ú, E, Á, K, L, N
+  {
+    id: 's348',
+    words: ['Kis', 'Kata', 'utazik'],
+    acceptedOrders: [['Kis', 'Kata', 'utazik']],
+    phase: 38,
+  },
+  {
+    id: 's349',
+    words: ['Edit', 'övet', 'vett'],
+    acceptedOrders: [['Edit', 'övet', 'vett'], ['övet', 'vett', 'Edit']],
+    phase: 38,
+  },
+  {
+    id: 's350',
+    words: ['Nusi', 'a', 'napos'],
+    acceptedOrders: [['Nusi', 'a', 'napos']],
+    phase: 38,
+  },
+  {
+    id: 's351',
+    words: ['Nusi', 'jól', 'tanul'],
+    acceptedOrders: [['Nusi', 'jól', 'tanul']],
+    phase: 38,
+  },
+  {
+    id: 's352',
+    words: ['Lali', 'fát', 'visz'],
+    acceptedOrders: [['Lali', 'fát', 'visz'], ['fát', 'visz', 'Lali']],
+    phase: 38,
+  },
+  {
+    id: 's353',
+    words: ['Kati', 'szeme', 'fekete'],
+    acceptedOrders: [['Kati', 'szeme', 'fekete']],
+    phase: 38,
+  },
+  {
+    id: 's354',
+    words: ['Laci', 'foga', 'fáj'],
+    acceptedOrders: [['Laci', 'foga', 'fáj']],
+    phase: 38,
+  },
+  {
+    id: 's355',
+    words: ['Nándi', 'feni', 'a', 'kaszát'],
+    acceptedOrders: [['Nándi', 'feni', 'a', 'kaszát']],
+    phase: 38,
+  },
+  {
+    id: 's356',
+    words: ['Eszti', 'ülve', 'alszik'],
+    acceptedOrders: [['Eszti', 'ülve', 'alszik']],
+    phase: 38,
+  },
+  {
+    id: 's357',
+    words: ['Ági', 'felmossa', 'a', 'konyhát'],
+    acceptedOrders: [['Ági', 'felmossa', 'a', 'konyhát']],
+    phase: 38,
+  },
+  {
+    id: 's358',
+    words: ['Ági', 'fagyi', 'és', 'tortát', 'vett'],
+    acceptedOrders: [['Ági', 'fagyi', 'és', 'tortát', 'vett']],
+    phase: 38,
+  },
+  {
+    id: 's359',
+    words: ['Látom', 'hogy', 'kevés', 'a', 'gyufa'],
+    acceptedOrders: [['Látom', 'hogy', 'kevés', 'a', 'gyufa']],
+    phase: 38,
+  },
+  {
+    id: 's360',
+    words: ['Lajos', 'mogyorót', 'gyűjt'],
+    acceptedOrders: [['Lajos', 'mogyorót', 'gyűjt'], ['mogyorót', 'gyűjt', 'Lajos']],
+    phase: 38,
+  },
+  {
+    id: 's361',
+    words: ['Károly', 'tejet', 'kér'],
+    acceptedOrders: [['Károly', 'tejet', 'kér'], ['tejet', 'kér', 'Károly']],
+    phase: 38,
+  },
+
+  // Nagybetű 39 — Ö, Ő, É, V, B, C
+  {
+    id: 's362',
+    words: ['Éva', 'szeme', 'kék'],
+    acceptedOrders: [['Éva', 'szeme', 'kék']],
+    phase: 39,
+  },
+  {
+    id: 's363',
+    words: ['Éva', 'nézi', 'a', 'képeket'],
+    acceptedOrders: [['Éva', 'nézi', 'a', 'képeket']],
+    phase: 39,
+  },
+  {
+    id: 's364',
+    words: ['Éva', 'tejet', 'tölt', 'neki'],
+    acceptedOrders: [['Éva', 'tejet', 'tölt', 'neki']],
+    phase: 39,
+  },
+  {
+    id: 's365',
+    words: ['Bori', 'a', 'táblára', 'írt'],
+    acceptedOrders: [['Bori', 'a', 'táblára', 'írt']],
+    phase: 39,
+  },
+  {
+    id: 's366',
+    words: ['Bori', 'most', 'büszke', 'rá'],
+    acceptedOrders: [['Bori', 'most', 'büszke', 'rá']],
+    phase: 39,
+  },
+  {
+    id: 's367',
+    words: ['Cili', 'iskolába', 'jár'],
+    acceptedOrders: [['Cili', 'iskolába', 'jár']],
+    phase: 39,
+  },
+  {
+    id: 's368',
+    words: ['Öregapó', 'almafát', 'ültetett'],
+    acceptedOrders: [['Öregapó', 'almafát', 'ültetett']],
+    phase: 39,
+  },
+  {
+    id: 's369',
+    words: ['Éva', 'Sányinak', 'nyújtja'],
+    acceptedOrders: [['Éva', 'Sányinak', 'nyújtja']],
+    phase: 39,
+  },
+  {
+    id: 's370',
+    words: ['Örül', 'a', 'barátainak'],
+    acceptedOrders: [['Örül', 'a', 'barátainak']],
+    phase: 39,
+  },
+
+  // Nagybetű 40 — Ü, Ű, F, G, J
+  {
+    id: 's371',
+    words: ['Jocó', 'a', 'kapus'],
+    acceptedOrders: [['Jocó', 'a', 'kapus']],
+    phase: 40,
+  },
+  {
+    id: 's372',
+    words: ['Gizi', 'a', 'tévét', 'nézi'],
+    acceptedOrders: [['Gizi', 'a', 'tévét', 'nézi']],
+    phase: 40,
+  },
+  {
+    id: 's373',
+    words: ['Géza', 'sast', 'látott'],
+    acceptedOrders: [['Géza', 'sast', 'látott'], ['sast', 'látott', 'Géza']],
+    phase: 40,
+  },
+  {
+    id: 's374',
+    words: ['Gézu', 'papája', 'falun', 'lakik'],
+    acceptedOrders: [['Gézu', 'papája', 'falun', 'lakik']],
+    phase: 40,
+  },
+  {
+    id: 's375',
+    words: ['Juci', 'szalvétát', 'tör'],
+    acceptedOrders: [['Juci', 'szalvétát', 'tör'], ['szalvétát', 'tör', 'Juci']],
+    phase: 40,
+  },
+  {
+    id: 's376',
+    words: ['Gábor', 'fagyit', 'kért', 'aputól'],
+    acceptedOrders: [['Gábor', 'fagyit', 'kért', 'aputól']],
+    phase: 40,
+  },
+  {
+    id: 's377',
+    words: ['Julcsi', 'segít', 'anyunak'],
+    acceptedOrders: [['Julcsi', 'segít', 'anyunak']],
+    phase: 40,
+  },
+  {
+    id: 's378',
+    words: ['Jani', 'furulyát', 'fúj'],
+    acceptedOrders: [['Jani', 'furulyát', 'fúj'], ['furulyát', 'fúj', 'Jani']],
+    phase: 40,
+  },
+  {
+    id: 's379',
+    words: ['Jenő', 'golyóval', 'játszik'],
+    acceptedOrders: [['Jenő', 'golyóval', 'játszik']],
+    phase: 40,
+  },
+  {
+    id: 's380',
+    words: ['Juci', 'tavaly', 'elsős', 'volt'],
+    acceptedOrders: [['Juci', 'tavaly', 'elsős', 'volt']],
+    phase: 40,
+  },
+
+  // Nagybetű 41 — D, R, Sz, Ty, Cs
+  {
+    id: 's381',
+    words: ['Szilvi', 'zoknit', 'mos'],
+    acceptedOrders: [['Szilvi', 'zoknit', 'mos'], ['zoknit', 'mos', 'Szilvi']],
+    phase: 41,
+  },
+  {
+    id: 's382',
+    words: ['Rita', 'siet', 'haza'],
+    acceptedOrders: [['Rita', 'siet', 'haza']],
+    phase: 41,
+  },
+  {
+    id: 's383',
+    words: ['Rudi', 'labdája', 'piros'],
+    acceptedOrders: [['Rudi', 'labdája', 'piros']],
+    phase: 41,
+  },
+  {
+    id: 's384',
+    words: ['Dóra', 'a', 'réten', 'játszott'],
+    acceptedOrders: [['Dóra', 'a', 'réten', 'játszott']],
+    phase: 41,
+  },
+  {
+    id: 's385',
+    words: ['Rágót', 'hozott', 'Csillának'],
+    acceptedOrders: [['Rágót', 'hozott', 'Csillának']],
+    phase: 41,
+  },
+  {
+    id: 's386',
+    words: ['Tyúkot', 'etet', 'Dóri'],
+    acceptedOrders: [['Tyúkot', 'etet', 'Dóri']],
+    phase: 41,
+  },
+
+  // Nagybetű 42 — Gy, Zs, Ny, Ly
+  {
+    id: 's387',
+    words: ['Zsóka', 'anyjának', 'névnapja', 'van'],
+    acceptedOrders: [['Zsóka', 'anyjának', 'névnapja', 'van']],
+    phase: 42,
+  },
+  {
+    id: 's388',
+    words: ['Zsóka', 'gondban', 'van'],
+    acceptedOrders: [['Zsóka', 'gondban', 'van']],
+    phase: 42,
+  },
+  {
+    id: 's389',
+    words: ['Zsolt', 'ma', 'nyolcéves'],
+    acceptedOrders: [['Zsolt', 'ma', 'nyolcéves']],
+    phase: 42,
+  },
+  {
+    id: 's390',
+    words: ['Zsolt', 'örül', 'az', 'ajándékoknak'],
+    acceptedOrders: [['Zsolt', 'örül', 'az', 'ajándékoknak']],
+    phase: 42,
+  },
+  {
+    id: 's391',
+    words: ['Gyuri', 'csokoládét', 'kapott', 'a', 'nagymamától'],
+    acceptedOrders: [['Gyuri', 'csokoládét', 'kapott', 'a', 'nagymamától']],
+    phase: 42,
+  },
+  {
+    id: 's392',
+    words: ['Gyuszi', 'ceruzát', 'gyúr'],
+    acceptedOrders: [['Gyuszi', 'ceruzát', 'gyúr'], ['ceruzát', 'gyúr', 'Gyuszi']],
+    phase: 42,
+  },
+  {
+    id: 's393',
+    words: ['Gyuri', 'a', 'kertbe', 'megy'],
+    acceptedOrders: [['Gyuri', 'a', 'kertbe', 'megy']],
+    phase: 42,
+  },
+  {
+    id: 's394',
+    words: ['Zsuzsi', 'ma', 'álmosan', 'ébredt'],
+    acceptedOrders: [['Zsuzsi', 'ma', 'álmosan', 'ébredt']],
+    phase: 42,
+  },
+  {
+    id: 's395',
+    words: ['Gyuri', 'papa', 'indul', 'a', 'boltba'],
+    acceptedOrders: [['Gyuri', 'papa', 'indul', 'a', 'boltba']],
+    phase: 42,
+  },
+  {
+    id: 's396',
+    words: ['Nyalókát', 'hoz', 'Zsuzsinak'],
+    acceptedOrders: [['Nyalókát', 'hoz', 'Zsuzsinak']],
+    phase: 42,
+  },
 ];
 
 export const COMPREHENSION_BANK: ComprehensionItem[] = [
@@ -1170,7 +2776,7 @@ export const COMPREHENSION_BANK: ComprehensionItem[] = [
     question: 'Mit csinál a mama?',
     correctAnswer: 'mos',
     wrongAnswers: ['főz', 'alszik'],
-    phase: 3,
+    phase: 8,
   },
   {
     id: 'c35',
@@ -1563,6 +3169,14 @@ export const COMPREHENSION_BANK: ComprehensionItem[] = [
     question: 'Mit csinál mama?',
     correctAnswer: 'főz',
     wrongAnswers: ['mos', 'alszik'],
+    phase: 15,
+  },
+  {
+    id: 'c84',
+    sentence: 'Az eső esik.',
+    question: 'Mi esik?',
+    correctAnswer: 'az eső',
+    wrongAnswers: ['a hó', 'a levél'],
     phase: 15,
   },
   {
