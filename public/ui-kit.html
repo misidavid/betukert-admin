@@ -534,6 +534,75 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 }
 .tablet-option-correct { background: var(--cardGreen); border: 2px solid var(--primary); color: var(--primary); }
 .tablet-option-incorrect { background: var(--errorBg); }
+
+/* Garden teaser (home screen strip) */
+.garden-teaser {
+  background: var(--cardGreen); border-radius: 24px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow);
+  border: 1.5px solid rgba(74,124,66,0.19);
+}
+.garden-teaser-icon { font-size: 26px; }
+.garden-teaser-body { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.garden-teaser-title-row { display: flex; align-items: center; gap: 8px; }
+.garden-teaser-label { font-size: 18px; font-weight: 800; color: var(--primary); }
+.garden-teaser-count { background: var(--primaryLight); border-radius: 10px; padding: 1px 7px; font-size: 11px; font-weight: 700; color: #fff; }
+.garden-teaser-bar-track { height: 5px; background: var(--white); border-radius: 3px; overflow: hidden; }
+.garden-teaser-bar-fill { height: 100%; background: var(--primaryLight); border-radius: 3px; }
+.garden-teaser-sub { font-size: 12px; color: var(--textMedium); }
+.garden-teaser-recent { display: flex; align-items: center; gap: 1px; flex-shrink: 0; }
+.garden-teaser-recent span { font-size: 18px; }
+.garden-teaser-arrow { font-size: 22px; color: var(--primaryLight); margin-left: 3px; }
+
+/* Letter path map (nodes) */
+.path-status { text-align: center; font-size: 14px; color: var(--textMedium); font-weight: 700; letter-spacing: .4px; }
+.path-node {
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; flex-shrink: 0;
+}
+.path-node-done { background: #4A8C40; border: 3px solid #2E6228; color: #E8FAE4; }
+.path-node-current { background: var(--accent); border: 3.5px solid #C88800; color: var(--primary); box-shadow: var(--shadow); }
+.path-node-locked { background: #DEDAD4; border: 3px solid #C0BCB6; color: #AAA6A0; }
+.path-node-milestone-done { background: #4A7C28; border: 3.5px solid #B89020; }
+.path-node-milestone-current { background: var(--accent); border: 3.5px solid #D4A000; }
+.path-node-milestone-locked { background: #EDE8D0; border: 3.5px solid #C8B060; opacity: .8; }
+.path-dot { width: 12px; height: 12px; border-radius: 50%; }
+.path-dot-done { background: #6CB85A; }
+.path-dot-pending { background: #C8BEB2; }
+.path-pin { width: 20px; height: 20px; border-radius: 10px; background: var(--accent); border: 2.5px solid #fff; box-shadow: 0 2px 4px rgba(200,136,0,0.5); }
+.path-pin-tip { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--accent); margin-top: -2px; }
+
+/* Garden screen plant cards */
+.garden-plant-card {
+  border-radius: 24px; padding: 20px 12px; text-align: center; width: 108px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative;
+}
+.garden-plant-earned { background: var(--white); border: 2px solid var(--accentLight); box-shadow: var(--shadow); }
+.garden-plant-locked { background: var(--card); border: 1.5px solid #DDD9D2; }
+.garden-plant-emoji { font-size: 38px; }
+.garden-plant-emoji-locked { opacity: .3; }
+.garden-plant-name { font-size: 12px; font-weight: 700; color: var(--primary); }
+.garden-plant-name-locked { color: var(--textLight); opacity: .6; }
+.garden-plant-phase { font-size: 11px; color: var(--textMedium); font-weight: 600; }
+.garden-plant-phase-locked { color: var(--textLight); opacity: .6; }
+.garden-plant-badge {
+  position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 11px;
+  background: var(--correct); border: 2px solid #fff; color: #fff; font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Boot splash screen */
+.splash-frame {
+  width: 100%; height: 100%; position: relative; overflow: hidden;
+  background: linear-gradient(160deg,#F5C842 0%,#F5C4A1 45%,#C4DCF5 100%);
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 48px;
+}
+.splash-frame-label {
+  background: rgba(255,255,255,0.85); border-radius: 16px; padding: 10px 18px;
+  font-size: 13px; font-weight: 700; color: var(--textDark); text-align: center;
+}
+
+/* Sentence-start red-letter indicator */
+.sentence-start-red { color: #E53935; }
 </style>
 </head>
 <body>
@@ -560,6 +629,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <a href="#slots">Slot-ok</a>
     <a href="#exercise-bar">Feladat sáv</a>
     <a href="#bottom-sheet">Bottom Sheet</a>
+    <a href="#letter-path">2.13 Betűösvény csomópont</a>
+    <a href="#sentence-start">2.14 Mondatkezdő jelölés</a>
     <div class="nav-section">3. Képernyők</div>
     <a href="#screen-login">3.1 Bejelentkezés</a>
     <a href="#screen-profile-select">3.2 Profil választó</a>
@@ -570,6 +641,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <a href="#screen-parent-gate">3.7 Szülői kapu</a>
     <a href="#screen-parent">3.8 Szülői felület</a>
     <a href="#screen-exercise-settings">3.9 Feladattípus-beállítások</a>
+    <a href="#screen-garden">3.10 Kertem</a>
     <div class="nav-section">4. Feladattípusok</div>
     <a href="#ex-letter-recognition">4.1 Betűfelismerés</a>
     <a href="#ex-image-word-match">4.2 Szókép párosítás</a>
@@ -589,6 +661,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <a href="#home-menu-sheet">5.1 HomeMenuSheet</a>
     <a href="#exercise-progress-bar">5.2 ExerciseProgressBar</a>
     <a href="#loading">5.3 Betöltés</a>
+    <a href="#boot-splash">5.4 Indítóképernyő</a>
   </nav>
 </div>
 
@@ -1191,6 +1264,71 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <!-- ═══════════════════════════════════ -->
+<!-- 2.13–2.14 Új komponensek -->
+<!-- ═══════════════════════════════════ -->
+
+<!-- 2.13 Letter path node states -->
+<div class="section" id="letter-path">
+  <div class="section-title">2.13 Betűösvény csomópont (LetterPathMap)</div>
+  <div class="section-desc">A főképernyőn és a Kertem képernyőn használt görgethető, hullámvonalban elrendezett betű-útvonal csomópont-állapotai. Az aktuális csomópontot pulzáló gyűrű és pattogó tű (BouncingPin) emeli ki.</div>
+  <div class="component-row">
+    <div class="component-item">
+      <div class="path-node path-node-locked" style="width:38px;height:38px;font-size:15px;">gy</div>
+      <div class="component-label">Zárolt (locked)</div>
+    </div>
+    <div class="component-item">
+      <div class="path-node path-node-done" style="width:52px;height:52px;font-size:20px;">t</div>
+      <div class="component-label">Teljesített (done)</div>
+    </div>
+    <div class="component-item">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="path-pin"></div>
+        <div class="path-pin-tip"></div>
+        <div class="path-node path-node-current" style="width:64px;height:64px;font-size:26px;margin-top:2px;">m</div>
+      </div>
+      <div class="component-label">Aktuális (current) — pulzáló gyűrű + tű</div>
+    </div>
+    <div class="component-item">
+      <div class="path-node path-node-milestone-locked" style="width:54px;height:54px;font-size:22px;">🌸</div>
+      <div class="component-label">Mérföldkő, zárolt</div>
+    </div>
+    <div class="component-item">
+      <div class="path-node path-node-milestone-done" style="width:52px;height:52px;font-size:22px;">🌱</div>
+      <div class="component-label">Mérföldkő, elért</div>
+    </div>
+  </div>
+  <div style="margin-top:20px;font-size:12px;color:#888;font-family:monospace;line-height:2;">
+    45 fázis · sine-wave elrendezés (amplitúdó 100px, sorköz 110px) · minden 5. fázis mérföldkő (növény)<br>
+    csomópont átmérő: current 64px (mérföldkőnél 76) · done 52px (68) · locked 38px (54)<br>
+    összekötő pontok (path-dot): 9 db / szakasz · done = #6CB85A · pending = #C8BEB2
+  </div>
+</div>
+
+<!-- 2.14 Sentence-start indicator -->
+<div class="section" id="sentence-start">
+  <div class="section-title">2.14 Mondatkezdő jelölés</div>
+  <div class="section-desc">Mondatok elején álló betű: amíg a nagybetűs alak fázisa nem ismert, a mondat pirosan, kisbetűvel kezdődik (jelzi a mondatkezdést nagybetű-tudás nélkül is). Ha a nagybetű már ismert, a betű nagybetűsen jelenik meg, a színe a normál szövegszín.</div>
+  <div class="component-row">
+    <div class="component-item">
+      <div class="sentence-card" style="width:220px;">
+        <div class="sentence-text"><span class="sentence-start-red">a</span> macska alszik.</div>
+      </div>
+      <div class="component-label">Nagy alak még nem ismert (piros kisbetű)</div>
+    </div>
+    <div class="component-item">
+      <div class="sentence-card" style="width:220px;">
+        <div class="sentence-text">A macska alszik.</div>
+      </div>
+      <div class="component-label">Nagy alak már ismert (nagybetű)</div>
+    </div>
+  </div>
+  <div style="margin-top:20px;font-size:12px;color:#888;font-family:monospace;line-height:2;">
+    renderSentenceText(text, currentPhase, style) — src/utils/sentenceDisplay.tsx<br>
+    piros: #E53935 · érintett: SentenceOrder, SentenceComprehension, SentencePictureMatch, ImageSentenceMatch
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
 <!-- 3. KÉPERNYŐK -->
 <!-- ═══════════════════════════════════ -->
 <div class="section" id="screen-login">
@@ -1322,6 +1460,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <!-- 3.4 Home screen -->
 <div class="section" id="screen-home">
   <div class="subsection-title">3.4 Főképernyő</div>
+  <div class="section-desc">GardenTeaser csík (→ Kertem képernyő) + LetterPathMap görgethető betűösvény-előnézet a régi statikus "betűkert kártya" helyett.</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -1335,17 +1474,58 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               </div>
               <div style="width:48px;height:48px;border-radius:24px;background:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);font-size:22px;flex-shrink:0;">👤</div>
             </div>
-            <div class="app-card-green">
-              <div style="font-size:48px;margin-bottom:16px;">🌱🌿🌸</div>
-              <div class="text-heading">A te betűkerted</div>
-              <div style="font-size:14px;color:var(--primaryLight);margin-top:4px;">3. szint</div>
+
+            <!-- GardenTeaser -->
+            <div class="garden-teaser">
+              <div class="garden-teaser-icon">🌿</div>
+              <div class="garden-teaser-body">
+                <div class="garden-teaser-title-row">
+                  <div class="garden-teaser-label">Kertem</div>
+                  <div class="garden-teaser-count">3/9</div>
+                </div>
+                <div class="garden-teaser-bar-track"><div class="garden-teaser-bar-fill" style="width:33%;"></div></div>
+                <div class="garden-teaser-sub">még 2 szint a 🌸-ig</div>
+              </div>
+              <div class="garden-teaser-recent">
+                <span>🌱</span><span>🌿</span><span>🍀</span>
+              </div>
+              <div class="garden-teaser-arrow">›</div>
             </div>
+
+            <!-- LetterPathMap preview -->
+            <div style="background:var(--bg);border-radius:24px;padding:16px 8px 8px;">
+              <div class="path-status">3. szint · 42 fázis hátra</div>
+              <div style="display:flex;flex-direction:column;align-items:center;padding-top:14px;">
+                <div class="path-node path-node-locked" style="width:38px;height:38px;font-size:15px;">v</div>
+                <div style="display:flex;flex-direction:column;gap:5px;padding:6px 0;">
+                  <div class="path-dot path-dot-pending"></div>
+                  <div class="path-dot path-dot-pending"></div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;">
+                  <div class="path-pin"></div>
+                  <div class="path-pin-tip"></div>
+                  <div class="path-node path-node-current" style="width:64px;height:64px;font-size:26px;margin-top:2px;">m</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:5px;padding:6px 0;">
+                  <div class="path-dot path-dot-done"></div>
+                  <div class="path-dot path-dot-done"></div>
+                </div>
+                <div class="path-node path-node-done" style="width:52px;height:52px;font-size:20px;">t</div>
+                <div style="display:flex;flex-direction:column;gap:5px;padding:6px 0;">
+                  <div class="path-dot path-dot-done"></div>
+                  <div class="path-dot path-dot-done"></div>
+                </div>
+                <div class="path-node path-node-milestone-done" style="width:46px;height:46px;font-size:20px;">🌱</div>
+              </div>
+            </div>
+
             <div class="app-btn-primary" style="display:block;text-align:center;padding:24px;border-radius:32px;font-size:24px;">🎯 Gyakorlás kezdése</div>
             <div class="app-btn-secondary" style="display:block;text-align:center;padding:18px;border-radius:32px;">🔍 Szabad gyakorlás</div>
           </div>
         </div>
       </div>
       <div class="phone-label">Főképernyő</div>
+      <div class="phone-sublabel">GardenTeaser koppintásra a Kertem képernyőre navigál. A LetterPathMap függőlegesen görgethető, az aktuális csomópont pulzáló gyűrűvel és pattogó tűvel jelölt.</div>
     </div>
   </div>
 </div>
@@ -1725,6 +1905,65 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         </div>
       </div>
       <div class="phone-label">Feladattípus beállítások</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3.10 Garden screen -->
+<div class="section" id="screen-garden">
+  <div class="subsection-title">3.10 Kertem (jutalom-gyűjtés)</div>
+  <div class="section-desc">A GardenTeaser csíkból nyitható teljes képernyő. 3 oszlopos rács, minden 5. fázis egy növény-jutalom (9 db, 5–45. szint). A megszerzett kártyák fehérek pipa-jelvénnyel, a zároltak halványítva.</div>
+  <div class="screens-grid">
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" style="padding-top:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 24px 16px;">
+            <div style="font-size:18px;color:var(--primaryLight);font-weight:600;width:70px;">← Vissza</div>
+            <div class="s-title" style="font-size:24px;">Kertem</div>
+            <div style="width:70px;"></div>
+          </div>
+          <div class="progress-bar-track" style="margin:0 24px;"><div class="progress-bar-fill" style="width:33%;background:var(--accent);"></div></div>
+          <div style="text-align:center;font-size:14px;font-weight:600;color:var(--textMedium);margin:8px 0 16px;">3 / 9 növény összegyűjtve</div>
+          <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:0 16px;">
+            <div class="garden-plant-card garden-plant-earned">
+              <div class="garden-plant-badge">✓</div>
+              <div class="garden-plant-emoji">🌱</div>
+              <div class="garden-plant-name">Csíra</div>
+              <div class="garden-plant-phase">5. szint</div>
+            </div>
+            <div class="garden-plant-card garden-plant-earned">
+              <div class="garden-plant-badge">✓</div>
+              <div class="garden-plant-emoji">🌿</div>
+              <div class="garden-plant-name">Hajtás</div>
+              <div class="garden-plant-phase">10. szint</div>
+            </div>
+            <div class="garden-plant-card garden-plant-earned">
+              <div class="garden-plant-badge">✓</div>
+              <div class="garden-plant-emoji">🍀</div>
+              <div class="garden-plant-name">Lóhere</div>
+              <div class="garden-plant-phase">15. szint</div>
+            </div>
+            <div class="garden-plant-card garden-plant-locked">
+              <div class="garden-plant-emoji garden-plant-emoji-locked">🌸</div>
+              <div class="garden-plant-name garden-plant-name-locked">Virágbimbó</div>
+              <div class="garden-plant-phase garden-plant-phase-locked">20. szint</div>
+            </div>
+            <div class="garden-plant-card garden-plant-locked">
+              <div class="garden-plant-emoji garden-plant-emoji-locked">🌼</div>
+              <div class="garden-plant-name garden-plant-name-locked">Margaréta</div>
+              <div class="garden-plant-phase garden-plant-phase-locked">25. szint</div>
+            </div>
+            <div class="garden-plant-card garden-plant-locked">
+              <div class="garden-plant-emoji garden-plant-emoji-locked">🌺</div>
+              <div class="garden-plant-name garden-plant-name-locked">Hibiszkusz</div>
+              <div class="garden-plant-phase garden-plant-phase-locked">30. szint</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Kertem</div>
+      <div class="phone-sublabel">9 mérföldkő: 🌱🌿🍀🌸🌼🌺🌻🌳🏆 az 5, 10, 15…45. szinteken.</div>
     </div>
   </div>
 </div>
@@ -2820,6 +3059,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         </div>
       </div>
       <div class="phone-label">Betöltés</div>
+      <div class="phone-sublabel">Feladatok generálása közben (PracticeScreen), változatlan.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5.4 Boot splash -->
+<div class="section" id="boot-splash">
+  <div class="subsection-title">5.4 Indítóképernyő (app indítás)</div>
+  <div class="section-desc">Az app hidegindításakor (tartalom-szinkron alatt) egy véletlenszerűen választott, teljes képernyős indítókép jelenik meg a régi spinner helyett — 5 helyi kép + az adminon feltölthető képek közül. Lásd: Loading Screens az adminon.</div>
+  <div class="screens-grid">
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" style="padding:0;">
+          <div class="splash-frame">
+            <div class="splash-frame-label">🖼️ Véletlenszerű indítókép<br>(cover, teljes képernyő)</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Indítóképernyő</div>
+      <div class="phone-sublabel">LoadingScreen komponens (src/components/LoadingScreen.tsx) · App.tsx: tartalom-cache betöltése közben látszik, min. 2mp.</div>
     </div>
   </div>
 </div>
