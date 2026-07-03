@@ -78,7 +78,7 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
         difficulty: w.difficulty,
       })) || [],
       graphemes: GRAPHEMES,
-      images: images?.map((img: any) => ({ word: img.word, phase: img.phase, url: img.file_url, syllables: img.syllables })) || [],
+      images: images?.map((img: any) => ({ word: img.word, phase: img.phase, url: img.file_url, syllables: img.syllables, exercise_types: img.exercise_types })) || [],
       sounds: sounds?.map((snd: any) => ({ text: snd.text, type: snd.type, phase: snd.phase, url: snd.file_url })) || [],
       sentence_images: sentenceImages?.map((si: any) => ({
         sentence_id: si.sentence_id,

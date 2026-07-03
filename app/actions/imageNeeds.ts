@@ -217,3 +217,67 @@ export async function updateImageNeedStatusAction(id: string, status: ImageStatu
     return { error: 'Szerverhiba' };
   }
 }
+
+export async function toggleImageNeedExerciseTypeAction(
+  id: string,
+  type: string,
+  included: boolean,
+): Promise<{ error?: string }> {
+  try {
+    await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+
+    const { data: config } = await getSupabaseAdmin()
+      .from('exercise_type_config')
+      .select('id')
+      .eq('id', type)
+      .eq('requires_image', true)
+      .maybeSingle();
+    if (!config) return { error: 'Érvénytelen feladattípus' };
+
+    const { data: record, error: fetchError } = await getSupabaseAdmin()
+      .from('image_needs')
+      .select('exercise_types')
+      .eq('id', id)
+      .single();
+    if (fetchError || !record) return { error: 'Nem található a bejegyzés' };
+
+    const current: string[] = record.exercise_types ?? [];
+    const next = included
+      ? (current.includes(type) ? current : [...current, type])
+      : current.filter((t: string) => t !== type);
+
+    const { error } = await getSupabaseAdmin()
+      .from('image_needs')
+      .update({ exercise_types: next, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) {
+      console.error('[toggleImageNeedExerciseTypeAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
+    return {};
+  } catch (e) {
+    console.error('[toggleImageNeedExerciseTypeAction]', e);
+    return { error: 'Szerverhiba' };
+  }
+}
+
+export async function updateAmbiguityNotesAction(id: string, notes: string): Promise<{ error?: string }> {
+  try {
+    await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+    if (notes.length > 500) return { error: 'A megjegyzés túl hosszú (max 500 karakter)' };
+    const { error } = await getSupabaseAdmin()
+      .from('image_needs')
+      .update({ ambiguity_notes: notes, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) {
+      console.error('[updateAmbiguityNotesAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
+    return {};
+  } catch (e) {
+    console.error('[updateAmbiguityNotesAction]', e);
+    return { error: 'Szerverhiba' };
+  }
+}

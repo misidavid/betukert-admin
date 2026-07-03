@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ImageNeed, ImageStatus } from '../../lib/supabase';
-import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction, fetchImageNeedsAction } from '../actions/imageNeeds';
+import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction, fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, updateAmbiguityNotesAction } from '../actions/imageNeeds';
 import { ExerciseTypeConfig } from '../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
@@ -41,6 +41,61 @@ function StatusChip({ status }: { status: ImageStatus }) {
     >
       {STATUS_LABELS[status]}
     </span>
+  );
+}
+
+function ExerciseTypeChips({
+  item,
+  configs,
+  onToggle,
+}: {
+  item: ImageNeed;
+  configs: ExerciseTypeConfig[];
+  onToggle: (id: string, type: string, included: boolean) => void;
+}) {
+  return (
+    <div className="flex flex-wrap gap-1 mt-1.5">
+      {configs.map(c => {
+        const included = item.exercise_types?.includes(c.id) ?? false;
+        return (
+          <button
+            key={c.id}
+            type="button"
+            onClick={() => onToggle(item.id, c.id, !included)}
+            title={included ? `Kizárás innen: ${c.label}` : `Bevonás ide: ${c.label}`}
+            className="text-[11px] px-2 py-0.5 rounded-full transition-colors"
+            style={included
+              ? { background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }
+              : { background: TRACK, color: '#B5AE9E', fontWeight: 500 }}
+          >
+            {included ? '✓ ' : '+ '}{c.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function AmbiguityNotesInput({
+  item,
+  onSave,
+}: {
+  item: ImageNeed;
+  onSave: (id: string, notes: string) => void;
+}) {
+  const [value, setValue] = useState(item.ambiguity_notes ?? '');
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      onBlur={() => {
+        if (value !== (item.ambiguity_notes ?? '')) onSave(item.id, value);
+      }}
+      placeholder="Megjegyzés a kétértelműségről..."
+      className="text-xs px-2 py-1 rounded-lg outline-none w-full mt-1"
+      style={{ background: '#FFFFFF', color: MUTED, border: '1px solid #E3DCC9' }}
+    />
   );
 }
 
@@ -155,6 +210,18 @@ export default function ImagesPage() {
     else loadData(true);
   };
 
+  const handleToggleExerciseType = async (id: string, type: string, included: boolean) => {
+    const result = await toggleImageNeedExerciseTypeAction(id, type, included);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else loadData(true);
+  };
+
+  const handleUpdateAmbiguityNotes = async (id: string, notes: string) => {
+    const result = await updateAmbiguityNotesAction(id, notes);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else loadData(true);
+  };
+
   const toggleSelect = (id: string) => {
     setSelected(prev => {
       const next = new Set(prev);
@@ -263,6 +330,8 @@ export default function ImagesPage() {
           {item.syllables?.join('-')} • Első hang: {item.first_sound}
         </div>
         <div className="text-xs mt-1" style={{ color: '#B5AE9E' }}>{item.image_brief}</div>
+        <ExerciseTypeChips item={item} configs={configs} onToggle={handleToggleExerciseType} />
+        <AmbiguityNotesInput item={item} onSave={handleUpdateAmbiguityNotes} />
       </div>
 
       <div className="flex items-center gap-2 flex-shrink-0">
@@ -689,6 +758,8 @@ export default function ImagesPage() {
                           <div className="text-xs mt-0.5" style={{ color: '#B5AE9E' }}>
                             {item.syllables?.join('-')} • {item.image_brief}
                           </div>
+                          <ExerciseTypeChips item={item} configs={configs} onToggle={handleToggleExerciseType} />
+                          <AmbiguityNotesInput item={item} onSave={handleUpdateAmbiguityNotes} />
                         </div>
 
                         <div className="flex items-center gap-2 flex-shrink-0">
