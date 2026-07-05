@@ -496,45 +496,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .img-sentence-cell-correct { border: 3px solid var(--correct); }
 .img-sentence-cell-incorrect { border: 3px solid var(--incorrect); background: var(--errorBg); }
 
-/* Spinner */
-.spinner { width: 40px; height: 40px; border: 3px solid var(--cardGreen); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-center { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; }
-
-/* Tablet frame */
-.tablet-frame {
-  width: 680px; min-height: 960px; background: var(--bg);
-  border-radius: 32px; overflow: hidden; position: relative;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
-  border: 8px solid #1a1a1a;
-  flex-shrink: 0; display: inline-flex; flex-direction: column;
-}
-.tablet-screen {
-  flex: 1; padding-top: 20px; padding-bottom: 72px;
-  overflow: hidden; display: flex; flex-direction: column;
-  position: relative;
-}
-.tablet-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.tablet-label { font-size: 13px; font-weight: 600; color: #444; text-align: center; }
-.tablet-sublabel { font-size: 11px; color: #888; text-align: center; max-width: 340px; line-height: 1.4; }
-.tablet-progress {
-  display: flex; align-items: center; gap: 16px;
-  padding: 12px 32px 24px;
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: var(--bg); z-index: 10;
-}
-.tablet-word-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 20px; padding: 0 48px 24px; width: 100%;
-}
-.tablet-option-card {
-  background: var(--white); border-radius: 28px; padding: 32px 24px;
-  text-align: center; box-shadow: var(--shadow);
-  font-size: 32px; font-weight: 700; color: var(--textDark); cursor: pointer;
-}
-.tablet-option-correct { background: var(--cardGreen); border: 2px solid var(--primary); color: var(--primary); }
-.tablet-option-incorrect { background: var(--errorBg); }
-
 /* Garden teaser (home screen strip) */
 .garden-teaser {
   background: var(--cardGreen); border-radius: 24px; padding: 16px 20px;
@@ -590,17 +551,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   display: flex; align-items: center; justify-content: center;
 }
 
-/* Boot splash screen */
-.splash-frame {
-  width: 100%; height: 100%; position: relative; overflow: hidden;
-  background: linear-gradient(160deg,#F5C842 0%,#F5C4A1 45%,#C4DCF5 100%);
-  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 48px;
-}
-.splash-frame-label {
-  background: rgba(255,255,255,0.85); border-radius: 16px; padding: 10px 18px;
-  font-size: 13px; font-weight: 700; color: var(--textDark); text-align: center;
-}
-
 /* Sentence-start red-letter indicator */
 .sentence-start-red { color: #E53935; }
 </style>
@@ -644,19 +594,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <a href="#screen-garden">3.10 Kertem</a>
     <div class="nav-section">4. Feladattípusok</div>
     <a href="#ex-letter-recognition">4.1 Betűfelismerés</a>
-    <a href="#ex-image-word-match">4.2 Szókép párosítás</a>
-    <a href="#ex-letter-sequence">4.3 Betűsorozat</a>
-    <a href="#ex-syllable-clapping">4.4 Szótag-tapsolás</a>
-    <a href="#ex-first-sound">4.5 Első hang</a>
-    <a href="#ex-word-builder">4.6 Szókirakós</a>
-    <a href="#ex-syllable-memory">4.7 Szótag-memória</a>
-    <a href="#ex-sentence-order">4.8 Mondatrakós</a>
+    <a href="#ex-image-word-match">4.2 Szófelismerés</a>
+    <a href="#ex-letter-sequence">4.3 Betűsor olvasás</a>
+    <a href="#ex-syllable-clapping">4.4 Szótagszám felismerés</a>
+    <a href="#ex-first-sound">4.5 Első hang felismerés</a>
+    <a href="#ex-word-builder">4.6 Szóépítés</a>
+    <a href="#ex-syllable-memory">4.7 Szótag memória</a>
+    <a href="#ex-sentence-order">4.8 Mondat rendezés</a>
     <a href="#ex-sentence-comprehension">4.9 Mondatértés</a>
-    <a href="#ex-direction">4.10 Iránykövetés</a>
-    <a href="#ex-image-word-drag">4.11 Kép-szó húzós</a>
+    <a href="#ex-direction">4.10 Irányvonal követés</a>
+    <a href="#ex-image-word-drag">4.11 Kép-szó párosítás</a>
     <a href="#ex-sentence-picture">4.12 Mondat-kép párosítás</a>
-    <a href="#ex-image-sentence">4.13 Kép-mondat párosítás</a>
-    <a href="#ex-word-recognition">4.14 Szófelismerés (tablet)</a>
+    <a href="#ex-image-sentence">4.13 Mi történik a képen</a>
+    <a href="#ex-word-recognition">4.14 Szótagfelismerés</a>
     <div class="nav-section">5. Egyéb</div>
     <a href="#home-menu-sheet">5.1 HomeMenuSheet</a>
     <a href="#exercise-progress-bar">5.2 ExerciseProgressBar</a>
@@ -1381,7 +1331,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div class="avatar-circle">A</div>
               <div class="profile-info">
                 <div class="profile-name">Anna</div>
-                <div class="profile-phase">3. szint · 12 betű</div>
+                <div class="profile-phase">3. szint</div>
               </div>
               <span style="font-size:16px;padding:8px;color:#bbb;cursor:pointer;">🗑</span>
               <span style="font-size:18px;color:var(--primaryLight);">→</span>
@@ -1390,7 +1340,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div class="avatar-circle">P</div>
               <div class="profile-info">
                 <div class="profile-name">Péter</div>
-                <div class="profile-phase">7. szint · 24 betű</div>
+                <div class="profile-phase">7. szint</div>
               </div>
               <span style="font-size:16px;padding:8px;color:#bbb;cursor:pointer;">🗑</span>
               <span style="font-size:18px;color:var(--primaryLight);">→</span>
@@ -1460,17 +1410,36 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <!-- 3.4 Home screen -->
 <div class="section" id="screen-home">
   <div class="subsection-title">3.4 Főképernyő</div>
-  <div class="section-desc">GardenTeaser csík (→ Kertem képernyő) + LetterPathMap görgethető betűösvény-előnézet a régi statikus "betűkert kártya" helyett.</div>
+  <div class="section-desc">A teljes háttér egy kézzel illusztrált, ~10 000px magas, görgethető kert-ösvény kép (LetterPathMap, assets/images/letter-path-map.jpg), rajta a fázis-csomópontokkal. A fejléc, a GardenTeaser és a két gomb lebegő rétegként úsznak a kép fölött, saját háttér nélkül.</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
         <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="s-scroll">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:24px 0 8px;">
+        <div class="phone-screen" style="padding:0;position:relative;overflow:hidden;">
+          <!-- Scrollable background: real LetterPathMap illustration -->
+          <div style="position:absolute;inset:0;overflow:hidden;background:#D6D2A7;">
+            <img src="/ui-kit-assets/letter-path-map.jpg" style="width:100%;display:block;margin-top:-3400px;">
+            <!-- Phase nodes overlaid on the path (approximate positions, sine-wave layout) -->
+            <div class="path-node path-node-locked" style="position:absolute;top:60px;left:26%;width:38px;height:38px;font-size:15px;">v</div>
+            <div class="path-dot path-dot-pending" style="position:absolute;top:112px;left:31%;"></div>
+            <div class="path-dot path-dot-pending" style="position:absolute;top:130px;left:36%;"></div>
+            <div class="path-pin" style="position:absolute;top:130px;left:calc(46% - 10px);"></div>
+            <div class="path-pin-tip" style="position:absolute;top:150px;left:calc(46% - 6px);"></div>
+            <div class="path-node path-node-current" style="position:absolute;top:158px;left:calc(46% - 32px);width:64px;height:64px;font-size:26px;">m</div>
+            <div class="path-dot path-dot-done" style="position:absolute;top:236px;left:41%;"></div>
+            <div class="path-dot path-dot-done" style="position:absolute;top:254px;left:36%;"></div>
+            <div class="path-node path-node-done" style="position:absolute;top:276px;left:26%;width:52px;height:52px;font-size:20px;">t</div>
+            <div class="path-dot path-dot-done" style="position:absolute;top:340px;left:31%;"></div>
+            <div class="path-dot path-dot-done" style="position:absolute;top:358px;left:36%;"></div>
+            <div class="path-node path-node-milestone-done" style="position:absolute;top:380px;left:46%;width:46px;height:46px;font-size:20px;">🌱</div>
+          </div>
+
+          <!-- Floating header (no background — sits directly over the map image) -->
+          <div style="position:absolute;top:0;left:0;right:0;padding:50px 24px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:8px;">
               <div>
                 <div class="s-greeting">Szia, Anna! 👋</div>
-                <div class="s-subtitle">Készen állsz a betűkertbe?</div>
+                <div class="s-subtitle">Készen állsz a gyakorlásra?</div>
               </div>
               <div style="width:48px;height:48px;border-radius:24px;background:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);font-size:22px;flex-shrink:0;">👤</div>
             </div>
@@ -1492,40 +1461,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div class="garden-teaser-arrow">›</div>
             </div>
 
-            <!-- LetterPathMap preview -->
-            <div style="background:var(--bg);border-radius:24px;padding:16px 8px 8px;">
-              <div class="path-status">3. szint · 42 fázis hátra</div>
-              <div style="display:flex;flex-direction:column;align-items:center;padding-top:14px;">
-                <div class="path-node path-node-locked" style="width:38px;height:38px;font-size:15px;">v</div>
-                <div style="display:flex;flex-direction:column;gap:5px;padding:6px 0;">
-                  <div class="path-dot path-dot-pending"></div>
-                  <div class="path-dot path-dot-pending"></div>
-                </div>
-                <div style="display:flex;flex-direction:column;align-items:center;">
-                  <div class="path-pin"></div>
-                  <div class="path-pin-tip"></div>
-                  <div class="path-node path-node-current" style="width:64px;height:64px;font-size:26px;margin-top:2px;">m</div>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:5px;padding:6px 0;">
-                  <div class="path-dot path-dot-done"></div>
-                  <div class="path-dot path-dot-done"></div>
-                </div>
-                <div class="path-node path-node-done" style="width:52px;height:52px;font-size:20px;">t</div>
-                <div style="display:flex;flex-direction:column;gap:5px;padding:6px 0;">
-                  <div class="path-dot path-dot-done"></div>
-                  <div class="path-dot path-dot-done"></div>
-                </div>
-                <div class="path-node path-node-milestone-done" style="width:46px;height:46px;font-size:20px;">🌱</div>
-              </div>
-            </div>
+            <div class="path-status" style="padding-bottom:16px;">3. szint&nbsp;&nbsp;·&nbsp;&nbsp;42 szint van hátra</div>
+          </div>
 
-            <div class="app-btn-primary" style="display:block;text-align:center;padding:24px;border-radius:32px;font-size:24px;">🎯 Gyakorlás kezdése</div>
-            <div class="app-btn-secondary" style="display:block;text-align:center;padding:18px;border-radius:32px;">🔍 Szabad gyakorlás</div>
+          <!-- Floating bottom buttons (no shared bar — each button floats separately) -->
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 24px 28px;display:flex;flex-direction:column;gap:16px;">
+            <div style="background:var(--primary);opacity:.95;border-radius:24px;padding:24px;text-align:center;box-shadow:var(--shadow);font-size:24px;font-weight:700;color:#fff;">Gyakorlás kezdése</div>
+            <div style="background:var(--white);opacity:.95;border-radius:16px;padding:16px;text-align:center;box-shadow:var(--shadow);font-size:18px;font-weight:700;color:var(--primary);max-width:200px;margin:0 auto;">Szabad gyakorlás</div>
           </div>
         </div>
       </div>
       <div class="phone-label">Főképernyő</div>
-      <div class="phone-sublabel">GardenTeaser koppintásra a Kertem képernyőre navigál. A LetterPathMap függőlegesen görgethető, az aktuális csomópont pulzáló gyűrűvel és pattogó tűvel jelölt.</div>
+      <div class="phone-sublabel">GardenTeaser koppintásra a Kertem képernyőre navigál. A háttér a valódi, kézzel rajzolt betűösvény-kép, a felül lévő fejléc (üdvözlés + avatar + GardenTeaser + "N. szint · N szint van hátra") és az alsó gombok saját háttér nélkül úsznak fölötte, ahogy a valós appban is. Az aktuális csomópontot pulzáló gyűrű és pattogó tű jelöli (itt statikusan).</div>
     </div>
   </div>
 </div>
@@ -1550,21 +1497,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;">
               <div class="type-card type-card-selected"><div class="type-card-label">Betűfelismerés</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
-              <div class="type-card"><div class="type-card-label">Betűsorozat</div></div>
+              <div class="type-card"><div class="type-card-label">Betűsor olvasás</div></div>
               <div class="type-card type-card-selected"><div class="type-card-label">Első hang felismerés</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
-              <div class="type-card"><div class="type-card-label">Szótag-tapsolás</div></div>
-              <div class="type-card type-card-selected"><div class="type-card-label">Szótag-memória</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
-              <div class="type-card"><div class="type-card-label">Szókirakós</div></div>
-              <div class="type-card type-card-selected"><div class="type-card-label">Mondatrakós</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
+              <div class="type-card"><div class="type-card-label">Szótagfelismerés</div></div>
+              <div class="type-card type-card-selected"><div class="type-card-label">Szótag memória</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
+              <div class="type-card"><div class="type-card-label">Szótagszám felismerés</div></div>
+              <div class="type-card type-card-selected"><div class="type-card-label">Szófelismerés</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
+              <div class="type-card"><div class="type-card-label">Kép-szó párosítás</div></div>
+              <div class="type-card type-card-selected"><div class="type-card-label">Szóépítés</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
+              <div class="type-card"><div class="type-card-label">Irányvonal követés</div></div>
+              <div class="type-card type-card-selected"><div class="type-card-label">Mondat rendezés</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
               <div class="type-card"><div class="type-card-label">Mondatértés</div></div>
-              <div class="type-card"><div class="type-card-label">Iránykövetés</div></div>
-              <div class="type-card type-card-selected"><div class="type-card-label">Kép-szó párosítás</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
-              <div class="type-card"><div class="type-card-label">Mondat-kép párosítás</div></div>
-              <div class="type-card type-card-selected"><div class="type-card-label">Kép-mondat párosítás</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
+              <div class="type-card type-card-selected"><div class="type-card-label">Mondat-kép párosítás</div><span style="font-size:18px;font-weight:700;color:var(--primary);">✓</span></div>
+              <div class="type-card"><div class="type-card-label">Mi történik a képen</div></div>
             </div>
           </div>
           <div class="footer-fixed">
-            <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Gyakorlás! (6 típus)</div>
+            <div class="app-btn-primary" style="display:block;text-align:center;border-radius:24px;padding:18px;font-size:18px;">Gyakorlás! (7 típus)</div>
           </div>
         </div>
       </div>
@@ -1754,13 +1703,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div class="s-card-title">Jelenlegi szint</div>
               <div style="display:flex;align-items:center;justify-content:center;gap:32px;margin:8px 0;">
                 <div class="phase-btn">−</div>
-                <div class="phase-display"><div class="phase-number">3</div><div class="phase-label-text">fázis</div></div>
+                <div class="phase-display"><div class="phase-number">3</div><div class="phase-label-text">fazis</div></div>
                 <div class="phase-btn">+</div>
               </div>
-              <div style="font-size:14px;color:var(--textMedium);text-align:center;">Következő betű: t</div>
+              <div style="font-size:14px;color:var(--textMedium);text-align:center;">Kovetkezo betu: t</div>
             </div>
             <div class="app-card">
-              <div class="s-card-title">Ismert betűk (12)</div>
+              <div class="s-card-title">Ismert betuk (12)</div>
               <div class="chip-row">
                 <div class="grapheme-chip"><span>m</span></div>
                 <div class="grapheme-chip grapheme-chip-stable"><span>á</span><div class="stable-badge">✓</div></div>
@@ -1771,37 +1720,35 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               </div>
             </div>
             <div class="app-card">
-              <div class="s-card-title">Beállítások</div>
+              <div class="s-card-title">Beallitasok</div>
               <div class="setting-row">
-                <div class="setting-info"><div class="setting-label">Nagybetűk</div><div class="setting-desc">Nagybetűs gyakorlás</div></div>
+                <div class="setting-info"><div class="setting-label">Nagybetuk</div><div class="setting-desc">Nagybetus gyakorlas engedelyezese</div></div>
                 <div class="toggle-track toggle-on"><div class="toggle-thumb"></div></div>
               </div>
               <div class="divider" style="margin:10px 0;"></div>
               <div class="setting-row">
-                <div class="setting-info"><div class="setting-label">Automatikus felolvasás</div></div>
+                <div class="setting-info"><div class="setting-label">Automatikus felolvasás</div><div class="setting-desc">Feladatok utasításainak automatikus felolvasása</div></div>
                 <div class="toggle-track toggle-off"><div class="toggle-thumb"></div></div>
               </div>
               <div class="divider" style="margin:10px 0;"></div>
               <div class="setting-row">
-                <div class="setting-info"><div class="setting-label">Szülői PIN</div><div class="setting-desc">Jelenlegi PIN: ••••</div></div>
-                <div class="app-btn-green">Módosítás</div>
+                <div class="setting-info"><div class="setting-label">Szuloi PIN</div><div class="setting-desc">Jelenlegi PIN: ••••</div></div>
+                <div class="app-btn-green">Modositas</div>
               </div>
             </div>
             <div class="app-card" style="cursor:pointer;">
               <div class="row-between">
                 <div class="s-card-title" style="margin:0;">Feladattípusok beállítása</div>
-                <div style="font-size:18px;color:var(--primaryLight);">›</div>
+                <div style="font-size:18px;color:var(--primaryLight);">→</div>
               </div>
               <div class="text-small" style="margin-top:4px;">Be/ki kapcsolás, szint tartomány, súlyozás</div>
             </div>
             <div class="app-card">
               <div class="s-card-title">Statisztika</div>
               <div class="stats-row">
-                <div class="stat-item"><div class="stat-number">12</div><div class="stat-label">ismert betű</div></div>
+                <div class="stat-item"><div class="stat-number">12</div><div class="stat-label">ismert betu</div></div>
                 <div class="stat-divider"></div>
-                <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">fázis</div></div>
-                <div class="stat-divider"></div>
-                <div class="stat-item"><div class="stat-number">87%</div><div class="stat-label">pontosság</div></div>
+                <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">fazis</div></div>
               </div>
               <div class="sync-row">
                 <div class="text-small">Tartalom forrása</div>
@@ -1975,7 +1922,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <!-- 4.1 Letter recognition -->
 <div class="section" id="ex-letter-recognition">
   <div class="section-title">4. Feladattípusok</div>
-  <div class="section-desc">Minden feladat phone frame-ben, ExerciseProgressBar alul, heartRow felül.</div>
+  <div class="section-desc">Minden feladat phone frame-ben, ExerciseProgressBar alul. A ❤️ + 🔊 heartRow csak egyes típusoknál jelenik meg (nem a betűfelismerésnél, betűsorozatnál és az iránykövetésnél).</div>
 
   <div class="subsection-title">4.1 Betűfelismerés (letter_recognition)</div>
   <div class="screens-grid">
@@ -1988,12 +1935,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:25%;"></div></div>
             <div class="progress-text">3/12</div>
           </div>
-          <div class="heart-row">
-            <div style="font-size:20px;">❤️</div>
-            <div class="replay-btn">🔊</div>
-          </div>
           <div class="exercise-area" style="flex:1;">
-            <div class="text-body center">Melyik betű van itt?</div>
+            <div class="text-body center">Koppints a betűre!</div>
             <div class="target-card"><div class="text-huge">m</div></div>
           </div>
           <div class="options-area">
@@ -2016,12 +1959,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:33%;"></div></div>
             <div class="progress-text">4/12</div>
           </div>
-          <div class="heart-row">
-            <div style="font-size:20px;">❤️</div>
-            <div class="replay-btn">🔊</div>
-          </div>
           <div class="exercise-area" style="flex:1;">
-            <div class="text-body center">Melyik betű van itt?</div>
+            <div class="text-body center">Koppints a betűre!</div>
             <div class="target-card"><div class="text-huge">m</div></div>
             <div class="feedback-correct">🌿 Igen, helyes!</div>
           </div>
@@ -2045,12 +1984,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:33%;"></div></div>
             <div class="progress-text">4/12</div>
           </div>
-          <div class="heart-row">
-            <div style="font-size:20px;">❤️</div>
-            <div class="replay-btn">🔊</div>
-          </div>
           <div class="exercise-area" style="flex:1;">
-            <div class="text-body center">Melyik betű van itt?</div>
+            <div class="text-body center">Koppints a betűre!</div>
             <div class="target-card"><div class="text-huge">m</div></div>
             <div class="feedback-incorrect">Nézzük meg újra.</div>
           </div>
@@ -2069,7 +2004,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.2 Image word match -->
 <div class="section" id="ex-image-word-match">
-  <div class="subsection-title">4.2 Szókép párosítás (image_word_match)</div>
+  <div class="subsection-title">4.2 Szófelismerés (image_word_match)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2096,7 +2031,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           </div>
         </div>
       </div>
-      <div class="phone-label">Szókép párosítás</div>
+      <div class="phone-label">Szófelismerés</div>
       <div class="phone-sublabel">Kép felül, pill opciók alul</div>
     </div>
 
@@ -2133,7 +2068,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.3 Letter sequence -->
 <div class="section" id="ex-letter-sequence">
-  <div class="subsection-title">4.3 Betűsorozat (letter_sequence)</div>
+  <div class="subsection-title">4.3 Betűsor olvasás (letter_sequence)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2164,7 +2099,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div class="letter-tile">t</div>
               <div class="letter-tile">l</div>
             </div>
-            <div style="font-size:14px;color:var(--textMedium);text-align:center;">Tapintsd meg az összes 'm' betűt!</div>
             <div class="app-btn-primary" style="padding:14px 32px;font-size:18px;border-radius:24px;">Kész! ✓</div>
           </div>
         </div>
@@ -2213,7 +2147,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.4 Syllable clapping -->
 <div class="section" id="ex-syllable-clapping">
-  <div class="subsection-title">4.4 Szótag-tapsolás (syllable_clapping)</div>
+  <div class="subsection-title">4.4 Szótagszám felismerés (syllable_clapping)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2251,7 +2185,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           </div>
         </div>
       </div>
-      <div class="phone-label">Szótag-tapsolás</div>
+      <div class="phone-label">Szótagszám felismerés</div>
       <div class="phone-sublabel">Pont-ikonok mutatják a szótagok számát</div>
     </div>
   </div>
@@ -2259,7 +2193,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.5 First sound -->
 <div class="section" id="ex-first-sound">
-  <div class="subsection-title">4.5 Első hang (first_sound)</div>
+  <div class="subsection-title">4.5 Első hang felismerés (first_sound)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2270,33 +2204,32 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:42%;"></div></div>
             <div class="progress-text">5/12</div>
           </div>
-          <div class="heart-row">
+          <div style="width:100%;height:165px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:72px;flex-shrink:0;">🍎</div>
+          <div class="heart-row" style="margin-top:8px;">
             <div style="font-size:20px;">❤️</div>
             <div class="replay-btn">🔊</div>
           </div>
-          <div class="exercise-area" style="flex:1;gap:20px;">
-            <div class="text-body center">Mi az első hang ebben a szóban?</div>
-            <div class="target-card" style="min-width:180px;min-height:100px;">
-              <div style="font-size:32px;font-weight:700;color:var(--primary);">alma</div>
-            </div>
-            <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
-              <div style="width:80px;height:80px;background:var(--cardGreen);border:2px solid var(--primary);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--primary);">a</div>
-              <div style="width:80px;height:80px;background:var(--white);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--textDark);box-shadow:var(--shadow);">l</div>
-              <div style="width:80px;height:80px;background:var(--white);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--textDark);box-shadow:var(--shadow);">m</div>
-              <div style="width:80px;height:80px;background:var(--white);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--textDark);box-shadow:var(--shadow);">r</div>
+          <div class="exercise-area" style="flex:1;gap:16px;padding:12px 24px;">
+            <div class="text-body center">Melyik hanggal kezdődik?</div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+              <div class="pill-option pill-option-correct">a</div>
+              <div class="pill-option">l</div>
+              <div class="pill-option">m</div>
+              <div class="pill-option">r</div>
             </div>
             <div class="feedback-correct">🌿 Igen, helyes!</div>
           </div>
         </div>
       </div>
       <div class="phone-label">Első hang felismerés</div>
+      <div class="phone-sublabel">Mindig van kép (imageId a szóhoz) — ugyanaz az ImageWordMatchLayout, mint a Szófelismerésnél, csak betű-opciókkal.</div>
     </div>
   </div>
 </div>
 
 <!-- 4.6 Word builder -->
 <div class="section" id="ex-word-builder">
-  <div class="subsection-title">4.6 Szókirakós (word_builder)</div>
+  <div class="subsection-title">4.6 Szóépítés (word_builder)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2314,7 +2247,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:18px;">
             <div class="text-body center">Rakd ki a szót szótagokból!</div>
             <div class="build-area">
-              <div style="font-size:14px;color:var(--textMedium);">Rakd ki a szót:</div>
               <div class="slots-row">
                 <div class="slot"><span>ma</span></div>
                 <div class="slot"><span class="slot-empty-text">_</span></div>
@@ -2322,7 +2254,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div style="font-size:18px;color:var(--primaryLight);font-style:italic;text-align:center;">ma</div>
             </div>
             <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
-              <div style="font-size:14px;color:var(--textMedium);">Szótagok:</div>
               <div class="available-row">
                 <div class="syllable-card">ma</div>
                 <div style="opacity:0;min-width:56px;height:48px;"></div>
@@ -2354,7 +2285,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:18px;">
             <div class="text-body center">Rakd ki a szót szótagokból!</div>
             <div class="build-area">
-              <div style="font-size:14px;color:var(--textMedium);">Rakd ki a szót:</div>
               <div class="slots-row">
                 <div class="slot slot-correct"><span>ma</span></div>
                 <div class="slot slot-correct"><span>ma</span></div>
@@ -2362,7 +2292,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div style="font-size:18px;color:var(--primaryLight);font-style:italic;text-align:center;">mama</div>
             </div>
             <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
-              <div style="font-size:14px;color:var(--textMedium);">Szótagok:</div>
               <div class="available-row">
                 <div style="opacity:0;min-width:56px;height:48px;"></div>
                 <div style="opacity:0;min-width:56px;height:48px;"></div>
@@ -2379,7 +2308,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.7 Syllable memory -->
 <div class="section" id="ex-syllable-memory">
-  <div class="subsection-title">4.7 Szótag-memória (syllable_reading)</div>
+  <div class="subsection-title">4.7 Szótag memória (syllable_reading)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2410,7 +2339,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           </div>
         </div>
       </div>
-      <div class="phone-label">Szótag-memória</div>
+      <div class="phone-label">Szótag memória</div>
       <div class="phone-sublabel">Sötétzöld=hátlappal · fehér=felfordítva · cardGreen=párosítva</div>
     </div>
   </div>
@@ -2418,7 +2347,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.8 Sentence order -->
 <div class="section" id="ex-sentence-order">
-  <div class="subsection-title">4.8 Mondatrakós (sentence_order)</div>
+  <div class="subsection-title">4.8 Mondat rendezés (sentence_order)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2436,7 +2365,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:18px;">
             <div class="text-body center">Rakd helyes sorrendbe a mondatot!</div>
             <div class="build-area">
-              <div style="font-size:14px;color:var(--textMedium);">Rakd össze a mondatot:</div>
               <div class="slots-row">
                 <div class="slot" style="height:44px;font-size:16px;"><span>A</span></div>
                 <div class="slot" style="height:44px;font-size:16px;"><span>macska</span></div>
@@ -2445,7 +2373,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <div style="font-size:16px;color:var(--primaryLight);font-style:italic;text-align:center;">A macska</div>
             </div>
             <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
-              <div style="font-size:14px;color:var(--textMedium);">Szavak:</div>
               <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
                 <div class="word-chip">alszik</div>
                 <div style="opacity:0;min-width:40px;height:36px;"></div>
@@ -2459,7 +2386,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           </div>
         </div>
       </div>
-      <div class="phone-label">Mondatrakós</div>
+      <div class="phone-label">Mondat rendezés</div>
     </div>
 
     <div class="phone-wrap">
@@ -2478,7 +2405,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:18px;">
             <div class="text-body center">Rakd helyes sorrendbe a mondatot!</div>
             <div class="build-area">
-              <div style="font-size:14px;color:var(--textMedium);">Rakd össze a mondatot:</div>
               <div class="slots-row">
                 <div class="slot slot-correct" style="height:44px;font-size:16px;"><span>A</span></div>
                 <div class="slot slot-correct" style="height:44px;font-size:16px;"><span>macska</span></div>
@@ -2514,7 +2440,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           </div>
           <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:16px 20px;gap:20px;">
             <div class="sentence-card">
-              <div class="sentence-label">Olvasd el:</div>
               <div class="sentence-text">A piros alma édes.</div>
             </div>
             <div style="font-size:18px;font-weight:700;color:var(--textDark);text-align:center;">Milyen az alma?</div>
@@ -2534,7 +2459,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.10 Direction tracking -->
 <div class="section" id="ex-direction">
-  <div class="subsection-title">4.10 Iránykövetés (direction_tracking)</div>
+  <div class="subsection-title">4.10 Irányvonal követés (direction_tracking)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2629,7 +2554,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
               <span>← kezdd itt</span><span>végezd itt →</span>
             </div>
             <div class="direction-track">
-              <div class="track-progress" style="width:40%;background:var(--incorrect);opacity:0.5;"></div>
+              <div class="track-progress" style="width:40%;opacity:0.5;"></div>
               <div class="track-start-dot">▶</div>
               <div class="track-end-star">⭐</div>
             </div>
@@ -2644,7 +2569,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.11 Image word drag -->
 <div class="section" id="ex-image-word-drag">
-  <div class="subsection-title">4.11 Kép-szó húzós (image_word_drag)</div>
+  <div class="subsection-title">4.11 Kép-szó párosítás (image_word_drag)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2688,8 +2613,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           </div>
         </div>
       </div>
-      <div class="phone-label">Kép-szó húzós</div>
-      <div class="phone-sublabel">Kitöltött · helyes · téves · üres slot állapotok</div>
+      <div class="phone-label">Kép-szó párosítás</div>
+      <div class="phone-sublabel">Kitöltött · helyes · téves · üres slot állapotok. Valós fotók helyett itt emoji-k állnak helyettesítőként.</div>
     </div>
   </div>
 </div>
@@ -2707,20 +2632,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:33%;"></div></div>
             <div class="progress-text">4/12</div>
           </div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:12px 0;">
-            <div class="sentence-target">A macska alszik a párnán.</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:12px 0;">
             <div class="img-sentence-grid">
               <div class="img-sentence-cell img-sentence-cell-correct">🐱</div>
               <div class="img-sentence-cell">🐶</div>
               <div class="img-sentence-cell">🐠</div>
               <div class="img-sentence-cell">🐇</div>
             </div>
+            <div class="heart-row">
+              <div style="font-size:20px;">❤️</div>
+              <div class="replay-btn">🔊</div>
+            </div>
+            <div class="text-body center">Melyik kép illik a mondathoz?</div>
+            <div class="sentence-target">A macska alszik a párnán.</div>
             <div class="feedback-correct">🌿 Igen, helyes!</div>
           </div>
         </div>
       </div>
       <div class="phone-label">Mondat-kép párosítás</div>
-      <div class="phone-sublabel">Mondat → melyik képhez illik?</div>
+      <div class="phone-sublabel">Képrács felül, utasítás + mondat alul.</div>
     </div>
 
     <div class="phone-wrap">
@@ -2732,14 +2662,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:42%;"></div></div>
             <div class="progress-text">5/12</div>
           </div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:12px 0;">
-            <div class="sentence-target">A kutya fut a kertben.</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:12px 0;">
             <div class="img-sentence-grid">
               <div class="img-sentence-cell img-sentence-cell-correct">🐶</div>
               <div class="img-sentence-cell img-sentence-cell-incorrect">🐱</div>
               <div class="img-sentence-cell">🌳</div>
               <div class="img-sentence-cell">🏠</div>
             </div>
+            <div class="heart-row">
+              <div style="font-size:20px;">❤️</div>
+              <div class="replay-btn">🔊</div>
+            </div>
+            <div class="text-body center">Melyik kép illik a mondathoz?</div>
+            <div class="sentence-target">A kutya fut a kertben.</div>
             <div class="feedback-incorrect">Nézzük meg újra.</div>
           </div>
         </div>
@@ -2751,7 +2686,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 4.13 Image sentence match -->
 <div class="section" id="ex-image-sentence">
-  <div class="subsection-title">4.13 Kép-mondat párosítás (image_sentence_match)</div>
+  <div class="subsection-title">4.13 Mi történik a képen (image_sentence_match)</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
@@ -2776,8 +2711,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           </div>
         </div>
       </div>
-      <div class="phone-label">Kép-mondat párosítás</div>
-      <div class="phone-sublabel">Kép → melyik mondat írja le?</div>
+      <div class="phone-label">Mi történik a képen</div>
+      <div class="phone-sublabel">Kép → melyik mondat írja le? (ugyanaz az ImageWordMatchLayout, mint a Szófelismerésnél)</div>
     </div>
 
     <div class="phone-wrap">
@@ -2812,121 +2747,67 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <!-- 5. EGYÉB KOMPONENSEK -->
 <!-- ═══════════════════════════════════ -->
 
-<!-- 4.14 Szófelismerés – tablet nézet -->
+<!-- 4.14 Szótagfelismerés -->
 <div class="section" id="ex-word-recognition">
-  <div class="subsection-title">4.14 Szófelismerés – tablet nézet (image_word_match)</div>
-  <div class="section-desc">680×960px portrait tablet frame. Kép jelenik meg, a gyerek négy szó közül kiválasztja a helyes írott alakot. Tablet elrendezés: bal oldalon nagy kép, jobb oldalon utasítás + 2×2-es szórács.</div>
+  <div class="subsection-title">4.14 Szótagfelismerés (syllable_choice)</div>
+  <div class="section-desc">Nincs dedikált komponens-fájl — a PracticeScreen általános eset-ágán fut, mint a betűfelismerés: target-card a keresett szótaggal + 4 option-card. (A korábbi "tablet nézet" mockup ebben a szekcióban tévesen egy nem létező word_recognition típust és 680×960px tablet keretet mutatott — a valós appban nincs ilyen, minden képernyő telefon méretű.)</div>
   <div class="screens-grid">
-
-    <!-- Alap állapot -->
-    <div class="tablet-wrap">
-      <div class="tablet-frame">
-        <div class="tablet-screen" style="display:flex;flex-direction:column;">
-          <div class="heart-row" style="padding:20px 32px 12px;">
-            <div style="font-size:22px;">❤️</div>
-            <div class="replay-btn" style="width:52px;height:52px;font-size:26px;border-radius:26px;">🔊</div>
-          </div>
-          <div style="flex:1;display:flex;flex-direction:row;gap:24px;padding:8px 32px 0;align-items:center;">
-            <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-              <div style="width:260px;height:260px;background:var(--card);border-radius:32px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:96px;">🍎</div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:20px;justify-content:center;">
-              <div style="font-size:22px;font-weight:600;color:var(--textMedium);text-align:center;">Melyik szót látod a képen?</div>
-              <div class="tablet-word-grid" style="padding:0;">
-                <div class="tablet-option-card">al-ma</div>
-                <div class="tablet-option-card">kör-te</div>
-                <div class="tablet-option-card">szi-lva</div>
-                <div class="tablet-option-card">ba-rack</div>
-              </div>
-            </div>
-          </div>
-          <div class="tablet-progress">
-            <div class="exit-btn" style="width:44px;height:44px;font-size:22px;">✕</div>
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:42%;"></div></div>
-            <div style="font-size:15px;color:var(--textMedium);width:48px;text-align:right;">5/12</div>
+            <div class="progress-text">5/12</div>
+          </div>
+          <div class="heart-row">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
+          <div class="exercise-area" style="flex:1;">
+            <div class="text-body center">Melyik szótag ez?</div>
+            <div class="target-card"><div class="text-huge">ma</div></div>
+          </div>
+          <div class="options-area">
+            <div class="option-card">ma</div>
+            <div class="option-card">ta</div>
+            <div class="option-card">la</div>
+            <div class="option-card">na</div>
           </div>
         </div>
       </div>
-      <div class="tablet-label">Alap állapot</div>
-      <div class="tablet-sublabel">Kép bal oldalon (260×260), 2×2-es szókártyák jobb oldalon. Szótagkötőjel alacsony fázisoknál.</div>
+      <div class="phone-label">Alap állapot</div>
     </div>
 
-    <!-- Helyes válasz -->
-    <div class="tablet-wrap">
-      <div class="tablet-frame">
-        <div class="tablet-screen" style="display:flex;flex-direction:column;">
-          <div class="heart-row" style="padding:20px 32px 12px;">
-            <div style="font-size:22px;">❤️</div>
-            <div class="replay-btn" style="width:52px;height:52px;font-size:26px;border-radius:26px;">🔊</div>
-          </div>
-          <div style="flex:1;display:flex;flex-direction:row;gap:24px;padding:8px 32px 0;align-items:center;">
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;justify-content:center;">
-              <div style="width:260px;height:260px;background:var(--card);border-radius:32px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:96px;">🍎</div>
-              <div class="feedback-correct" style="font-size:20px;">🌿 Igen, helyes!</div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:20px;justify-content:center;">
-              <div style="font-size:22px;font-weight:600;color:var(--textMedium);text-align:center;">Melyik szót látod a képen?</div>
-              <div class="tablet-word-grid" style="padding:0;">
-                <div class="tablet-option-card tablet-option-correct">al-ma</div>
-                <div class="tablet-option-card">kör-te</div>
-                <div class="tablet-option-card">szi-lva</div>
-                <div class="tablet-option-card">ba-rack</div>
-              </div>
-            </div>
-          </div>
-          <div class="tablet-progress">
-            <div class="exit-btn" style="width:44px;height:44px;font-size:22px;">✕</div>
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" style="display:flex;flex-direction:column;">
+          <div class="practice-header">
+            <div class="exit-btn">✕</div>
             <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:50%;"></div></div>
-            <div style="font-size:15px;color:var(--textMedium);width:48px;text-align:right;">6/12</div>
+            <div class="progress-text">6/12</div>
+          </div>
+          <div class="heart-row">
+            <div style="font-size:20px;">❤️</div>
+            <div class="replay-btn">🔊</div>
+          </div>
+          <div class="exercise-area" style="flex:1;">
+            <div class="text-body center">Melyik szótag ez?</div>
+            <div class="target-card"><div class="text-huge">ma</div></div>
+            <div class="feedback-correct">🌿 Igen, helyes!</div>
+          </div>
+          <div class="options-area">
+            <div class="option-card option-card-correct">ma</div>
+            <div class="option-card">ta</div>
+            <div class="option-card">la</div>
+            <div class="option-card">na</div>
           </div>
         </div>
       </div>
-      <div class="tablet-label">Helyes válasz</div>
-      <div class="tablet-sublabel">Helyes kártya: cardGreen + primary border. Visszajelzés a kép alatt.</div>
+      <div class="phone-label">Helyes válasz</div>
     </div>
-
-    <!-- Helytelen válasz -->
-    <div class="tablet-wrap">
-      <div class="tablet-frame">
-        <div class="tablet-screen" style="display:flex;flex-direction:column;">
-          <div class="heart-row" style="padding:20px 32px 12px;">
-            <div style="font-size:22px;">❤️</div>
-            <div class="replay-btn" style="width:52px;height:52px;font-size:26px;border-radius:26px;">🔊</div>
-          </div>
-          <div style="flex:1;display:flex;flex-direction:row;gap:24px;padding:8px 32px 0;align-items:center;">
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;justify-content:center;">
-              <div style="width:260px;height:260px;background:var(--card);border-radius:32px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:96px;">🍎</div>
-              <div class="feedback-incorrect" style="font-size:20px;">Nézzük meg újra.</div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:20px;justify-content:center;">
-              <div style="font-size:22px;font-weight:600;color:var(--textMedium);text-align:center;">Melyik szót látod a képen?</div>
-              <div class="tablet-word-grid" style="padding:0;">
-                <div class="tablet-option-card tablet-option-correct">al-ma</div>
-                <div class="tablet-option-card tablet-option-incorrect">kör-te</div>
-                <div class="tablet-option-card">szi-lva</div>
-                <div class="tablet-option-card">ba-rack</div>
-              </div>
-            </div>
-          </div>
-          <div class="tablet-progress">
-            <div class="exit-btn" style="width:44px;height:44px;font-size:22px;">✕</div>
-            <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:42%;"></div></div>
-            <div style="font-size:15px;color:var(--textMedium);width:48px;text-align:right;">5/12</div>
-          </div>
-        </div>
-      </div>
-      <div class="tablet-label">Helytelen válasz</div>
-      <div class="tablet-sublabel">Helyes kártya zölddel kiemelve, helytelen errorBg-vel. Visszajelzés a kép alatt.</div>
-    </div>
-
-  </div>
-  <div style="margin-top:24px;font-size:12px;color:#888;font-family:monospace;line-height:2;">
-    tablet-frame: 680×960px · border 8px #1a1a1a · border-radius 32px<br>
-    elrendezés: side-by-side flex-row · kép bal (260×260 · radius 32) · opciók jobb (flex:1)<br>
-    tablet-option-card: white · radius 28px · padding 32/24 · 32px bold textDark<br>
-    tablet-word-grid: 2 columns · gap 20px · szótagkötőjel alacsony fázisoknál<br>
-    visszajelzés: kép alatt (feedback-correct / feedback-incorrect · 20px)<br>
-    tablet-progress: fixed bottom · padding 12/32/24 · ✕ 44×44 · counter 15px
   </div>
 </div>
 
@@ -2944,7 +2825,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:24px 0 8px;">
               <div>
                 <div class="s-greeting">Szia, Anna! 👋</div>
-                <div class="s-subtitle">Készen állsz a betűkertbe?</div>
+                <div class="s-subtitle">Készen állsz a gyakorlásra?</div>
               </div>
               <div style="width:48px;height:48px;border-radius:24px;background:var(--white);display:flex;align-items:center;justify-content:center;font-size:22px;">👤</div>
             </div>
@@ -3032,7 +2913,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div style="background:var(--bg);border:1px solid #eee;border-radius:16px;padding:12px 16px 20px;">
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="exit-btn">✕</div>
-          <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:100%;background:var(--correct);"></div></div>
+          <div style="flex:1;" class="progress-bar-track"><div class="progress-bar-fill" style="width:100%;"></div></div>
           <div class="progress-text">12/12</div>
         </div>
       </div>
@@ -3048,38 +2929,57 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <!-- 5.3 Loading -->
 <div class="section" id="loading">
-  <div class="subsection-title">5.3 Betöltési állapot</div>
+  <div class="subsection-title">5.3 Betöltési állapot (PracticeScreen)</div>
+  <div class="section-desc">Nincs spinner vagy ikon — csak középre igazított szöveg, a háttér változatlan (app bg).</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
         <div class="phone-notch"></div>
-        <div class="phone-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
-          <div class="spinner"></div>
+        <div class="phone-screen" style="display:flex;align-items:center;justify-content:center;padding:32px;">
           <div style="font-size:18px;color:var(--textMedium);text-align:center;">Feladatok készítése...</div>
         </div>
       </div>
-      <div class="phone-label">Betöltés</div>
-      <div class="phone-sublabel">Feladatok generálása közben (PracticeScreen), változatlan.</div>
+      <div class="phone-label">Feladatok generálása közben</div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;gap:24px;">
+          <div style="font-size:18px;color:var(--textMedium);text-align:center;">Ehhez a feladattípushoz még nincs feltöltött kép. Kérj meg egy felnőttet, hogy töltse fel!</div>
+          <div style="font-size:18px;color:var(--primary);text-align:center;">Vissza</div>
+        </div>
+      </div>
+      <div class="phone-label">Nincs tartalom ehhez a típushoz</div>
     </div>
   </div>
 </div>
 
 <!-- 5.4 Boot splash -->
 <div class="section" id="boot-splash">
-  <div class="subsection-title">5.4 Indítóképernyő (app indítás)</div>
-  <div class="section-desc">Az app hidegindításakor (tartalom-szinkron alatt) egy véletlenszerűen választott, teljes képernyős indítókép jelenik meg a régi spinner helyett — 5 helyi kép + az adminon feltölthető képek közül. Lásd: Loading Screens az adminon.</div>
+  <div class="subsection-title">5.4 Indítóképernyők</div>
+  <div class="section-desc">Két különböző "splash" van: (1) a natív OS indítókép app.json-ból, csak egy pillanatra villan fel induláskor; (2) a LoadingScreen komponens (src/components/LoadingScreen.tsx) — ez jelenik meg, amíg a tartalom-cache betöltődik, és 5 helyi illusztrált kép közül választ véletlenszerűen egyet (cover, teljes képernyő).</div>
   <div class="screens-grid">
     <div class="phone-wrap">
       <div class="phone-frame">
         <div class="phone-notch"></div>
-        <div class="phone-screen" style="padding:0;">
-          <div class="splash-frame">
-            <div class="splash-frame-label">🖼️ Véletlenszerű indítókép<br>(cover, teljes képernyő)</div>
-          </div>
+        <div class="phone-screen" style="padding:0;background:#fff;display:flex;align-items:center;justify-content:center;">
+          <img src="/ui-kit-assets/splash-icon.png" style="width:45%;height:auto;">
         </div>
       </div>
-      <div class="phone-label">Indítóképernyő</div>
-      <div class="phone-sublabel">LoadingScreen komponens (src/components/LoadingScreen.tsx) · App.tsx: tartalom-cache betöltése közben látszik, min. 2mp.</div>
+      <div class="phone-label">Natív OS splash</div>
+      <div class="phone-sublabel">app.json: assets/splash-icon.png · resizeMode: contain · háttér: #ffffff</div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" style="padding:0;">
+          <img src="/ui-kit-assets/loading-01.png" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+      </div>
+      <div class="phone-label">LoadingScreen (1/5 példa)</div>
+      <div class="phone-sublabel">assets/loading-screens/01–05.png közül véletlenszerűen; adminon feltölthető remote képekkel is felülírható.</div>
     </div>
   </div>
 </div>
