@@ -35,6 +35,9 @@ const INSTRUCTIONS = [
   'Rakd helyes sorrendbe a szavakat!',
   'Húzd a szavakat a képekhez!',
   'Húzd az ujjad balról jobbra a vonalon!',
+  'Melyik kép illik a mondathoz?',
+  'Mi történik a képen?',
+  'Olvasd el a mondatot és válaszold meg a kérdést.',
 ];
 
 export async function generateSoundNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
