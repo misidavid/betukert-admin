@@ -21,9 +21,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function PrivacyPolicyPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
-      <Link href="/landing" className="text-sm mb-6 inline-block hover:opacity-70" style={{ color: '#2F6B3F' }}>
-        ← Vissza a főoldalra
-      </Link>
 
       <h1 className="text-3xl mb-2" style={{ fontWeight: 800, color: '#234430' }}>
         Adatvédelmi tájékoztató
