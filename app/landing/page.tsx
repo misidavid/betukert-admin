@@ -343,6 +343,11 @@ export default function LandingPage() {
           🌱 Betűkert
         </div>
         <p>© {new Date().getFullYear()} Betűkert. Minden jog fenntartva.</p>
+        <p className="mt-2">
+          <a href="/adatvedelem" className="hover:opacity-70 transition-opacity" style={{ textDecoration: 'underline' }}>
+            Adatvédelmi tájékoztató
+          </a>
+        </p>
       </footer>
     </div>
   );

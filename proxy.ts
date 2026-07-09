@@ -5,7 +5,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // A mobilapp által hívott publikus endpoint, a login oldal és az UI kit nem védett
-  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/landing')) {
+  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem')) {
     return NextResponse.next();
   }
 
