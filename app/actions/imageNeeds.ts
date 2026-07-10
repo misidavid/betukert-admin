@@ -262,6 +262,108 @@ export async function toggleImageNeedExerciseTypeAction(
   }
 }
 
+export async function bulkRemoveImageExerciseTypesAction(
+  ids: string[],
+): Promise<{ updated: number; error?: string }> {
+  try {
+    await requireAuth();
+    if (!Array.isArray(ids) || ids.length === 0) return { updated: 0, error: 'Nincs kijelölt elem' };
+    if (ids.length > 500) return { updated: 0, error: 'Túl sok elem (max 500)' };
+    if (!ids.every(id => UUID_RE.test(id))) return { updated: 0, error: 'Érvénytelen azonosító' };
+
+    const { data: configs } = await getSupabaseAdmin()
+      .from('exercise_type_config')
+      .select('id')
+      .eq('requires_image', true);
+    const imageTypes = new Set((configs ?? []).map(c => c.id));
+    if (imageTypes.size === 0) return { updated: 0, error: 'Nincs képköteles feladattípus' };
+
+    const { data: records, error: fetchError } = await getSupabaseAdmin()
+      .from('image_needs')
+      .select('id, exercise_types')
+      .in('id', ids);
+    if (fetchError || !records) return { updated: 0, error: 'Nem találhatók a bejegyzések' };
+
+    const now = new Date().toISOString();
+    const toUpdate = records
+      .map(r => {
+        const current: string[] = r.exercise_types ?? [];
+        return { id: r.id, current, next: current.filter(t => !imageTypes.has(t)) };
+      })
+      .filter(r => r.next.length !== r.current.length);
+
+    const results = await Promise.all(
+      toUpdate.map(r =>
+        getSupabaseAdmin()
+          .from('image_needs')
+          .update({ exercise_types: r.next, updated_at: now })
+          .eq('id', r.id),
+      ),
+    );
+    const failed = results.filter(r => r.error);
+    if (failed.length > 0) {
+      console.error('[bulkRemoveImageExerciseTypesAction] DB hiba:', failed[0].error);
+      return { updated: toUpdate.length - failed.length, error: `${failed.length} elem frissítése nem sikerült` };
+    }
+    return { updated: toUpdate.length };
+  } catch (e) {
+    console.error('[bulkRemoveImageExerciseTypesAction]', e);
+    return { updated: 0, error: 'Szerverhiba' };
+  }
+}
+
+export async function bulkRestoreImageExerciseTypesAction(
+  ids: string[],
+): Promise<{ updated: number; error?: string }> {
+  try {
+    await requireAuth();
+    if (!Array.isArray(ids) || ids.length === 0) return { updated: 0, error: 'Nincs kijelölt elem' };
+    if (ids.length > 500) return { updated: 0, error: 'Túl sok elem (max 500)' };
+    if (!ids.every(id => UUID_RE.test(id))) return { updated: 0, error: 'Érvénytelen azonosító' };
+
+    const { data: configs } = await getSupabaseAdmin()
+      .from('exercise_type_config')
+      .select('id')
+      .eq('requires_image', true);
+    const imageTypes = new Set((configs ?? []).map(c => c.id));
+    if (imageTypes.size === 0) return { updated: 0, error: 'Nincs képköteles feladattípus' };
+
+    const { data: records, error: fetchError } = await getSupabaseAdmin()
+      .from('image_needs')
+      .select('id, word, exercise_types')
+      .in('id', ids);
+    if (fetchError || !records) return { updated: 0, error: 'Nem találhatók a bejegyzések' };
+
+    const now = new Date().toISOString();
+    const toUpdate = records
+      .map(r => {
+        const current: string[] = r.exercise_types ?? [];
+        const defaults = getExerciseTypes(r.word).filter(t => imageTypes.has(t));
+        const next = [...current, ...defaults.filter(t => !current.includes(t))];
+        return { id: r.id, current, next };
+      })
+      .filter(r => r.next.length !== r.current.length);
+
+    const results = await Promise.all(
+      toUpdate.map(r =>
+        getSupabaseAdmin()
+          .from('image_needs')
+          .update({ exercise_types: r.next, updated_at: now })
+          .eq('id', r.id),
+      ),
+    );
+    const failed = results.filter(r => r.error);
+    if (failed.length > 0) {
+      console.error('[bulkRestoreImageExerciseTypesAction] DB hiba:', failed[0].error);
+      return { updated: toUpdate.length - failed.length, error: `${failed.length} elem frissítése nem sikerült` };
+    }
+    return { updated: toUpdate.length };
+  } catch (e) {
+    console.error('[bulkRestoreImageExerciseTypesAction]', e);
+    return { updated: 0, error: 'Szerverhiba' };
+  }
+}
+
 export async function updateAmbiguityNotesAction(id: string, notes: string): Promise<{ error?: string }> {
   try {
     await requireAuth();

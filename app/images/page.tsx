@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ImageNeed, ImageStatus } from '../../lib/supabase';
-import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction, fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, updateAmbiguityNotesAction } from '../actions/imageNeeds';
+import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction, fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, updateAmbiguityNotesAction, bulkRemoveImageExerciseTypesAction } from '../actions/imageNeeds';
 import { ExerciseTypeConfig } from '../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
@@ -115,6 +115,7 @@ export default function ImagesPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkWorking, setBulkWorking] = useState(false);
   const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
+  const [bulkRemoveTypesConfirm, setBulkRemoveTypesConfirm] = useState(false);
   const [message, setMessage] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
   const savedScrollY = useRef<number | null>(null);
@@ -255,6 +256,20 @@ export default function ImagesPage() {
       ...toDelete.map(item => deleteImageFileAction(item.id)),
       ...toReplace.map(item => updateImageNeedStatusAction(item.id, 'needs_replacement')),
     ]);
+    setSelected(new Set());
+    setBulkWorking(false);
+    loadData(true);
+  };
+
+  const handleBulkRemoveImageTypes = async () => {
+    setBulkWorking(true);
+    const ids = filtered.filter(i => selected.has(i.id)).map(i => i.id);
+    const result = await bulkRemoveImageExerciseTypesAction(ids);
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
+      setMessage(`✅ ${result.updated} szó kikerült az összes képköteles feladattípusból. A szóbankban továbbra is szerepelnek.`);
+    }
     setSelected(new Set());
     setBulkWorking(false);
     loadData(true);
@@ -495,6 +510,33 @@ export default function ImagesPage() {
         </div>
       );
     })()}
+    {bulkRemoveTypesConfirm && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="bg-white rounded-[24px] p-6 max-w-md mx-4 shadow-xl">
+          <h3 className="text-lg mb-2" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>Kivétel a képköteles feladattípusokból</h3>
+          <p className="text-sm mb-4" style={{ color: MUTED }}>
+            A kijelölt <strong style={{ color: GREEN_DARK }}>{selected.size} szó</strong> az <strong style={{ color: GREEN_DARK }}>összes képköteles feladattípusból</strong> ({configs.map(c => c.label).join(', ')}) kikerül, így eltűnik erről az oldalról.
+            A szóbankban és a nem képköteles feladatokban továbbra is szerepelni fognak.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => setBulkRemoveTypesConfirm(false)}
+              className="text-sm px-4 py-2 rounded-2xl transition-colors"
+              style={{ color: MUTED, background: TRACK }}
+            >
+              Mégse
+            </button>
+            <button
+              onClick={() => { setBulkRemoveTypesConfirm(false); handleBulkRemoveImageTypes(); }}
+              className="text-white text-sm px-4 py-2 rounded-2xl transition-colors"
+              style={{ ...display, fontWeight: 600, background: '#C97B3E' }}
+            >
+              Kivétel mindegyikből
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -504,6 +546,13 @@ export default function ImagesPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Link
+            href="/images/excluded"
+            className="px-4 py-2.5 rounded-2xl text-sm transition-colors"
+            style={{ ...display, fontWeight: 600, color: MUTED, background: '#FFFFFF', border: '1px solid #E3DCC9' }}
+          >
+            🚫 Kizárt szavak{items.length - relevantItems.length > 0 ? ` (${items.length - relevantItems.length})` : ''}
+          </Link>
           <Link
             href="/images/settings"
             className="px-4 py-2.5 rounded-2xl text-sm transition-colors"
@@ -649,6 +698,14 @@ export default function ImagesPage() {
               🔄 Csere szükséges
             </button>
           )}
+          <button
+            onClick={() => setBulkRemoveTypesConfirm(true)}
+            disabled={bulkWorking}
+            className="text-xs px-3 py-1.5 rounded-xl transition-colors disabled:opacity-50"
+            style={{ background: '#FBE9DC', color: '#8A5A2F', fontWeight: 600 }}
+          >
+            🚫 Kivétel minden képköteles típusból
+          </button>
           <button
             onClick={() => setBulkDeleteConfirm(true)}
             disabled={bulkWorking}
