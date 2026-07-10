@@ -33,7 +33,7 @@ export const WORD_BANK: string[] = [
   // Fázis 5 — e
   // ----------------------------------------
   'te', 'se',
-  'mese', 'este', 'test', 'evet',
+  'mese', 'este', 'test',
   'esti', 'teve', 'vese',
   'sem', 'vet', 'semmi', 'testi', 'vetít',
 
@@ -190,7 +190,7 @@ export const WORD_BANK: string[] = [
   'délután', 'péntek',
   'néni', 'neve', 'néma',
   'napos', 'nevet',
-  'zene', 'zokni', 'kaftan',
+  'zene', 'zokni',
   'tehén', 'hiéna', 'málna',
   'fonál', 'kanál', 'ének',
   'lenéz', 'menő', 'honos', 'hajnal',
@@ -280,7 +280,7 @@ export const WORD_BANK: string[] = [
   'sün', 'ürge',
   'tű', 'fű', 'fésű', 'fülke', 'füstös',
   'fűszer', 'szüret', 'repül',
-  'üveg', 'ünnepe', 'ünnep', 'ütemes',
+  'üveg', 'ünnep', 'ütemes',
   'körül', 'tükör', 'füzet', 'szűrő', 'szükség',
   'repülő', 'tűzijáték', 'repülőgép',
 
@@ -289,7 +289,7 @@ export const WORD_BANK: string[] = [
   // ----------------------------------------
   'bár', 'bor', 'bál', 'bőr', 'baj',
   'bél', 'bér', 'bír', 'bán', 'bűn',
-  'bari', 'boci', 'béna', 'betű',
+  'bari', 'boci', 'betű',
   'boka', 'bokor', 'birka',
   'béka', 'bika',
   'galamb', 'veréb',
@@ -354,7 +354,7 @@ export const WORD_BANK: string[] = [
   'anya', 'anyuka', 'bárány',
   'szúnyog', 'fűnyíró', 'dinnye',
   'nyár', 'nyél', 'nyom', 'nyúl', 'nyírfa', 'nyakkendő',
-  'banya', 'arány', 'kemény', 'könnyed', 'szenny',
+  'arány', 'kemény', 'könnyed', 'szenny',
   'nyalóka',
 
   // ----------------------------------------
@@ -379,6 +379,16 @@ export const WORD_BANK: string[] = [
   'bagoly', 'gólya', 'fogoly', 'tűzhely',
   'osztály', 'folyam', 'lyuk', 'gally',
   'folyópart',
+
+  // ----------------------------------------
+  // Fázis 31 — dz
+  // ----------------------------------------
+  'bodza', 'madzag', 'edz', 'pedz', 'bodzafa',
+
+  // ----------------------------------------
+  // Fázis 33 — dzs
+  // ----------------------------------------
+  'dzsem', 'dzsungel', 'dzsip', 'maharadzsa',
 
 
   // ----------------------------------------

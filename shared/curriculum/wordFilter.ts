@@ -3,7 +3,6 @@ import { getGraphemesForWordFilter } from './graphemes';
 
 const VOWELS = ['a', 'á', 'e', 'é', 'i', 'í', 'o', 'ó', 'ö', 'ő', 'u', 'ú', 'ü', 'ű'];
 const DIGRAPHS = ['dzs', 'cs', 'dz', 'gy', 'ly', 'ny', 'sz', 'ty', 'zs'];
-// Nagybetűs kétjegyűek (keresztnevekhez, pl. Cs-illa, Gy-ula, Sz-abi)
 const UPPER_DIGRAPHS = ['Dzs', 'Dz', 'Cs', 'Gy', 'Ly', 'Ny', 'Sz', 'Ty', 'Zs'];
 
 export const splitIntoGraphemes = (word: string): string[] => {
@@ -13,8 +12,8 @@ export const splitIntoGraphemes = (word: string): string[] => {
   while (i < lower.length) {
     let matched = false;
 
-    // Doubled digraphs (ggy→gy+gy, nny→ny+ny, ssz→sz+sz, ccs→cs+cs, etc.):
-    // the first char is the digraph's first char doubled, so advance only 1.
+    // Megkettőzött kétjegyűek (ggy→gy+gy, nny→ny+ny, ssz→sz+sz, stb.):
+    // az első karakter a kétjegyű kezdőbetűjének megduplázása, ezért csak 1-et lépünk.
     for (const digraph of DIGRAPHS) {
       if (lower[i] === digraph[0] && lower.slice(i + 1, i + 1 + digraph.length) === digraph) {
         graphemes.push(digraph);
@@ -43,20 +42,10 @@ export const splitIntoGraphemes = (word: string): string[] => {
   return graphemes;
 };
 
-// Keresztnevekhez: az első grafémát nagybetűsen adja vissza, a többit kisbetűsen.
-// Pl. 'Csilla' → ['Cs', 'i', 'l', 'l', 'a'], 'Alma' → ['A', 'l', 'm', 'a']
-export const splitNameIntoGraphemes = (word: string): string[] => {
-  if (!word || word[0] === word[0].toLowerCase()) return splitIntoGraphemes(word);
-  for (const digraph of UPPER_DIGRAPHS) {
-    if (word.startsWith(digraph)) {
-      return [digraph, ...splitIntoGraphemes(word.slice(digraph.length))];
-    }
-  }
-  return [word[0], ...splitIntoGraphemes(word.slice(1))];
-};
-
 const isVowel = (g: string): boolean => VOWELS.includes(g);
 
+// Megkettőzött kétjegyűek helyesírási normalizálása (gygy→ggy, szsz→ssz, stb.)
+// Szótagon belül kell, ha a két azonos kétjegyű ugyanabba a szótagba kerül (pl. meggy).
 const DOUBLED_DIGRAPH_MAP: [string, string][] = [
   ['dzsdzs', 'ddzs'],
   ['dzdz', 'ddz'],
@@ -142,11 +131,24 @@ export const DISPLAY_TO_ID: Record<string, string> = {
   'Z': 'Z', 'Zs': 'Zs',
 };
 
+// Keresztnevekhez: az első grafémát nagybetűsen adja vissza, a többit kisbetűsen.
+// Pl. 'Csilla' → ['Cs', 'i', 'l', 'l', 'a'], 'Alma' → ['A', 'l', 'm', 'a']
+export const splitNameIntoGraphemes = (word: string): string[] => {
+  if (!word || word[0] === word[0].toLowerCase()) return splitIntoGraphemes(word);
+  for (const digraph of UPPER_DIGRAPHS) {
+    if (word.startsWith(digraph)) {
+      return [digraph, ...splitIntoGraphemes(word.slice(digraph.length))];
+    }
+  }
+  return [word[0], ...splitIntoGraphemes(word.slice(1))];
+};
+
 export const wordIsKnown = (
   word: string,
   knownGraphemeIds: string[]
 ): boolean => {
-  const graphemes = splitIntoGraphemes(word.toLowerCase());
+  const isName = word[0] && word[0] !== word[0].toLowerCase();
+  const graphemes = isName ? splitNameIntoGraphemes(word) : splitIntoGraphemes(word.toLowerCase());
   return graphemes.every(g => {
     const id = DISPLAY_TO_ID[g];
     return id && knownGraphemeIds.includes(id);
@@ -176,9 +178,10 @@ export const filterWordsByPhase = (
 
   return words
     .filter(word => wordIsKnown(word, knownIds))
-    .map((word, index) => {
+    .map(word => {
       const syllables = splitIntoSyllables(word);
-      const graphemes = splitIntoGraphemes(word);
+      const isName = word[0] && word[0] !== word[0].toLowerCase();
+      const graphemes = isName ? splitNameIntoGraphemes(word) : splitIntoGraphemes(word);
       const maxGraphemePhase = Math.max(
         ...graphemes.map(g => {
           const id = DISPLAY_TO_ID[g];
@@ -187,7 +190,9 @@ export const filterWordsByPhase = (
       );
 
       return {
-        id: `word_${index}_${word}`,
+        // Stabil azonosító: a szó szövege egyedi a bankban, a lista-index
+        // fázisonként változna és széttördelné a mastery előzményeket.
+        id: `word_${word}`,
         text: word,
         syllables,
         syllableCount: syllables.length,
@@ -198,3 +203,8 @@ export const filterWordsByPhase = (
     })
     .sort((a, b) => a.phase - b.phase || a.syllableCount - b.syllableCount);
 };
+
+// Szótagok összefűzésekor a szótaghatáron átnyúló megkettőzött kétjegyűek
+// (pl. hosz+szú → hosszú) visszakapják a helyesírási alakjukat.
+export const joinSyllables = (syllables: string[]): string =>
+  normalizeGeminate(syllables.join(''));

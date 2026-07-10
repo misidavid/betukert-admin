@@ -113,8 +113,8 @@ export const GRAPHEMES: Grapheme[] = [
   // Fázis 33 — dzs
   { id: 'dzs', display: 'dzs', phoneme: 'dzs', type: 'trigraph',  rare: false, phase: 33 },
 
-  // Fázis 34 — y
-  { id: 'y',   display: 'y',   phoneme: 'i',   type: 'consonant', rare: false, phase: 34 },
+  // Fázis 34 — y  (ritka: önállóan csak idegen szavakban/nevekben — a nagy Y-nal konzisztensen)
+  { id: 'y',   display: 'y',   phoneme: 'i',   type: 'consonant', rare: true,  phase: 34 },
 
   // Fázis 35 — w  (ritka: idegen szavakban)
   { id: 'w',   display: 'w',   phoneme: 'v',   type: 'consonant', rare: true,  phase: 35 },
