@@ -16,7 +16,8 @@ export async function proxy(request: NextRequest) {
       pathname.startsWith('/adatvedelem') ||
       pathname.startsWith('/tamogatas') ||
       pathname.startsWith('/megerositve') ||
-      pathname.startsWith('/api/content')
+      pathname.startsWith('/api/content') ||
+      pathname.startsWith('/email/')
     ) {
       return NextResponse.next();
     }
@@ -24,7 +25,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // A mobilapp által hívott publikus endpoint, a login oldal és az UI kit nem védett
-  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem') || pathname.startsWith('/tamogatas') || pathname.startsWith('/megerositve')) {
+  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem') || pathname.startsWith('/tamogatas') || pathname.startsWith('/megerositve') || pathname.startsWith('/email/')) {
     return NextResponse.next();
   }
 
