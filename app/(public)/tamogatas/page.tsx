@@ -60,17 +60,13 @@ export default function SupportPage() {
             a bejelentkező képernyőn kérhetsz új jelszót. Ha továbbra sem sikerül, írj nekünk
             e-mailben.
           </Faq>
-          <Faq q="Elfelejtettem a szülői PIN kódot.">
-            A szülői kapu alapértelmezett PIN kódja 1234. Ha megváltoztattad és nem emlékszel
-            rá, írj nekünk e-mailben, és segítünk visszaállítani.
-          </Faq>
           <Faq q="Megvettem az előfizetést, de nem aktív. Hogyan állíthatom vissza?">
-            Az előfizetés az App Store fiókodhoz kötődik. Nyisd meg az Alkalmazásban az
+            Az előfizetés az App Store vagy a Google Play fiókodhoz kötődik. Nyisd meg az Alkalmazásban az
             előfizetési képernyőt, és koppints a „Vásárlások visszaállítása” lehetőségre.
-            Ha ez nem segít, írj nekünk a vásárláskor kapott Apple-nyugta dátumával.
+            Ha ez nem segít, írj nekünk a vásárláskor kapott nyugta dátumával.
           </Faq>
           <Faq q="Hogyan mondhatom le az előfizetést?">
-            Az előfizetést az Apple kezeli: a készüléken a Beállítások → saját név →
+            Az előfizetést az Apple és a Google kezeli: a készüléken a Beállítások → saját név →
             Előfizetések menüpontban mondhatod le. Lemondás után a már kifizetett időszak
             végéig a hozzáférés megmarad.
           </Faq>
@@ -79,8 +75,7 @@ export default function SupportPage() {
             ez a profilt és a hozzá tartozó tanulási adatokat véglegesen eltávolítja.
           </Faq>
           <Faq q="Hogyan törölhetem a teljes fiókomat?">
-            Írj nekünk e-mailben a fiókodhoz tartozó e-mail címről, és 30 napon belül véglegesen
-            töröljük a fiókodat és minden hozzá tartozó adatot.
+            A szülői módba lépve az oldal alján találod a fiók törlésének lehetőségét.
           </Faq>
         </div>
       </Section>
