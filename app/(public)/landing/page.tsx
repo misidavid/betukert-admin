@@ -37,7 +37,7 @@ export default function LandingPage() {
         className="relative z-10 mx-6 flex flex-col items-center gap-5 rounded-[36px] px-10 py-12 text-center sm:px-16"
         style={{
           background: 'rgba(241, 236, 224, 0.2)',
-          backdropFilter: 'blur(1px)',
+          backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
           boxShadow: '0 8px 40px rgba(35, 68, 48, 0.15)',
         }}
