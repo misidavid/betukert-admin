@@ -1,0 +1,80 @@
+<!--
+  Supabase "Confirm signup" e-mail sablon
+  Beillesztés: Supabase Dashboard → Authentication → Emails → Templates → Confirm signup
+  Tárgy (Subject): Erősítsd meg az e-mail-címed a Betűkertben 🌱
+  A logó a https://betukert.hu/email/betukert-logo.png címről töltődik (public/email/betukert-logo.png, deploy szükséges).
+-->
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body style="margin:0; padding:0; background-color:#F1ECE0;">
+    <!-- Előnézeti szöveg (a levéllistában látszik, a levélben nem) -->
+    <div style="display:none; max-height:0; overflow:hidden; mso-hide:all;">
+      Egy kattintás, és kezdődhet a betűtanulás!
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F1ECE0" style="background-color:#F1ECE0;">
+      <tr>
+        <td align="center" style="padding:32px 16px;">
+          <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="max-width:480px; width:100%;">
+            <!-- Logó -->
+            <tr>
+              <td align="center" style="padding:8px 0 24px;">
+                <a href="https://betukert.hu" target="_blank" style="text-decoration:none;">
+                  <img src="https://betukert.hu/email/betukert-logo.png" width="200" alt="Betűkert" style="display:block; width:200px; height:auto; border:0;" />
+                </a>
+              </td>
+            </tr>
+
+            <!-- Kártya -->
+            <tr>
+              <td bgcolor="#FFFFFF" style="background-color:#FFFFFF; border:1px solid #E3DCC9; border-radius:24px; padding:40px 36px; font-family:'Segoe UI', Arial, Helvetica, sans-serif;">
+                <h1 style="margin:0 0 16px; font-size:22px; line-height:30px; color:#234430; font-weight:700;">
+                  Erősítsd meg az e-mail-címed
+                </h1>
+                <p style="margin:0 0 28px; font-size:15px; line-height:24px; color:#1F2421;">
+                  Örülünk, hogy csatlakozol a Betűkerthez! Már csak egy lépés van hátra:
+                  kattints az alábbi gombra, és máris kezdődhet a játékos betűtanulás.
+                </p>
+
+                <!-- Gomb -->
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 28px;">
+                  <tr>
+                    <td bgcolor="#2F6B3F" style="background-color:#2F6B3F; border-radius:14px;">
+                      <a href="{{ .ConfirmationURL }}" target="_blank"
+                         style="display:inline-block; padding:14px 36px; font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:16px; font-weight:700; color:#FFFFFF; text-decoration:none; border-radius:14px;">
+                        E-mail-cím megerősítése
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:0; font-size:13px; line-height:20px; color:#8A8478;">
+                  Ha a gomb nem működik, másold be ezt a linket a böngésződbe:<br />
+                  <a href="{{ .ConfirmationURL }}" target="_blank" style="color:#2F6B3F; word-break:break-all;">{{ .ConfirmationURL }}</a>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Lábléc -->
+            <tr>
+              <td align="center" style="padding:24px 20px 8px; font-family:'Segoe UI', Arial, Helvetica, sans-serif;">
+                <p style="margin:0 0 8px; font-size:12px; line-height:18px; color:#8A8478;">
+                  Ezt az üzenetet azért kaptad, mert valaki ezzel az e-mail-címmel regisztrált
+                  a Betűkert alkalmazásba. Ha nem te voltál, nyugodtan hagyd figyelmen kívül.
+                </p>
+                <p style="margin:0; font-size:12px; line-height:18px; color:#8A8478;">
+                  <a href="https://betukert.hu" target="_blank" style="color:#2F6B3F; text-decoration:none;">betukert.hu</a>
+                  &nbsp;·&nbsp;
+                  <a href="mailto:support@betukert.hu" style="color:#2F6B3F; text-decoration:none;">support@betukert.hu</a>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
