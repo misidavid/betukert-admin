@@ -13,8 +13,8 @@ import {
   seedComprehensionBankAction,
   type SentenceRow,
   type ComprehensionRow,
-} from '../actions/sentences';
-import { GRAPHEMES } from '../../shared/curriculum/graphemes';
+} from '../../actions/sentences';
+import { GRAPHEMES } from '../../../shared/curriculum/graphemes';
 
 type Tab = 'mondatrendezes' | 'mondatertes';
 

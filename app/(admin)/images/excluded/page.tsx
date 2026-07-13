@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ImageNeed } from '../../../lib/supabase';
-import { fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, bulkRestoreImageExerciseTypesAction } from '../../actions/imageNeeds';
-import { ExerciseTypeConfig } from '../../actions/exerciseTypeConfig';
+import { ImageNeed } from '../../../../lib/supabase';
+import { fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, bulkRestoreImageExerciseTypesAction } from '../../../actions/imageNeeds';
+import { ExerciseTypeConfig } from '../../../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
 const GREEN = '#2F6B3F';

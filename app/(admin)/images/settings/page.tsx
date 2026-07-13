@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { toggleRequiresImageAction, fetchExerciseTypeConfigsAction, ExerciseTypeConfig } from '../../actions/exerciseTypeConfig';
+import { toggleRequiresImageAction, fetchExerciseTypeConfigsAction, ExerciseTypeConfig } from '../../../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
 const GREEN = '#2F6B3F';

@@ -6,7 +6,7 @@ import {
   AreaChart, Area,
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
-import { getStatsAction, StatsResult, MasteryStatusItem } from '../actions/stats';
+import { getStatsAction, StatsResult, MasteryStatusItem } from '../../actions/stats';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';

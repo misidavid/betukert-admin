@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { publishPackageAction, fetchPublishDataAction, PublishedPackage } from '../actions/publish';
+import { publishPackageAction, fetchPublishDataAction, PublishedPackage } from '../../actions/publish';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';

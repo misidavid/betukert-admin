@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { SoundNeed, SoundStatus } from '../../lib/supabase';
-import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction, fetchSoundNeedsAction } from '../actions/soundNeeds';
+import { SoundNeed, SoundStatus } from '../../../lib/supabase';
+import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction, fetchSoundNeedsAction } from '../../actions/soundNeeds';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';

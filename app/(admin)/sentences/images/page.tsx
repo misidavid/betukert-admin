@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SentenceImageNeed, ImageStatus } from '../../../lib/supabase';
+import { SentenceImageNeed, ImageStatus } from '../../../../lib/supabase';
 import {
   generateSentenceImageNeedsAction,
   uploadSentenceImageFileAction,
   updateSentenceImageNeedStatusAction,
   deleteSentenceImageFileAction,
   fetchSentenceImageNeedsAction,
-} from '../../actions/sentenceImageNeeds';
+} from '../../../actions/sentenceImageNeeds';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';

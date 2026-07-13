@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Search, RotateCcw, Trash2 } from 'lucide-react';
-import { seedWordsAction, deleteWordAction, toggleWordEnabledAction, addWordAction, getExcludedWordsAction, restoreExcludedWordAction, fetchWordsAction, WordItem } from '../actions/words';
-import { GRAPHEMES } from '../../shared/curriculum/graphemes';
-import { generateSyllables } from '../../shared/curriculum/syllableGenerator';
+import { seedWordsAction, deleteWordAction, toggleWordEnabledAction, addWordAction, getExcludedWordsAction, restoreExcludedWordAction, fetchWordsAction, WordItem } from '../../actions/words';
+import { GRAPHEMES } from '../../../shared/curriculum/graphemes';
+import { generateSyllables } from '../../../shared/curriculum/syllableGenerator';
 
 type Tab = 'graphemes' | 'syllables' | 'words';
 

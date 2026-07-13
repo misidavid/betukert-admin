@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { LoadingScreen, fetchLoadingScreensAction, uploadLoadingScreenAction, deleteLoadingScreenAction } from '../actions/loadingScreens';
+import { LoadingScreen, fetchLoadingScreensAction, uploadLoadingScreenAction, deleteLoadingScreenAction } from '../../actions/loadingScreens';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';

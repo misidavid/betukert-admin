@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Baloo_2, Quicksand } from 'next/font/google';
-import { fetchHomeStatsAction } from './actions/stats';
+import { fetchHomeStatsAction } from '../actions/stats';
 
 const displayFont = Baloo_2({
   subsets: ['latin', 'latin-ext'],

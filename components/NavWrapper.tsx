@@ -11,8 +11,6 @@ export default function NavWrapper() {
 
   if (pathname === '/login') return null;
   if (pathname?.startsWith('/design-preview')) return null;
-  if (pathname?.startsWith('/landing')) return null;
-  if (pathname?.startsWith('/adatvedelem')) return null;
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
