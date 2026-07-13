@@ -347,6 +347,10 @@ export default function LandingPage() {
           <a href="/adatvedelem" className="hover:opacity-70 transition-opacity" style={{ textDecoration: 'underline' }}>
             Adatvédelmi tájékoztató
           </a>
+          {' · '}
+          <a href="/tamogatas" className="hover:opacity-70 transition-opacity" style={{ textDecoration: 'underline' }}>
+            Támogatás
+          </a>
         </p>
       </footer>
     </div>

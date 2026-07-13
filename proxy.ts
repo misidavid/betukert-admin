@@ -3,9 +3,27 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = (request.headers.get('host') ?? '').split(':')[0];
+
+  // A publikus fő domain csak a landing oldalt és a publikus aloldalakat szolgálja ki;
+  // az admin az admin.betukert.hu-n (és a vercel.app címen) él
+  if (host === 'betukert.hu' || host === 'www.betukert.hu') {
+    if (pathname === '/') {
+      return NextResponse.rewrite(new URL('/landing', request.url));
+    }
+    if (
+      pathname.startsWith('/landing') ||
+      pathname.startsWith('/adatvedelem') ||
+      pathname.startsWith('/tamogatas') ||
+      pathname.startsWith('/api/content')
+    ) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL('/', request.url));
+  }
 
   // A mobilapp által hívott publikus endpoint, a login oldal és az UI kit nem védett
-  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem')) {
+  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem') || pathname.startsWith('/tamogatas')) {
     return NextResponse.next();
   }
 
