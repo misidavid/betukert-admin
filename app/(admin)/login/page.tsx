@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
-import { useRouter } from 'next/navigation';
 import { checkAdminAction } from '../../actions/checkAdmin';
 
 export default function LoginPage() {
@@ -10,7 +9,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,33 +20,35 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      setError('Hibás email cím vagy jelszó.');
-      setLoading(false);
-      return;
-    }
-
-    // Deploy után a régi, nyitva maradt oldalról hívott server action elszáll
-    // (az action ID deployonként változik) — enélkül a gomb némán beragadna
-    let isAdmin: boolean;
     try {
-      ({ isAdmin } = await checkAdminAction());
-    } catch {
-      setError('Az oldal elavult, frissítsd az oldalt és próbáld újra.');
-      setLoading(false);
-      return;
-    }
-    if (!isAdmin) {
-      await supabase.auth.signOut();
-      setError('Ehhez a fiókhoz nincs admin hozzáférés.');
-      setLoading(false);
-      return;
-    }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-    router.push('/');
-    router.refresh();
+      if (error) {
+        setError('Hibás email cím vagy jelszó.');
+        return;
+      }
+
+      const { isAdmin } = await checkAdminAction();
+      if (!isAdmin) {
+        await supabase.auth.signOut();
+        setError('Ehhez a fiókhoz nincs admin hozzáférés.');
+        return;
+      }
+
+      // Teljes oldalbetöltés a kliensoldali router.push helyett: ha a proxy
+      // bármiért visszairányít, a router ugyanazon a betöltött login oldalon
+      // ragadna üzenet nélkül, folyamatosan töltő gombbal
+      window.location.assign('/');
+    } catch (err) {
+      // Bármelyik lépés váratlan hibája (pl. deploy utáni elavult oldalról
+      // hívott server action) látható üzenetet adjon néma beragadás helyett
+      setError(
+        'Váratlan hiba a bejelentkezéskor: ' +
+          (err instanceof Error ? err.message : String(err))
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
