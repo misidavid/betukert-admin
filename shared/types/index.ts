@@ -70,6 +70,9 @@ export interface MasteryRecord {
   incorrectCount: number;
   lastPracticed: string;
   sessions: number;
+  // Csak lokális (a felhő-szinkron nem viszi át): melyik gyakorlási alkalom
+  // növelte utoljára a sessions számlálót — alkalmanként legfeljebb egyszer nő.
+  lastSessionId?: string;
 }
 
 export interface Exercise {
