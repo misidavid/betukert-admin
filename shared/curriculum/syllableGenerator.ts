@@ -1,6 +1,15 @@
 import { Syllable, Grapheme } from '../types';
 import { getVowels, getConsonants } from './graphemes';
 
+const shuffle = <T>(arr: T[]): T[] => {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
 // ============================================
 // MEIXNER SZÓTAGGENERÁTOR
 // Szabály: csak ismert betűkből generál szótagot
@@ -112,8 +121,10 @@ const generateCVCSyllables = (
 
 // Fő generátor függvény
 export const generateSyllables = (maxPhase: number): Syllable[] => {
-  const vowels = getVowels(maxPhase);
-  const consonants = getConsonants(maxPhase);
+  // 36-tól a nagybetűs grafémák jönnek — szótagot csak kisbetűből generálunk
+  const lowercasePhase = Math.min(maxPhase, 35);
+  const vowels = getVowels(lowercasePhase);
+  const consonants = getConsonants(lowercasePhase);
 
   const vc = generateVCSyllables(vowels, consonants, maxPhase);
   const cv = generateCVSyllables(vowels, consonants, maxPhase);
@@ -156,21 +167,18 @@ export const generateDistractors = (
   allSyllables: Syllable[],
   count: number = 3
 ): Syllable[] => {
-  const candidates = allSyllables.filter(s => {
-    if (s.id === target.id) return false;
-    if (s.type !== target.type) return false;
+  // Kemény szabályok: azonos típus + tévesztőpár-kizárás — ezeken sosem lazítunk
+  const safe = allSyllables.filter(
+    s =>
+      s.id !== target.id &&
+      s.type === target.type &&
+      !sharesConfusionPair(target.graphemes, s.graphemes)
+  );
 
-    // Homogén gátlás: ha az első karakter ugyanaz, ne adjuk zavarókként
-    if (target.text[0] === s.text[0]) return false;
+  // Homogén gátlás: előnyben részesítjük az eltérő első karakterű szótagokat,
+  // de ha így nem jönne össze elég zavaró, ezen a szűrésen engedünk
+  const strict = safe.filter(s => s.text[0] !== target.text[0]);
+  const candidates = strict.length >= count ? strict : safe;
 
-    // Meixner-féle tévesztőpárok: ha a célszótag és a jelölt
-    // egymással összekeverhetős graféméket tartalmaz, kizárjuk
-    if (sharesConfusionPair(target.graphemes, s.graphemes)) return false;
-
-    return true;
-  });
-
-  // Véletlenszerű választás a jelöltekből
-  const shuffled = candidates.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  return shuffle(candidates).slice(0, count);
 };

@@ -58,6 +58,7 @@ export interface ChildSettings {
   enabledPhases: number[];
   exerciseSettings: ExerciseTypeSettings[];
   parentPin: string;
+  autoReadInstructions: boolean;
 }
 
 export interface MasteryRecord {
@@ -87,6 +88,8 @@ export interface Exercise {
   syllableParts?: string[];
   acceptedOrders?: string[][];
   displayText?: string;
+  question?: string;
+  pairs?: { imageId: string; word: string }[];
 }
 
 export type ExerciseType =
@@ -101,7 +104,10 @@ export type ExerciseType =
   | 'syllable_clapping'
   | 'sentence_order'
   | 'sentence_comprehension'
-  | 'direction_tracking';
+  | 'direction_tracking'
+  | 'image_word_drag'
+  | 'sentence_picture_match'
+  | 'image_sentence_match';
 
 export interface PracticeSession {
   id: string;

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { useRouter } from 'next/navigation';
+import { checkAdminAction } from '../../actions/checkAdmin';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -25,6 +26,14 @@ export default function LoginPage() {
 
     if (error) {
       setError('Hibás email cím vagy jelszó.');
+      setLoading(false);
+      return;
+    }
+
+    const { isAdmin } = await checkAdminAction();
+    if (!isAdmin) {
+      await supabase.auth.signOut();
+      setError('Ehhez a fiókhoz nincs admin hozzáférés.');
       setLoading(false);
       return;
     }

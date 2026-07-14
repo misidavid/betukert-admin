@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { isAdminEmail } from './lib/adminAllowlist';
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -55,7 +56,9 @@ export async function proxy(request: NextRequest) {
   // getUser() validálja a tokent a Supabase szerverrel — nem csak a cookie-t olvassa
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
+  // A session megléte nem elég: a mobilapp felhasználói is ebben a Supabase
+  // projektben élnek, adminba csak az allowlistes e-mail címek léphetnek be
+  if (!user || !isAdminEmail(user.email)) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/login';
     return NextResponse.redirect(loginUrl);
