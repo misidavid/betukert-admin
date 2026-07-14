@@ -79,11 +79,12 @@ export async function uploadSoundFileAction(
 
     const { data: record, error: fetchError } = await getSupabaseAdmin()
       .from('sound_needs')
-      .select('text')
+      .select('text, file_path')
       .eq('id', id)
       .single();
 
     if (fetchError || !record?.text) return { error: 'Nem található a bejegyzés' };
+    const previousPath = record.file_path;
 
     if (file.size > 10 * 1024 * 1024) return { error: 'Fájl túl nagy (max 10 MB)' };
     const ALLOWED_SOUND_EXTENSIONS = ['mp3', 'wav', 'ogg', 'm4a'];
@@ -100,7 +101,10 @@ export async function uploadSoundFileAction(
       .replace(/\s+/g, '_')
       .replace(/_+/g, '_')
       .replace(/^_|_$/, '');
-    const path = `instruction/${safeName}.${ext}`;
+    // A rekord UUID-prefixe garantálja az egyediséget: az ékezet-levágás miatt
+    // a csak ékezetben eltérő szövegek slugja azonos lenne, és az upsert
+    // némán felülírná egymás hangfájlját.
+    const path = `instruction/${safeName}_${id.slice(0, 8)}.${ext}`;
 
     const { error: uploadError } = await getSupabaseAdmin().storage
       .from('sounds')
@@ -109,6 +113,11 @@ export async function uploadSoundFileAction(
     if (uploadError) {
       console.error('[uploadSoundFileAction] Storage hiba:', uploadError);
       return { error: 'Tárhely hiba' };
+    }
+
+    // Újrafeltöltésnél a korábbi (más nevű) fájl árván maradna a storage-ban
+    if (previousPath && previousPath !== path) {
+      await getSupabaseAdmin().storage.from('sounds').remove([previousPath]);
     }
 
     const { data: urlData } = getSupabaseAdmin().storage.from('sounds').getPublicUrl(path);

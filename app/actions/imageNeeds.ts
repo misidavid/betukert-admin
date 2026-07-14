@@ -107,13 +107,13 @@ export async function uploadImageFileAction(
 
     const { data: record, error: fetchError } = await getSupabaseAdmin()
       .from('image_needs')
-      .select('word, phase')
+      .select('word, phase, file_path')
       .eq('id', id)
       .single();
 
     if (fetchError || !record) return { error: 'Nem található a bejegyzés' };
 
-    const { word, phase } = record;
+    const { word, phase, file_path: previousPath } = record;
     const file = formData.get('file') as File;
 
     if (!file || !file.name) return { error: 'Hiányzó fájl' };
@@ -131,7 +131,10 @@ export async function uploadImageFileAction(
       .replace(/ú/g, 'u').replace(/ü/g, 'u').replace(/ű/g, 'u')
       .replace(/[^a-z0-9]/g, '_');
 
-    const path = `phase_${phase}/${toSlug(word)}.${ext}`;
+    // A rekord UUID-prefixe garantálja az egyediséget: az ékezet-levágás miatt
+    // a csak ékezetben eltérő szavak (rak/rák, bor/bőr) slugja azonos lenne,
+    // és az upsert némán felülírná egymás képét.
+    const path = `phase_${phase}/${toSlug(word)}_${id.slice(0, 8)}.${ext}`;
 
     const { error: uploadError } = await getSupabaseAdmin().storage
       .from('images')
@@ -140,6 +143,11 @@ export async function uploadImageFileAction(
     if (uploadError) {
       console.error('[uploadImageFileAction] Storage hiba:', uploadError);
       return { error: 'Tárhely hiba' };
+    }
+
+    // Újrafeltöltésnél a korábbi (más nevű) fájl árván maradna a storage-ban
+    if (previousPath && previousPath !== path) {
+      await getSupabaseAdmin().storage.from('images').remove([previousPath]);
     }
 
     const { data: urlData } = getSupabaseAdmin().storage.from('images').getPublicUrl(path);
