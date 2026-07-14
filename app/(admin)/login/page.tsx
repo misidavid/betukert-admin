@@ -30,7 +30,16 @@ export default function LoginPage() {
       return;
     }
 
-    const { isAdmin } = await checkAdminAction();
+    // Deploy után a régi, nyitva maradt oldalról hívott server action elszáll
+    // (az action ID deployonként változik) — enélkül a gomb némán beragadna
+    let isAdmin: boolean;
+    try {
+      ({ isAdmin } = await checkAdminAction());
+    } catch {
+      setError('Az oldal elavult, frissítsd az oldalt és próbáld újra.');
+      setLoading(false);
+      return;
+    }
     if (!isAdmin) {
       await supabase.auth.signOut();
       setError('Ehhez a fiókhoz nincs admin hozzáférés.');
