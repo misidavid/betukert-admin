@@ -64,6 +64,15 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
       getSupabaseAdmin().from('loading_screens').select('file_url, sort_order').order('sort_order').order('created_at'),
     ]);
 
+    // A mondat-kép fázisát a forrás-bankból (sentence_bank / comprehension_bank)
+    // vesszük, NEM a sentence_image_needs.phase pillanatképből. Utóbbi a kép-igény
+    // létrehozásakor rögzül, és nem frissül, ha a mondat fázisát később javítjuk
+    // (pl. a 2026-06-os Meixner-audit) — így elavult, túl alacsony fázis kerülhetett
+    // a manifestbe, és a mondat-kép a hozzá tartozó betűk szintje alatt jelent meg.
+    const sourcePhaseById = new Map<string, number>();
+    for (const s of sentences ?? []) sourcePhaseById.set(s.id, s.phase);
+    for (const c of comprehensions ?? []) sourcePhaseById.set(c.id, c.phase);
+
     const version = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const manifest = {
       version,
@@ -84,7 +93,7 @@ export async function publishPackageAction(): Promise<{ version: string; imageCo
         sentence_id: si.sentence_id,
         source: si.source,
         sentence: si.sentence_text,
-        phase: si.phase,
+        phase: sourcePhaseById.get(si.sentence_id) ?? si.phase,
         url: si.file_url,
       })) || [],
       sentences: sentences?.map((s: any) => ({
