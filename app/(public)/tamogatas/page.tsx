@@ -75,7 +75,13 @@ export default function SupportPage() {
             ez a profilt és a hozzá tartozó tanulási adatokat véglegesen eltávolítja.
           </Faq>
           <Faq q="Hogyan törölhetem a teljes fiókomat?">
-            A szülői módba lépve az oldal alján találod a fiók törlésének lehetőségét.
+            A szülői módba lépve, az oldal alján lévő „Fiók” szakaszban találod a „Fiók végleges
+            törlése” lehetőséget. Ha nem tudsz belépni, e-mailben is kérheted a törlést — a
+            részletes lépéseket a{' '}
+            <a href="/fiok-torles" style={{ color: '#2F6B3F', textDecoration: 'underline' }}>
+              Fiók törlése
+            </a>{' '}
+            oldalon találod.
           </Faq>
         </div>
       </Section>

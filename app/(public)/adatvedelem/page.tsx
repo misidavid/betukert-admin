@@ -142,10 +142,16 @@ export default function PrivacyPolicyPage() {
           tartozó tanulási adatokat véglegesen eltávolítja.
         </p>
         <p>
-          A szülői fiók (bejelentkezési adatok) törlésére jelenleg nincs önálló, alkalmazáson
-          belüli funkció — ehhez kérjük, írj a 2. pontban megadott e-mail címre. A kérelem
-          beérkezésétől számított 30 napon belül gondoskodunk a fiók és a hozzá tartozó összes
-          adat végleges törléséről.
+          A szülői fiók az Alkalmazáson belül is véglegesen törölhető (szülői mód → az oldal
+          alján lévő „Fiók” szakasz → „Fiók végleges törlése”); ez a fiókot és a hozzá tartozó
+          összes gyermekprofilt és tanulási adatot eltávolítja. Ha nem tudsz belépni, a törlést
+          e-mailben is kérheted a 2. pontban megadott címen — a kérelem beérkezésétől számított
+          30 napon belül gondoskodunk a fiók és a hozzá tartozó összes adat végleges törléséről.
+          A törlés részletes lépéseit a{' '}
+          <a href="/fiok-torles" style={{ color: '#2F6B3F', textDecoration: 'underline' }}>
+            Fiók törlése
+          </a>{' '}
+          oldalon találod.
         </p>
       </Section>
 
