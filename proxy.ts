@@ -16,6 +16,7 @@ export async function proxy(request: NextRequest) {
       pathname.startsWith('/landing') ||
       pathname.startsWith('/adatvedelem') ||
       pathname.startsWith('/tamogatas') ||
+      pathname.startsWith('/fiok-torles') ||
       pathname.startsWith('/megerositve') ||
       pathname.startsWith('/api/content') ||
       pathname.startsWith('/email/')
@@ -26,7 +27,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // A mobilapp által hívott publikus endpoint, a login oldal, az UI kit és a landing wireframe nem védett
-  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/wireframe') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem') || pathname.startsWith('/tamogatas') || pathname.startsWith('/megerositve') || pathname.startsWith('/email/')) {
+  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/wireframe') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem') || pathname.startsWith('/tamogatas') || pathname.startsWith('/fiok-torles') || pathname.startsWith('/megerositve') || pathname.startsWith('/email/')) {
     return NextResponse.next();
   }
 
