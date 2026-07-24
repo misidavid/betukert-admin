@@ -25,8 +25,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  // A mobilapp által hívott publikus endpoint, a login oldal és az UI kit nem védett
-  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem') || pathname.startsWith('/tamogatas') || pathname.startsWith('/megerositve') || pathname.startsWith('/email/')) {
+  // A mobilapp által hívott publikus endpoint, a login oldal, az UI kit és a landing wireframe nem védett
+  if (pathname.startsWith('/api/content') || pathname.startsWith('/login') || pathname.startsWith('/ui-kit') || pathname.startsWith('/wireframe') || pathname.startsWith('/landing') || pathname.startsWith('/adatvedelem') || pathname.startsWith('/tamogatas') || pathname.startsWith('/megerositve') || pathname.startsWith('/email/')) {
     return NextResponse.next();
   }
 

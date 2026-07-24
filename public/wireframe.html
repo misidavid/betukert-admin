@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Betűkert — Landing page wireframe</title>
+<style>
+  :root {
+    --paper: #ECEEE7;
+    --frame: #FFFFFF;
+    --ink: #1A2A17;
+    --muted: #61705B;
+    --hair: #D3D8CB;
+    --ph-fill: #E1E5DA;
+    --ph-line: #C3CBB6;
+    --ph-ink: #7C8874;
+    --green: #2D5A27;
+    --green-soft: #E4EDDF;
+    --yellow: #F5C842;
+    --yellow-soft: #FBEEBE;
+    --note-bg: #F4F2EA;
+    --note-ink: #5A5140;
+
+    --sans: ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, monospace;
+
+    --maxw: 1120px;
+    --r: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #14170F;
+      --frame: #1D2118;
+      --ink: #E9ECE0;
+      --muted: #9BA791;
+      --hair: #333A2C;
+      --ph-fill: #262B1F;
+      --ph-line: #3C4432;
+      --ph-ink: #8B977E;
+      --green: #85B579;
+      --green-soft: #23301E;
+      --yellow: #F5C842;
+      --yellow-soft: #3A3418;
+      --note-bg: #221F16;
+      --note-ink: #C4BCA3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14170F; --frame: #1D2118; --ink: #E9ECE0; --muted: #9BA791;
+    --hair: #333A2C; --ph-fill: #262B1F; --ph-line: #3C4432; --ph-ink: #8B977E;
+    --green: #85B579; --green-soft: #23301E; --yellow: #F5C842; --yellow-soft: #3A3418;
+    --note-bg: #221F16; --note-ink: #C4BCA3;
+  }
+  :root[data-theme="light"] {
+    --paper: #ECEEE7; --frame: #FFFFFF; --ink: #1A2A17; --muted: #61705B;
+    --hair: #D3D8CB; --ph-fill: #E1E5DA; --ph-line: #C3CBB6; --ph-ink: #7C8874;
+    --green: #2D5A27; --green-soft: #E4EDDF; --yellow: #F5C842; --yellow-soft: #FBEEBE;
+    --note-bg: #F4F2EA; --note-ink: #5A5140;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 4px; }
+
+  /* ---------- Page masthead ---------- */
+  .masthead { padding: 56px 0 20px; }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 14px;
+  }
+  h1.title {
+    font-size: clamp(30px, 5vw, 48px); line-height: 1.08; margin: 0 0 16px;
+    font-weight: 800; letter-spacing: -0.02em; text-wrap: balance;
+  }
+  .lede { font-size: 18px; color: var(--muted); max-width: 60ch; margin: 0; }
+
+  /* ---------- Brief / meta strip ---------- */
+  .brief {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px; background: var(--hair); border: 1px solid var(--hair);
+    border-radius: var(--r); overflow: hidden; margin: 32px 0 12px;
+  }
+  .brief > div { background: var(--frame); padding: 16px 18px; }
+  .brief dt {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 6px;
+  }
+  .brief dd { margin: 0; font-size: 14.5px; font-weight: 600; }
+
+  /* palette swatches */
+  .palette { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 4px; }
+  .sw { display: flex; align-items: center; gap: 9px; font-family: var(--mono);
+    font-size: 12px; color: var(--muted); }
+  .chip { width: 30px; height: 30px; border-radius: 8px; border: 1px solid rgba(0,0,0,.08); }
+
+  /* legend */
+  .legend {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px; margin: 26px 0 10px;
+  }
+  .legend .item {
+    border: 1px solid var(--hair); border-radius: 12px; padding: 13px 15px;
+    background: var(--frame); font-size: 13.5px; color: var(--muted);
+  }
+  .legend .item b { color: var(--ink); }
+  .swatch-box { display:inline-block; width:34px; height:20px; border-radius:5px; vertical-align:-4px; margin-right:8px; }
+  .sb-ph { background: var(--ph-fill); border: 1.5px dashed var(--ph-line); }
+  .sb-copy { background: var(--green-soft); border: 1px solid var(--green); }
+  .sb-note { background: var(--note-bg); border: 1px solid var(--note-ink); }
+
+  hr.div { border: none; border-top: 1px solid var(--hair); margin: 40px 0; }
+
+  /* ---------- Section card ---------- */
+  .section { margin: 26px 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 4px; flex-wrap: wrap; }
+  .sec-num {
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--green); letter-spacing: 0.05em;
+  }
+  .sec-name { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
+  .sec-tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--hair); border-radius: 999px; padding: 3px 10px;
+  }
+  .sec-purpose { color: var(--muted); font-size: 15px; margin: 0 0 16px; max-width: 70ch; }
+
+  .card {
+    background: var(--frame); border: 1px solid var(--hair);
+    border-radius: 18px; overflow: hidden;
+  }
+  .card-body { padding: 22px; }
+  @media (min-width: 860px) {
+    .card { display: grid; grid-template-columns: 1.35fr 1fr; }
+    .card-body { padding: 26px; }
+    .notes-col { border-left: 1px solid var(--hair); }
+  }
+
+  /* wireframe primitives */
+  .wf-label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ph-ink); margin: 0 0 10px;
+  }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .col { display: flex; flex-direction: column; gap: 12px; }
+  .grow { flex: 1; }
+
+  .ph {
+    background: var(--ph-fill);
+    background-image: repeating-linear-gradient(135deg, transparent 0 9px, rgba(0,0,0,.03) 9px 10px);
+    border: 1.5px dashed var(--ph-line);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    color: var(--ph-ink); font-family: var(--mono); font-size: 11.5px;
+    letter-spacing: 0.06em; padding: 10px; min-height: 44px;
+  }
+  .ph.tall { min-height: 120px; }
+  .ph.hero-img { min-height: 220px; }
+
+  /* real-copy blocks */
+  .copy { border-left: 3px solid var(--green); background: var(--green-soft);
+    border-radius: 4px 10px 10px 4px; padding: 10px 14px; }
+  .copy .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--green); margin: 0 0 4px; font-weight: 700; }
+  .copy h4 { margin: 0 0 6px; font-size: 20px; font-weight: 800; line-height: 1.15; }
+  .copy p { margin: 0; font-size: 14.5px; color: var(--ink); }
+  .copy p + p { margin-top: 8px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans);
+    font-weight: 700; font-size: 14px; border-radius: 12px; padding: 11px 18px;
+    border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--green); color: #fff; }
+  :root[data-theme="dark"] .btn-primary, .btn-primary { }
+  @media (prefers-color-scheme: dark) { .btn-primary { color: #0f130b; } }
+  :root[data-theme="dark"] .btn-primary { color: #0f130b; }
+  :root[data-theme="light"] .btn-primary { color: #fff; }
+  .btn-yellow { background: var(--yellow); color: #2a2410; }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--hair); }
+  .store {
+    display:inline-flex; align-items:center; gap:8px; border:1px solid var(--ph-line);
+    border-radius: 11px; padding: 8px 14px; font-family: var(--mono); font-size: 11px;
+    color: var(--ph-ink); background: var(--ph-fill);
+  }
+
+  ul.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  ul.notes li { position: relative; padding-left: 22px; font-size: 13.5px; color: var(--note-ink); }
+  ul.notes li::before {
+    content: "▸"; position: absolute; left: 4px; top: -1px; color: var(--green); font-size: 12px;
+  }
+  ul.notes li b { color: var(--ink); }
+  .notes-head { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+
+  /* nav wireframe */
+  .navbar { display:flex; align-items:center; justify-content:space-between; gap:12px;
+    border:1.5px dashed var(--ph-line); border-radius:12px; padding:10px 14px; background:var(--ph-fill); }
+  .navlinks { display:flex; gap:14px; font-family:var(--mono); font-size:11px; color:var(--ph-ink); flex-wrap:wrap; }
+
+  .mini-grid { display:grid; gap:10px; }
+  .mini-grid.g4 { grid-template-columns: repeat(2, 1fr); }
+  .mini-grid.g3 { grid-template-columns: repeat(3, 1fr); }
+  @media (min-width:600px){ .mini-grid.g4 { grid-template-columns: repeat(4,1fr);} }
+  .stepbox { border:1.5px dashed var(--ph-line); border-radius:10px; padding:12px 12px 14px; background:var(--ph-fill); }
+  .stepbox .n { font-family:var(--mono); font-weight:700; color:var(--green); font-size:12px; }
+  .stepbox .t { font-weight:800; font-size:15px; margin:6px 0 4px; color:var(--ink); }
+  .stepbox .d { font-size:12px; color:var(--muted); }
+
+  .phone {
+    width: 150px; border: 2px solid var(--ph-line); border-radius: 22px; padding: 8px;
+    background: var(--frame);
+  }
+  .phone .screen { border-radius: 15px; background: var(--ph-fill);
+    background-image: repeating-linear-gradient(135deg, transparent 0 9px, rgba(0,0,0,.03) 9px 10px);
+    min-height: 230px; display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:11px; color:var(--ph-ink); text-align:center; padding:10px; }
+
+  .faqrow { border-bottom:1px solid var(--hair); padding:11px 0; display:flex; justify-content:space-between; gap:10px; }
+  .faqrow:last-child { border-bottom:none; }
+  .faqrow .q { font-weight:700; font-size:14.5px; }
+  .faqrow .plus { color: var(--muted); font-family:var(--mono); }
+
+  /* closing / open questions */
+  .oq { background: var(--frame); border:1px solid var(--hair); border-radius:18px; padding:24px; }
+  .oq h3 { margin:0 0 14px; font-size:20px; font-weight:800; }
+  .oq ol { margin:0; padding-left:20px; display:flex; flex-direction:column; gap:9px; }
+  .oq li { font-size:14.5px; }
+  .oq li b { color: var(--green); }
+
+  footer.page { color: var(--muted); font-size: 13px; padding: 40px 0 64px; text-align:center; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card { transition: border-color .2s ease; }
+    .card:hover { border-color: var(--ph-line); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">Landing page · Wireframe &amp; tartalmi javaslat · v1</p>
+    <h1 class="title">Betűkert — a nyitóoldal váza</h1>
+    <p class="lede">Low-fidelity elrendezés és átvehető magyar szövegek szekciónként. A szürke, szaggatott dobozok a grafikus által megtöltendő vizuális elemek; a zöld sávos blokkok a kész, átemelhető copyk; a monospace jegyzetek instrukciók a tervezőnek.</p>
+
+    <dl class="brief">
+      <div><dt>Termék</dt><dd>Betűkert — játékos olvasástanuló app</dd></div>
+      <div><dt>Módszer</dt><dd>Meixner-módszer alapján</dd></div>
+      <div><dt>Elsődleges közönség</dt><dd>Óvodás/kisiskolás gyerekek szülei</dd></div>
+      <div><dt>Az oldal egyetlen célja</dt><dd>Letöltés (App Store / Google Play)</dd></div>
+      <div><dt>Hangvétel</dt><dd>Nyugodt, meleg, biztató — nem „leckeszerű”</dd></div>
+      <div><dt>Platform</dt><dd>Next.js oldal a betukert.hu-n</dd></div>
+    </dl>
+
+    <div class="palette" aria-label="Márka paletta">
+      <span class="sw"><span class="chip" style="background:#FAF7F2"></span>#FAF7F2 háttér</span>
+      <span class="sw"><span class="chip" style="background:#2D5A27"></span>#2D5A27 zöld</span>
+      <span class="sw"><span class="chip" style="background:#4A7C42"></span>#4A7C42 közép</span>
+      <span class="sw"><span class="chip" style="background:#F5C842"></span>#F5C842 sárga (CTA)</span>
+      <span class="sw"><span class="chip" style="background:#F5C4A1"></span>#F5C4A1 barack</span>
+      <span class="sw"><span class="chip" style="background:#1A3318"></span>#1A3318 szöveg</span>
+    </div>
+
+    <div class="legend">
+      <div class="item"><span class="swatch-box sb-ph"></span><b>Szaggatott doboz</b> — vizuális elem, amit a grafikus tölt meg (kép, illusztráció, mockup, ikon).</div>
+      <div class="item"><span class="swatch-box sb-copy"></span><b>Zöld sávos blokk</b> — kész szövegjavaslat, egy az egyben átvehető.</div>
+      <div class="item"><span class="swatch-box sb-note"></span><b>Monospace jegyzet</b> — elrendezési / tartalmi instrukció a tervezőnek.</div>
+    </div>
+  </header>
+
+  <hr class="div">
+
+  <!-- ============ 00 HEADER ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">00</span>
+      <h2 class="sec-name">Fejléc &amp; navigáció</h2>
+      <span class="sec-tag">sticky</span>
+    </div>
+    <p class="sec-purpose">Végig elérhető felső sáv. Bal oldalon a márka, jobbra a fő letöltés-CTA — hogy a döntés bármikor egy koppintásra legyen.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés</p>
+        <div class="navbar">
+          <div class="row" style="gap:8px">
+            <span class="ph" style="width:34px;height:34px;min-height:0;border-radius:9px">🐤</span>
+            <b style="color:var(--ink)">Betűkert</b>
+          </div>
+          <div class="navlinks">
+            <span>Hogyan működik</span><span>A módszer</span><span>Kiknek</span><span>GYIK</span>
+          </div>
+          <span class="btn btn-primary" style="font-size:12px;padding:8px 14px">Töltsd le</span>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li>Logó = <b>madár-kabala + „Betűkert” szövegjel</b>. Mobilon a navigációs linkek hamburger menübe.</li>
+          <li>A CTA gomb <b>sárga (#F5C842)</b> lehet, hogy kiugorjon a zöld/krém felületből — ez az egyetlen „hangos” elem a fejlécben.</li>
+          <li>Scroll közben halványan áttetsző/blur háttér, hogy a tartalom felett is olvasható maradjon.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 01 HERO ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-name">Hero</h2>
+      <span class="sec-tag">a tézis</span>
+    </div>
+    <p class="sec-purpose">Az első képernyő. Egy mondatban elmondja, mi ez és kinek jó, megmutatja a kabalát és az appot, és felkínálja a letöltést. Az ígéret: <em>olvasni szeret meg a gyerek, nem csak megtanul.</em></p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — kétoszlopos (mobilon egymás alatt)</p>
+        <div class="row" style="align-items:stretch">
+          <div class="grow col" style="min-width:240px">
+            <div class="copy">
+              <p class="eyebrow">Meixner-módszer alapján</p>
+              <h4>Hogy a gyermeke ne csak megtanuljon, hanem szeressen is olvasni</h4>
+              <p>A Betűkert apró, biztató lépésekkel vezet a betűktől a mondatokig — játékos kvízekkel, képpel és hanggal, mindig a gyermeke saját tempójában.</p>
+            </div>
+            <div class="row">
+              <span class="btn btn-yellow">Töltsd le ingyen</span>
+              <span class="store"> App Store</span>
+              <span class="store">▶ Google Play</span>
+            </div>
+            <div class="ph" style="min-height:0;padding:7px 12px">Bizalmi mikrocopy: „Ingyenesen kipróbálható · Reklámmentes · Magyar fejlesztés”</div>
+          </div>
+          <div class="col" style="align-items:center">
+            <div class="phone"><div class="screen">App-képernyő<br>(kvíz nézet)<br>+ madár-kabala</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li><b>A kabala legyen jelen</b> a hero-ban (a képernyő mellett vagy „kikukucskálva” a telefon mögül) — ő a márka arca.</li>
+          <li>Háttér: a meglévő festett, természet-ihlette illusztrációk egyike lágyan, hogy ne vigye el a figyelmet a szövegről.</li>
+          <li>Elsődleges CTA a <b>letöltés</b>. A store-badge-ek valódi hivatalos badge-ek legyenek (App Store / Google Play).</li>
+          <li>H1 alternatíva, ha rövidebb kell: „Olvasni szeret meg a gyermeke.”</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 TRUST ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-name">Bizalmi sáv</h2>
+      <span class="sec-tag">social proof</span>
+    </div>
+    <p class="sec-purpose">Vékony sáv közvetlenül a hero alatt: 3–4 rövid bizalmi pont, amiért egy szülő komolyan veszi az appot. Szám és tekintély, nem marketingszöveg.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — 4 rövid oszlop, ikonnal</p>
+        <div class="mini-grid g4">
+          <div class="stepbox"><div class="t">Meixner-módszer</div><div class="d">Bevált, gyógypedagógiai alapokra építve</div></div>
+          <div class="stepbox"><div class="t">Reklámmentes</div><div class="d">Semmi hirdetés, semmi külső link</div></div>
+          <div class="stepbox"><div class="t">Saját tempó</div><div class="d">Nincs óra, nincs verseny, nincs büntetés</div></div>
+          <div class="stepbox"><div class="t">Magyar fejlesztés</div><div class="d">A magyar ábécére és hangokra szabva</div></div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li>Ha lesz rá adat, ide kerülhet <b>letöltésszám vagy értékelés</b> („★ 4,8 · 500+ család”). <b>Csak valós számmal.</b></li>
+          <li>Apró, egyszínű vonalas ikonok — nem hangos, ez egy megnyugtató sáv.</li>
+          <li><b>Egyeztetni:</b> mondhatjuk-e, hogy „gyógypedagógusok által használt elvek”? Ha nincs mögötte konkrét szakmai együttműködés, óvatosabb megfogalmazás kell.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 EMPÁTIA ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-name">Ráhangolás / a probléma</h2>
+      <span class="sec-tag">empátia</span>
+    </div>
+    <p class="sec-purpose">Egy rövid, emberi blokk, ami megnevezi a szülő félelmét, és átvezet arra, miért segítenek a Meixner-lépések. Ez teszi hitelessé a „hogyan működik” részt.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — középre zárt, szöveg + halvány illusztráció</p>
+        <div class="col">
+          <div class="ph tall">Illusztráció: gyerek + felnőtt együtt olvas (nyugodt jelenet)</div>
+          <div class="copy">
+            <h4>Az olvasás kezdete sok gyereknek nehéz — és ez nem baj</h4>
+            <p>A túl gyors tempó, a hasonló betűk összekeverése, egy-egy kudarc könnyen elveszi a kedvet. A Betűkert épp ezért apró, biztos lépésekre bontja az utat: mindig csak annyi új, amennyit a gyermeke éppen be tud fogadni — és minden lépés egy kis siker.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li>Ez a szekció <b>rövid maradjon</b> — egy fejléc + egy bekezdés. Levegős tipográfia.</li>
+          <li>Az illusztráció opcionális; működik tiszta, tipográfiai blokként is.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 HOGYAN ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-name">Hogyan épül fel</h2>
+      <span class="sec-tag">4 lépcső · valódi sorrend</span>
+    </div>
+    <p class="sec-purpose">A tananyag négy egymásra épülő szintje. Itt a számozás <em>tartalmilag indokolt</em>: ez tényleg egy sorrend, betűktől a mondatokig.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — 4 kártya, összekötve (lépcső/ösvény érzet)</p>
+        <div class="mini-grid g4">
+          <div class="stepbox"><div class="n">01</div><div class="t">Betűk</div><div class="d">Hangok és betűk egyenként, a Meixner-sorrendben.</div></div>
+          <div class="stepbox"><div class="n">02</div><div class="t">Szótagok</div><div class="d">Betűkből szótagok — vizuálisan tagolva.</div></div>
+          <div class="stepbox"><div class="n">03</div><div class="t">Szavak</div><div class="d">Képpel-hanggal megerősített szavak, kvízekben.</div></div>
+          <div class="stepbox"><div class="n">04</div><div class="t">Mondatok</div><div class="d">Mondatrendezés és -értés: már érti is, amit olvas.</div></div>
+        </div>
+        <p class="wf-label" style="margin-top:16px">Bevezető szöveg a szekcióhoz</p>
+        <div class="copy">
+          <h4>Betűktől a mondatokig — lépésről lépésre</h4>
+          <p>Négy szint épül egymásra, apró lépésekben. A gyermeke csak akkor lép tovább, ha az előző már biztosan megy — így soha nem ütközik falba.</p>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li>Vizuális ötlet: a négy kártyát <b>egy ösvény / kúszónövény</b> kösse össze — passzol a „kert” metaforához, és a folyamat-jelleget is mutatja.</li>
+          <li>Minden kártyához mini-ikon vagy apró app-részlet illusztráció.</li>
+          <li>Mobilon egymás alá, a sorszám vezeti a szemet lefelé.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 MÓDSZER ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-name">A Meixner-módszer — közérthetően</h2>
+      <span class="sec-tag">hitelesség</span>
+    </div>
+    <p class="sec-purpose">A fő megkülönböztető. Elmagyarázza szülői nyelven, miért más ez, mint egy sima „betűzős” app. Ez adja a bizalmat, hogy fizessen is érte.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — bal: rövid magyarázat · jobb: 4 elv-pont</p>
+        <div class="copy" style="margin-bottom:14px">
+          <p class="eyebrow">Miért a Meixner</p>
+          <h4>Egy módszer, amit évtizedek óta a nehezen olvasó gyerekekért fejlesztettek</h4>
+          <p>A Meixner-módszer lassabban, de biztosabban tanít — pont azokra a buktatókra figyel, ahol a gyerekek elakadnak. A Betűkert ezt az elveket ülteti át játékká.</p>
+        </div>
+        <div class="mini-grid g4">
+          <div class="stepbox"><div class="t">Nem keverednek a hasonlók</div><div class="d">A könnyen összetéveszthető betűk (b/d, m/n) sosem kerülnek egymás mellé.</div></div>
+          <div class="stepbox"><div class="t">Kisbetűvel kezd</div><div class="d">Előbb a kisbetűk — a nagybetű csak később, szülői engedéllyel.</div></div>
+          <div class="stepbox"><div class="t">Csak a tudásra épít</div><div class="d">Új feladat csak már ismert betűkből készül — nincs meglepetés.</div></div>
+          <div class="stepbox"><div class="t">Nincs büntetés</div><div class="d">Hiba esetén nem piros X, hanem egy nyugodt „Nézzük meg újra”.</div></div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li>Kerüljük a szakszavakat („homogén gátlás”) — <b>a hatását írjuk le</b>, ne a nevét.</li>
+          <li>Ha van jogtiszta mód a Meixner-örökség említésére / forrásra hivatkozásra, az itt erősít. <b>Egyeztetni a névhasználatot.</b></li>
+          <li>Vizuálisan ez lehet a <b>„fehér” nyugodt szekció</b> — sok levegő, kevés dísz, hogy komolyan vehető legyen.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 FUNKCIÓK ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2 class="sec-name">Funkciók — miért szeretik</h2>
+      <span class="sec-tag">érték</span>
+    </div>
+    <p class="sec-purpose">A konkrét, megfogható előnyök. Fele a gyerekről szól (élmény), fele a szülőről (nyugalom, kontroll).</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — 2×3 rács, ikon + cím + 1 mondat</p>
+        <div class="mini-grid g3">
+          <div class="stepbox"><div class="t">Játékos kvízek</div><div class="d">Minden feladat rövid, képes-hangos játék — azonnali, biztató visszajelzéssel.</div></div>
+          <div class="stepbox"><div class="t">Kép és hang segít</div><div class="d">Minden szóhoz kép és kimondott hang — annak is, aki még bizonytalan.</div></div>
+          <div class="stepbox"><div class="t">Saját tempó</div><div class="d">Nincs óra, nincs verseny — annyit játszik, amennyit szeretne.</div></div>
+          <div class="stepbox"><div class="t">Szülői áttekintő</div><div class="d">Egy pillantásra látja, hol tart és mit gyakorolt a gyermeke.</div></div>
+          <div class="stepbox"><div class="t">Reklámmentes, biztonságos</div><div class="d">Semmi hirdetés, semmi kifelé mutató link — gyerekkézbe adható.</div></div>
+          <div class="stepbox"><div class="t">Több profil</div><div class="d">Egy készüléken több gyerek, külön haladással.</div></div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li><b>Egyeztetni:</b> „Több profil” és „offline működés” — csak ha az appban tényleg így van. A meglévők közül a valósakat tartsd meg.</li>
+          <li>Egységes ikonstílus (vonalas, lekerekített), a márka zöldjében.</li>
+          <li>Ez a rács jó hely arra, hogy 1-2 cellába <b>apró valódi app-részlet</b> kerüljön kép helyett ikon.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 07 SCREENSHOTS ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <h2 class="sec-name">Képernyőképek</h2>
+      <span class="sec-tag">„lássam, milyen”</span>
+    </div>
+    <p class="sec-purpose">A szülő látni akarja, mit kap a gyerek. 3–4 valódi képernyő telefon-keretben, rövid felirattal.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — 3 telefon egymás mellett (mobilon vízszintesen görgethető)</p>
+        <div class="row" style="justify-content:center">
+          <div class="col" style="align-items:center"><div class="phone"><div class="screen">Kezdőképernyő<br>+ kabala</div></div><span class="ph" style="min-height:0;padding:6px 10px">„A kert”</span></div>
+          <div class="col" style="align-items:center"><div class="phone"><div class="screen">Kvíz — „Mi<br>van a képen?”</div></div><span class="ph" style="min-height:0;padding:6px 10px">„Játékos feladat”</span></div>
+          <div class="col" style="align-items:center"><div class="phone"><div class="screen">Szülői<br>áttekintő</div></div><span class="ph" style="min-height:0;padding:6px 10px">„Szülői nézet”</span></div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li><b>Kellenek friss, valódi screenshotok</b> az appból (ugyanazok mehetnek a store-ba is).</li>
+          <li>Egységes eszközkeret; a márka háttérszínén „lebegjenek”.</li>
+          <li>Mobilon vízszintes swipe/carousel, ne törd 3 sorba.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 08 ÁRAZÁS ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">08</span>
+      <h2 class="sec-name">Árazás</h2>
+      <span class="sec-tag">egyeztetni</span>
+    </div>
+    <p class="sec-purpose">Átlátható, tisztességes ajánlat: ingyenes belépés, előfizetés a teljes tananyagért. A bizalom fenntartása fontosabb, mint a trükközés.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — 2 kártya egymás mellett</p>
+        <div class="mini-grid" style="grid-template-columns:1fr 1fr">
+          <div class="stepbox"><div class="n">INGYENES</div><div class="t">Az első kert</div><div class="d">Kipróbálható a módszer, több feladattípus — bankkártya nélkül.</div></div>
+          <div class="stepbox" style="border-style:solid;border-color:var(--green)"><div class="n" style="color:var(--green)">ELŐFIZETÉS</div><div class="t">Teljes Betűkert</div><div class="d">A teljes tananyag a betűktől a mondatokig, minden profillal.</div></div>
+        </div>
+        <div class="copy" style="margin-top:14px">
+          <p>Bármikor lemondható · Nincs rejtett díj · A gyermeke adatai nálunk maradnak</p>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li><b>Kitöltendő:</b> tényleges ár(ak), havi/éves, van-e próbaidőszak. Az appban RevenueCat-alapú előfizetés van — a landingnek ezzel egyeznie kell.</li>
+          <li>Ha az árazás még nem végleges, ez a szekció elmaradhat az első kiadásból, és csak „Ingyenesen kipróbálható” üzenet marad.</li>
+          <li>Ne legyen sürgetés/nyomás — a márkához a nyugalom illik.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 09 GYIK ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">09</span>
+      <h2 class="sec-name">Gyakori kérdések</h2>
+      <span class="sec-tag">kifogáskezelés</span>
+    </div>
+    <p class="sec-purpose">A letöltés előtti utolsó kételyek feloldása. Lenyíló (accordion) lista — rövid, őszinte válaszok.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés — accordion</p>
+        <div>
+          <div class="faqrow"><span class="q">Hány éves kortól ajánljátok?</span><span class="plus">+</span></div>
+          <div class="faqrow"><span class="q">Kell hozzá, hogy a gyerek már ismerje a betűket?</span><span class="plus">+</span></div>
+          <div class="faqrow"><span class="q">Van benne reklám vagy alkalmazáson belüli vásárlás gyerekkézben?</span><span class="plus">+</span></div>
+          <div class="faqrow"><span class="q">Működik internet nélkül?</span><span class="plus">+</span></div>
+          <div class="faqrow"><span class="q">Több gyerekem is használhatja egy készüléken?</span><span class="plus">+</span></div>
+          <div class="faqrow"><span class="q">Mennyibe kerül és lemondható?</span><span class="plus">+</span></div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li>A válaszszövegeket <b>össze tudom írni</b>, ha megvannak a pontos tények (életkor-sáv, offline, árazás).</li>
+          <li>SEO-nak is jó: ezek valós keresések a szülőktől.</li>
+          <li>Alapból zárva, csak a kérdések látszanak — ne nyomja szét az oldalt.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10 CTA ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">10</span>
+      <h2 class="sec-name">Záró felhívás</h2>
+      <span class="sec-tag">a konverzió</span>
+    </div>
+    <p class="sec-purpose">Teljes szélességű, zöld (vagy meleg illusztrált) sáv, a kabalával és a store-gombokkal. Az utolsó, határozott hívás.</p>
+    <div class="card">
+      <div class="card-body" style="grid-column:1 / -1">
+        <p class="wf-label">Elrendezés — teljes szélességű blokk, középre zárva</p>
+        <div class="col" style="align-items:center;text-align:center">
+          <div class="ph" style="width:70px;height:70px;min-height:0;border-radius:50%">kabala</div>
+          <div class="copy" style="text-align:center;border-left:none;border-radius:12px;max-width:56ch">
+            <h4>Kezdjétek el még ma — az első kert ingyenes</h4>
+            <p>Nézzék meg együtt, hogyan tanul olvasni játszva a gyermeke.</p>
+          </div>
+          <div class="row" style="justify-content:center">
+            <span class="store"> App Store</span>
+            <span class="store">▶ Google Play</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11 FOOTER ============ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">11</span>
+      <h2 class="sec-name">Lábléc</h2>
+      <span class="sec-tag">kötelező linkek</span>
+    </div>
+    <p class="sec-purpose">Diszkrét zárás a jogi és kapcsolati linkekkel — ezek az App Store / Google Play elfogadáshoz is kellenek.</p>
+    <div class="card">
+      <div class="card-body">
+        <p class="wf-label">Elrendezés</p>
+        <div class="navbar" style="align-items:flex-start">
+          <div class="col" style="gap:6px">
+            <b style="color:var(--ink)">🐤 Betűkert</b>
+            <span class="navlinks" style="max-width:220px">Játékos olvasástanulás a Meixner-módszer alapján.</span>
+          </div>
+          <div class="navlinks" style="flex-direction:column;gap:8px">
+            <span>Adatvédelmi tájékoztató</span>
+            <span>Támogatás / Kapcsolat</span>
+            <span>© 2026 Betűkert</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body notes-col">
+        <p class="notes-head">Jegyzetek</p>
+        <ul class="notes">
+          <li><b>Muszáj</b>: Adatvédelmi tájékoztató + Támogatás/Kapcsolat link (store-követelmény). Ezek az oldalak már léteznek: <b>/adatvedelem</b>, <b>/tamogatas</b>.</li>
+          <li>Opcionális: e-mail cím, közösségi linkek, ha vannak.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- ============ OPEN QUESTIONS ============ -->
+  <div class="oq">
+    <h3>Nyitott kérdések — mielőtt a grafikus véglegesít</h3>
+    <ol>
+      <li><b>Kabala:</b> van végleges, sokféle pózban használható változata a sárga madárból (hero, CTA, kártyák)? Ha nincs, érdemes pár pózt rendelni tőle.</li>
+      <li><b>Screenshotok:</b> kellenek friss, valódi app-képernyők — ugyanazok mehetnek a store-listázásba is.</li>
+      <li><b>Árazás:</b> végleges ár, periódus (havi/éves), próbaidőszak? A 08-as szekció ettől függ (vagy kimarad az első verzióból).</li>
+      <li><b>Szakmai hivatkozás:</b> hogyan hivatkozhatunk jogtisztán a Meixner-módszerre / örökségre a 02 és 05 szekcióban?</li>
+      <li><b>Tények a GYIK-hez:</b> ajánlott életkor-sáv, offline működés, hány profil — ezekre pontos válasz kell.</li>
+      <li><b>Elsődleges CTA:</b> most még mindkét store „hamarosan”? Ha csak az egyik él, a badge-eket ehhez igazítjuk.</li>
+    </ol>
+  </div>
+
+  <footer class="page">
+    Betűkert · landing wireframe v1 · a szürke dobozok helyére a grafikus dolgozik, a zöld blokkok szövege átvehető.
+  </footer>
+
+</div>
+</body>
+</html>
