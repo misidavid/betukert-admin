@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { SoundNeed, SoundStatus } from '../../../lib/supabase';
-import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction, fetchSoundNeedsAction } from '../../actions/soundNeeds';
+import { generateSoundNeedsAction, uploadSoundFileAction, updateSoundNeedStatusAction, deleteSoundNeedAction, fetchSoundNeedsAction } from '../../actions/soundNeeds';
 
 const GREEN = '#2F6B3F';
 const GREEN_DARK = '#234430';
@@ -97,6 +97,17 @@ export default function SoundsPage() {
 
   const handleStatusChange = async (id: string, status: SoundStatus) => {
     const result = await updateSoundNeedStatusAction(id, status);
+    if (result.error) setMessage(`❌ Hiba: ${result.error}`);
+    else loadItems();
+  };
+
+  const handleDelete = async (item: SoundNeed) => {
+    if (!confirm(`Biztosan törlöd? "${item.text}"\n\nA hozzá tartozó hangfelvétel is véglegesen törlődik.`)) return;
+    if (playingId === item.id) {
+      audioRef.current?.pause();
+      setPlayingId(null);
+    }
+    const result = await deleteSoundNeedAction(item.id);
     if (result.error) setMessage(`❌ Hiba: ${result.error}`);
     else loadItems();
   };
@@ -262,6 +273,14 @@ export default function SoundsPage() {
                     🚀 Publikálás
                   </button>
                 )}
+
+                <button
+                  onClick={() => handleDelete(item)}
+                  className="text-xs px-3 py-1.5 rounded-xl transition-colors"
+                  style={{ background: STATUS_COLORS.missing.bg, color: STATUS_COLORS.missing.text, fontWeight: 600 }}
+                >
+                  🗑 Törlés
+                </button>
               </div>
             </div>
           ))}

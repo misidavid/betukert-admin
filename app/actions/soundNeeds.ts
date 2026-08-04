@@ -25,7 +25,7 @@ const VALID_SOUND_STATUSES = new Set<SoundStatus>(['missing', 'uploaded', 'pendi
 
 const INSTRUCTIONS = [
   'Koppints a betűre!',
-  'Koppints minden betűre!',
+  'Koppints minden keresett betűre!',
   'Melyik hanggal kezdődik?',
   'Melyik szótag ez?',
   'Tapsolj, és számold meg a szótagokat!',
@@ -33,7 +33,7 @@ const INSTRUCTIONS = [
   'Rakd ki a szót!',
   'Keresd meg a szótagpárokat!',
   'Rakd helyes sorrendbe a szavakat!',
-  'Húzd a szavakat a képekhez!',
+  'Húzd a szavakat a képek alá!',
   'Húzd az ujjad balról jobbra a vonalon!',
   'Melyik kép illik a mondathoz?',
   'Mi történik a képen?',
@@ -134,6 +134,40 @@ export async function uploadSoundFileAction(
     return {};
   } catch (e) {
     console.error('[uploadSoundFileAction]', e);
+    return { error: 'Szerverhiba' };
+  }
+}
+
+export async function deleteSoundNeedAction(id: string): Promise<{ error?: string }> {
+  try {
+    await requireAuth();
+    if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
+
+    const { data: record, error: fetchError } = await getSupabaseAdmin()
+      .from('sound_needs')
+      .select('file_path')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !record) return { error: 'Nem található a bejegyzés' };
+
+    // A hozzá tartozó hangfájl storage-ból is törlődik, hogy ne maradjon árva.
+    if (record.file_path) {
+      await getSupabaseAdmin().storage.from('sounds').remove([record.file_path]);
+    }
+
+    const { error } = await getSupabaseAdmin()
+      .from('sound_needs')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('[deleteSoundNeedAction] DB hiba:', error);
+      return { error: 'Adatbázis hiba' };
+    }
+    return {};
+  } catch (e) {
+    console.error('[deleteSoundNeedAction]', e);
     return { error: 'Szerverhiba' };
   }
 }
