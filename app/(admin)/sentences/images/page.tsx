@@ -53,6 +53,15 @@ function StatusChip({ status }: { status: ImageStatus }) {
   );
 }
 
+// A cserélt képek ugyanarra a storage-útvonalra kerülnek (upsert), ezért az URL
+// változatlan marad, és a böngésző/CDN a régi képet cache-elné. Az updated_at-alapú
+// query paraméter minden feltöltésnél új, így friss verziót kényszerít.
+function cacheBustedUrl(item: SentenceImageNeed): string | undefined {
+  if (!item.file_url) return undefined;
+  const sep = item.file_url.includes('?') ? '&' : '?';
+  return `${item.file_url}${sep}v=${encodeURIComponent(item.updated_at ?? '')}`;
+}
+
 export default function SentenceImagesPage() {
   const [items, setItems] = useState<SentenceImageNeed[]>([]);
   const [loading, setLoading] = useState(true);
@@ -500,10 +509,10 @@ export default function SentenceImagesPage() {
                         <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden" style={{ background: TRACK }}>
                           {item.file_url ? (
                             <img
-                              src={item.file_url}
+                              src={cacheBustedUrl(item)}
                               alt={item.sentence_text}
                               className="w-full h-full object-cover cursor-zoom-in"
-                              onClick={() => setLightbox({ url: item.file_url!, sentence: item.sentence_text })}
+                              onClick={() => setLightbox({ url: cacheBustedUrl(item)!, sentence: item.sentence_text })}
                             />
                           ) : (
                             <span className="text-xl">🖼️</span>
