@@ -4,7 +4,7 @@
 // GENERÁLT FÁJL — kézzel ne szerkeszd!
 // Forrás: a Supabase-ben publikált manifest (admin felületen szerkeszthető).
 // Frissítés:  node scripts/sync-fallback.mjs
-// Generálva:  2026-07-14T13:54:54.231Z  (manifest verzió: 2026-07-10T16-08-48)
+// Generálva:  2026-08-13T13:46:09.946Z  (manifest verzió: 2026-08-13T13-45-35)
 // ============================================
 
 export interface SentenceItem {
@@ -327,7 +327,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s198",
     words: ["ott","áll","hat","fiú"],
-    acceptedOrders: [["ott","áll","hat","fiú"]],
+    acceptedOrders: [["ott","áll","hat","fiú"],["hat","fiú","áll","ott"]],
     phase: 13,
   },
   {
@@ -435,7 +435,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s208",
     words: ["a","víz","felemelkedett"],
-    acceptedOrders: [["a","víz","felemelkedett"]],
+    acceptedOrders: [["a","víz","felemelkedett"],["felemelkedett","a","víz"]],
     phase: 16,
   },
   {
@@ -465,7 +465,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s148",
     words: ["hívja","a","pajtását"],
-    acceptedOrders: [["hívja","a","pajtását"]],
+    acceptedOrders: [["hívja","a","pajtását"],["a","pajtását","hívja"]],
     phase: 17,
   },
   {
@@ -489,7 +489,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s152",
     words: ["az","éjjel","sok","hó","esett"],
-    acceptedOrders: [["az","éjjel","sok","hó","esett"]],
+    acceptedOrders: [["az","éjjel","sok","hó","esett"],["sok","hó","esett","az","éjjel"]],
     phase: 18,
   },
   {
@@ -537,7 +537,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s217",
     words: ["a","cica","is","éhes"],
-    acceptedOrders: [["a","cica","is","éhes"]],
+    acceptedOrders: [["a","cica","is","éhes"],["éhes","a","cica","is"]],
     phase: 18,
   },
   {
@@ -573,7 +573,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s218",
     words: ["a","póni","kis","ló"],
-    acceptedOrders: [["a","póni","kis","ló"]],
+    acceptedOrders: [["a","póni","kis","ló"],["kis","ló","a","póni"]],
     phase: 19,
   },
   {
@@ -597,13 +597,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s222",
     words: ["az","úton","két","ló","jön"],
-    acceptedOrders: [["az","úton","két","ló","jön"]],
+    acceptedOrders: [["az","úton","két","ló","jön"],["két","ló","jön","az","úton"]],
     phase: 19,
   },
   {
     id: "s223",
     words: ["a","lapon","öt","kép","van"],
-    acceptedOrders: [["a","lapon","öt","kép","van"]],
+    acceptedOrders: [["a","lapon","öt","kép","van"],["öt","kép","van","a","lapon"]],
     phase: 19,
   },
   {
@@ -615,7 +615,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s225",
     words: ["a","mama","kiflit","ad","neki"],
-    acceptedOrders: [["a","mama","kiflit","ad","neki"]],
+    acceptedOrders: [["a","mama","kiflit","ad","neki"],["kiflit","ad","neki","a","mama"]],
     phase: 19,
   },
   {
@@ -669,7 +669,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s156",
     words: ["nem","lehet","kint","játszani"],
-    acceptedOrders: [["nem","lehet","kint","játszani"]],
+    acceptedOrders: [["nem","lehet","kint","játszani"],["kint","nem","lehet","játszani"]],
     phase: 20,
   },
   {
@@ -699,13 +699,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s160",
     words: ["a","fiúk","előveszik","a","vonatot"],
-    acceptedOrders: [["a","fiúk","előveszik","a","vonatot"]],
+    acceptedOrders: [["a","fiúk","előveszik","a","vonatot"],["előveszik","a","vonatot","a","fiúk"]],
     phase: 20,
   },
   {
     id: "s161",
     words: ["a","padlón","sok","a","szemét"],
-    acceptedOrders: [["a","padlón","sok","a","szemét"]],
+    acceptedOrders: [["a","padlón","sok","a","szemét"],["sok","a","szemét","a","padlón"]],
     phase: 20,
   },
   {
@@ -729,7 +729,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s229",
     words: ["a","lila","szép","szín"],
-    acceptedOrders: [["a","lila","szép","szín"]],
+    acceptedOrders: [["a","lila","szép","szín"],["szép","szín","a","lila"]],
     phase: 20,
   },
   {
@@ -759,7 +759,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s234",
     words: ["a","halász","hálót","vet","ki"],
-    acceptedOrders: [["a","halász","hálót","vet","ki"]],
+    acceptedOrders: [["a","halász","hálót","vet","ki"],["hálót","vet","ki","a","halász"]],
     phase: 20,
   },
   {
@@ -771,13 +771,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s236",
     words: ["a","mama","messze","lakik"],
-    acceptedOrders: [["a","mama","messze","lakik"]],
+    acceptedOrders: [["a","mama","messze","lakik"],["messze","lakik","a","mama"]],
     phase: 20,
   },
   {
     id: "s237",
     words: ["a","tó","vize","tiszta"],
-    acceptedOrders: [["a","tó","vize","tiszta"]],
+    acceptedOrders: [["a","tó","vize","tiszta"],["tiszta","a","tó","vize"]],
     phase: 20,
   },
   {
@@ -837,7 +837,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s239",
     words: ["a","sas","magasan","szállt"],
-    acceptedOrders: [["a","sas","magasan","szállt"]],
+    acceptedOrders: [["a","sas","magasan","szállt"],["magasan","szállt","a","sas"]],
     phase: 21,
   },
   {
@@ -896,8 +896,8 @@ export const SENTENCE_BANK: SentenceItem[] = [
   },
   {
     id: "s165",
-    words: ["az","örömmel","szalad","vele"],
-    acceptedOrders: [["az","örömmel","szalad","vele"]],
+    words: ["örömmel","szalad","vele"],
+    acceptedOrders: [["örömmel","szalad","vele"]],
     phase: 22,
   },
   {
@@ -909,7 +909,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s167",
     words: ["felkeni","a","lekvárt"],
-    acceptedOrders: [["felkeni","a","lekvárt"]],
+    acceptedOrders: [["felkeni","a","lekvárt"],["a","lekvárt","felkeni"]],
     phase: 22,
   },
   {
@@ -927,7 +927,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s245",
     words: ["a","lavór","tele","van"],
-    acceptedOrders: [["a","lavór","tele","van"]],
+    acceptedOrders: [["a","lavór","tele","van"],["tele","van","a","lavór"]],
     phase: 22,
   },
   {
@@ -939,7 +939,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s247",
     words: ["ez","a","puli","nem","harap"],
-    acceptedOrders: [["ez","a","puli","nem","harap"]],
+    acceptedOrders: [["ez","a","puli","nem","harap"],["nem","harap","ez","a","puli"]],
     phase: 22,
   },
   {
@@ -969,19 +969,19 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s252",
     words: ["apa","orvoshoz","viszi"],
-    acceptedOrders: [["apa","orvoshoz","viszi"]],
+    acceptedOrders: [["apa","orvoshoz","viszi"],["orvoshoz","viszi","apa"]],
     phase: 22,
   },
   {
     id: "s253",
     words: ["ez","az","alma","apró"],
-    acceptedOrders: [["ez","az","alma","apró"]],
+    acceptedOrders: [["ez","az","alma","apró"],["apró","ez","az","alma"]],
     phase: 22,
   },
   {
     id: "s254",
     words: ["este","enni","kérek"],
-    acceptedOrders: [["este","enni","kérek"]],
+    acceptedOrders: [["este","enni","kérek"],["enni","kérek","este"]],
     phase: 22,
   },
   {
@@ -993,25 +993,25 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s256",
     words: ["a","rönk","a","földön","fekszik"],
-    acceptedOrders: [["a","rönk","a","földön","fekszik"]],
+    acceptedOrders: [["a","rönk","a","földön","fekszik"],["a","földön","fekszik","a","rönk"]],
     phase: 22,
   },
   {
     id: "s257",
     words: ["vannak","más","országok","is"],
-    acceptedOrders: [["vannak","más","országok","is"]],
+    acceptedOrders: [["vannak","más","országok","is"],["más","országok","is","vannak"]],
     phase: 22,
   },
   {
     id: "s258",
     words: ["a","varjú","szomjas","volt"],
-    acceptedOrders: [["a","varjú","szomjas","volt"]],
+    acceptedOrders: [["a","varjú","szomjas","volt"],["szomjas","volt","a","varjú"]],
     phase: 22,
   },
   {
     id: "s259",
     words: ["darálom","a","húst"],
-    acceptedOrders: [["darálom","a","húst"]],
+    acceptedOrders: [["darálom","a","húst"],["a","húst","darálom"]],
     phase: 22,
   },
   {
@@ -1083,7 +1083,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s260",
     words: ["az","üst","tele","van"],
-    acceptedOrders: [["az","üst","tele","van"]],
+    acceptedOrders: [["az","üst","tele","van"],["tele","van","az","üst"]],
     phase: 23,
   },
   {
@@ -1101,13 +1101,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s263",
     words: ["a","sün","háta","tüskés"],
-    acceptedOrders: [["a","sün","háta","tüskés"]],
+    acceptedOrders: [["a","sün","háta","tüskés"],["tüskés","a","sün","háta"]],
     phase: 23,
   },
   {
     id: "s264",
     words: ["leül","a","székre"],
-    acceptedOrders: [["leül","a","székre"]],
+    acceptedOrders: [["leül","a","székre"],["a","székre","leül"]],
     phase: 23,
   },
   {
@@ -1119,7 +1119,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s266",
     words: ["az","ing","ujja","szűk"],
-    acceptedOrders: [["az","ing","ujja","szűk"]],
+    acceptedOrders: [["az","ing","ujja","szűk"],["szűk","az","ing","ujja"]],
     phase: 23,
   },
   {
@@ -1167,13 +1167,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s268",
     words: ["van","mérges","gomba","is"],
-    acceptedOrders: [["van","mérges","gomba","is"]],
+    acceptedOrders: [["van","mérges","gomba","is"],["mérges","gomba","is","van"]],
     phase: 24,
   },
   {
     id: "s269",
     words: ["az","új","kabát","szürke"],
-    acceptedOrders: [["az","új","kabát","szürke"]],
+    acceptedOrders: [["az","új","kabát","szürke"],["szürke","az","új","kabát"]],
     phase: 24,
   },
   {
@@ -1185,13 +1185,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s270",
     words: ["a","mama","borsóból","készít","levest"],
-    acceptedOrders: [["a","mama","borsóból","készít","levest"]],
+    acceptedOrders: [["a","mama","borsóból","készít","levest"],["borsóból","készít","levest","a","mama"],["a","mama","borsóból","levest","készít"]],
     phase: 24,
   },
   {
     id: "s271",
     words: ["a","falu","szélén","domb","van"],
-    acceptedOrders: [["a","falu","szélén","domb","van"]],
+    acceptedOrders: [["a","falu","szélén","domb","van"],["domb","van","a","falu","szélén"]],
     phase: 24,
   },
   {
@@ -1227,7 +1227,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s95",
     words: ["a","ló","lábán","patkó","van"],
-    acceptedOrders: [["a","ló","lábán","patkó","van"]],
+    acceptedOrders: [["a","ló","lábán","patkó","van"],["patkó","van","a","ló","lábán"]],
     phase: 24,
   },
   {
@@ -1299,13 +1299,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s275",
     words: ["gyorsan","épülnek","a","házak"],
-    acceptedOrders: [["gyorsan","épülnek","a","házak"]],
+    acceptedOrders: [["gyorsan","épülnek","a","házak"],["a","házak","gyorsan","épülnek"]],
     phase: 25,
   },
   {
     id: "s276",
     words: ["nagyapának","nagy","kertje","van"],
-    acceptedOrders: [["nagyapának","nagy","kertje","van"]],
+    acceptedOrders: [["nagyapának","nagy","kertje","van"],["nagy","kertje","van","nagyapának"]],
     phase: 25,
   },
   {
@@ -1323,7 +1323,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s279",
     words: ["gyúrom","a","tésztát"],
-    acceptedOrders: [["gyúrom","a","tésztát"]],
+    acceptedOrders: [["gyúrom","a","tésztát"],["a","tésztát","gyúrom"]],
     phase: 25,
   },
   {
@@ -1347,7 +1347,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s63",
     words: ["a","kisgyerek","gyorsan","szalad","haza"],
-    acceptedOrders: [["a","kisgyerek","gyorsan","szalad","haza"]],
+    acceptedOrders: [["a","kisgyerek","gyorsan","szalad","haza"],["gyorsan","szalad","haza","a","kisgyerek"]],
     phase: 25,
   },
   {
@@ -1395,7 +1395,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s280",
     words: ["kicsi","csibék","mennek","a","mezőn"],
-    acceptedOrders: [["kicsi","csibék","mennek","a","mezőn"]],
+    acceptedOrders: [["kicsi","csibék","mennek","a","mezőn"],["a","mezőn","kicsi","csibék","mennek"]],
     phase: 26,
   },
   {
@@ -1407,25 +1407,25 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s282",
     words: ["itt","csupa","fekete","csibe","van"],
-    acceptedOrders: [["itt","csupa","fekete","csibe","van"]],
+    acceptedOrders: [["itt","csupa","fekete","csibe","van"],["csupa","fekete","csibe","van","itt"]],
     phase: 26,
   },
   {
     id: "s283",
     words: ["belül","csupa","korom"],
-    acceptedOrders: [["belül","csupa","korom"]],
+    acceptedOrders: [["belül","csupa","korom"],["csupa","korom","belül"]],
     phase: 26,
   },
   {
     id: "s285",
     words: ["a","kacsák","a","tóhoz","mentek"],
-    acceptedOrders: [["a","kacsák","a","tóhoz","mentek"]],
+    acceptedOrders: [["a","kacsák","a","tóhoz","mentek"],["a","tóhoz","mentek","a","kacsák"]],
     phase: 26,
   },
   {
     id: "s286",
     words: ["pancsoltak","a","vízben"],
-    acceptedOrders: [["pancsoltak","a","vízben"]],
+    acceptedOrders: [["pancsoltak","a","vízben"],["a","vízben","pancsoltak"]],
     phase: 26,
   },
   {
@@ -1527,7 +1527,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s290",
     words: ["a","szőnyeg","sáros","lett"],
-    acceptedOrders: [["a","szőnyeg","sáros","lett"]],
+    acceptedOrders: [["a","szőnyeg","sáros","lett"],["sáros","lett","a","szőnyeg"]],
     phase: 27,
   },
   {
@@ -1545,7 +1545,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s293",
     words: ["a","kenyéren","lekvár","van"],
-    acceptedOrders: [["a","kenyéren","lekvár","van"]],
+    acceptedOrders: [["a","kenyéren","lekvár","van"],["lekvár","van","a","kenyéren"]],
     phase: 27,
   },
   {
@@ -1557,43 +1557,43 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s295",
     words: ["a","szoknyán","folt","van"],
-    acceptedOrders: [["a","szoknyán","folt","van"]],
+    acceptedOrders: [["a","szoknyán","folt","van"],["folt","van","a","szoknyán"]],
     phase: 27,
   },
   {
     id: "s296",
     words: ["a","labda","a","szőnyegen","van"],
-    acceptedOrders: [["a","labda","a","szőnyegen","van"]],
+    acceptedOrders: [["a","labda","a","szőnyegen","van"],["a","szőnyegen","van","a","labda"]],
     phase: 27,
   },
   {
     id: "s297",
     words: ["a","nyaraló","fából","épül"],
-    acceptedOrders: [["a","nyaraló","fából","épül"]],
+    acceptedOrders: [["a","nyaraló","fából","épül"],["fából","épül","a","nyaraló"]],
     phase: 27,
   },
   {
     id: "s298",
     words: ["a","tányér","porcelánból","van"],
-    acceptedOrders: [["a","tányér","porcelánból","van"]],
+    acceptedOrders: [["a","tányér","porcelánból","van"],["porcelánból","van","a","tányér"]],
     phase: 27,
   },
   {
     id: "s299",
     words: ["a","könyv","papírból","van"],
-    acceptedOrders: [["a","könyv","papírból","van"]],
+    acceptedOrders: [["a","könyv","papírból","van"],["papírból","van","a","könyv"]],
     phase: 27,
   },
   {
     id: "s300",
-    words: ["a","kocsonya","disznóhúsból","főzik"],
-    acceptedOrders: [["a","kocsonya","disznóhúsból","főzik"]],
+    words: ["a","kocsonyát","disznóhúsból","főzik"],
+    acceptedOrders: [["a","kocsonyát","disznóhúsból","főzik"],["disznóhúsból","főzik","a","kocsonyát"]],
     phase: 27,
   },
   {
     id: "s301",
     words: ["anyu","a","hús","mellé","adja"],
-    acceptedOrders: [["anyu","a","hús","mellé","adja"]],
+    acceptedOrders: [["anyu","a","hús","mellé","adja"],["a","hús","mellé","adja","anyu"]],
     phase: 27,
   },
   {
@@ -1659,19 +1659,19 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s304",
     words: ["a","parkban","zöld","a","pázsit"],
-    acceptedOrders: [["a","parkban","zöld","a","pázsit"]],
+    acceptedOrders: [["a","parkban","zöld","a","pázsit"],["zöld","a","pázsit","a","parkban"]],
     phase: 28,
   },
   {
     id: "s305",
     words: ["fő","a","rizs","a","lábosban"],
-    acceptedOrders: [["fő","a","rizs","a","lábosban"]],
+    acceptedOrders: [["fő","a","rizs","a","lábosban"],["a","lábosban","fő","a","rizs"]],
     phase: 28,
   },
   {
     id: "s306",
     words: ["a","ház","előtt","rózsák","nőnek"],
-    acceptedOrders: [["a","ház","előtt","rózsák","nőnek"]],
+    acceptedOrders: [["a","ház","előtt","rózsák","nőnek"],["rózsák","nőnek","a","ház","előtt"]],
     phase: 28,
   },
   {
@@ -1713,19 +1713,19 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s307",
     words: ["a","tyúknak","két","lába","van"],
-    acceptedOrders: [["a","tyúknak","két","lába","van"]],
+    acceptedOrders: [["a","tyúknak","két","lába","van"],["két","lába","van","a","tyúknak"]],
     phase: 29,
   },
   {
     id: "s308",
     words: ["a","kutyának","négy","lába","van"],
-    acceptedOrders: [["a","kutyának","négy","lába","van"]],
+    acceptedOrders: [["a","kutyának","négy","lába","van"],["négy","lába","van","a","kutyának"]],
     phase: 29,
   },
   {
     id: "s309",
-    words: ["a","szatyor","füle","van"],
-    acceptedOrders: [["a","szatyor","füle","van"]],
+    words: ["a","szatyornak","füle","van"],
+    acceptedOrders: [["a","szatyornak","füle","van"],["füle","van","a","szatyornak"]],
     phase: 29,
   },
   {
@@ -1749,13 +1749,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s313",
     words: ["a","gyertya","viaszból","van"],
-    acceptedOrders: [["a","gyertya","viaszból","van"]],
+    acceptedOrders: [["a","gyertya","viaszból","van"],["viaszból","van","a","gyertya"]],
     phase: 29,
   },
   {
     id: "s314",
     words: ["a","kártya","is","papírból","van"],
-    acceptedOrders: [["a","kártya","is","papírból","van"]],
+    acceptedOrders: [["a","kártya","is","papírból","van"],["papírból","van","a","kártya","is"]],
     phase: 29,
   },
   {
@@ -1833,7 +1833,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s320",
     words: ["a","pálya","lefelé","vezet"],
-    acceptedOrders: [["a","pálya","lefelé","vezet"]],
+    acceptedOrders: [["a","pálya","lefelé","vezet"],["lefelé","vezet","a","pálya"]],
     phase: 30,
   },
   {
@@ -1851,7 +1851,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s323",
     words: ["recseg","a","száraz","gally"],
-    acceptedOrders: [["recseg","a","száraz","gally"]],
+    acceptedOrders: [["recseg","a","száraz","gally"],["a","száraz","gally","recseg"]],
     phase: 30,
   },
   {
@@ -1868,14 +1868,14 @@ export const SENTENCE_BANK: SentenceItem[] = [
   },
   {
     id: "s130",
-    words: ["Mama","friss","levest","főz"],
-    acceptedOrders: [["Mama","friss","levest","főz"]],
+    words: ["a","mama","friss","levest","főz"],
+    acceptedOrders: [["a","mama","friss","levest","főz"],["friss","levest","főz","a","mama"]],
     phase: 36,
   },
   {
     id: "s131",
-    words: ["Mama","finom","kenyeret","süt"],
-    acceptedOrders: [["Mama","finom","kenyeret","süt"]],
+    words: ["a","mama","finom","kenyeret","süt"],
+    acceptedOrders: [["a","mama","finom","kenyeret","süt"],["finom","kenyeret","süt","a","mama"]],
     phase: 36,
   },
   {
@@ -1893,7 +1893,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s138",
     words: ["Tibor","nagy","almát","eszik"],
-    acceptedOrders: [["Tibor","nagy","almát","eszik"]],
+    acceptedOrders: [["Tibor","nagy","almát","eszik"],["nagy","almát","eszik","Tibor"]],
     phase: 36,
   },
   {
@@ -1905,7 +1905,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s169",
     words: ["Tomi","húzza","a","macit"],
-    acceptedOrders: [["Tomi","húzza","a","macit"]],
+    acceptedOrders: [["Tomi","húzza","a","macit"],["a","macit","húzza","Tomi"]],
     phase: 36,
   },
   {
@@ -1953,7 +1953,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s328",
     words: ["Misi","sok","tejet","vesz"],
-    acceptedOrders: [["Misi","sok","tejet","vesz"]],
+    acceptedOrders: [["Misi","sok","tejet","vesz"],["sok","tejet","vesz","Misi"]],
     phase: 36,
   },
   {
@@ -1965,13 +1965,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s330",
     words: ["Anna","mégis","kint","játszott"],
-    acceptedOrders: [["Anna","mégis","kint","játszott"]],
+    acceptedOrders: [["Anna","mégis","kint","játszott"],["mégis","kint","játszott","Anna"]],
     phase: 36,
   },
   {
     id: "s331",
     words: ["Anna","hozza","a","füzetét"],
-    acceptedOrders: [["Anna","hozza","a","füzetét"]],
+    acceptedOrders: [["Anna","hozza","a","füzetét"],["a","füzetét","hozza","Anna"]],
     phase: 36,
   },
   {
@@ -1983,19 +1983,19 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s333",
     words: ["Ottó","viszi","vissza","a","füzeteket"],
-    acceptedOrders: [["Ottó","viszi","vissza","a","füzeteket"]],
+    acceptedOrders: [["Ottó","viszi","vissza","a","füzeteket"],["a","füzeteket","viszi","vissza","Ottó"]],
     phase: 36,
   },
   {
     id: "s334",
     words: ["Magyarország","a","mi","hazánk"],
-    acceptedOrders: [["Magyarország","a","mi","hazánk"]],
+    acceptedOrders: [["Magyarország","a","mi","hazánk"],["a","mi","hazánk","Magyarország"]],
     phase: 36,
   },
   {
     id: "s335",
     words: ["Sabina","látogatóba","jött"],
-    acceptedOrders: [["Sabina","látogatóba","jött"]],
+    acceptedOrders: [["Sabina","látogatóba","jött"],["látogatóba","jött","Sabina"]],
     phase: 36,
   },
   {
@@ -2006,50 +2006,50 @@ export const SENTENCE_BANK: SentenceItem[] = [
   },
   {
     id: "s51",
-    words: ["Mama","finom","rétest","süt"],
-    acceptedOrders: [["Mama","finom","rétest","süt"],["Mama","süt","finom","rétest"]],
+    words: ["a","mama","finom","rétest","süt"],
+    acceptedOrders: [["a","mama","finom","rétest","süt"],["finom","rétest","süt","a","mama"]],
     phase: 36,
   },
   {
     id: "s52",
     words: ["Tomi","sokat","alszik","ma"],
-    acceptedOrders: [["Tomi","sokat","alszik","ma"]],
+    acceptedOrders: [["Tomi","sokat","alszik","ma"],["ma","sokat","alszik","Tomi"],["Tomi","ma","sokat","alszik"]],
     phase: 36,
   },
   {
     id: "s173",
     words: ["Zoli","tolja","a","padot"],
-    acceptedOrders: [["Zoli","tolja","a","padot"]],
+    acceptedOrders: [["Zoli","tolja","a","padot"],["a","padot","tolja","Zoli"]],
     phase: 37,
   },
   {
     id: "s174",
     words: ["Zita","áll","a","fa","alatt"],
-    acceptedOrders: [["Zita","áll","a","fa","alatt"]],
+    acceptedOrders: [["Zita","áll","a","fa","alatt"],["a","fa","alatt","áll","Zita"]],
     phase: 37,
   },
   {
     id: "s175",
-    words: ["Zoli","kék","luftot","kapott"],
-    acceptedOrders: [["Zoli","kék","luftot","kapott"]],
+    words: ["Zoli","kék","lufit","kapott"],
+    acceptedOrders: [["Zoli","kék","lufit","kapott"],["kék","lufit","kapott","Zoli"]],
     phase: 37,
   },
   {
     id: "s337",
     words: ["Peti","jót","nevet"],
-    acceptedOrders: [["Peti","jót","nevet"]],
+    acceptedOrders: [["Peti","jót","nevet"],["jót","nevet","Peti"]],
     phase: 37,
   },
   {
     id: "s338",
     words: ["apu","neveli","Petit"],
-    acceptedOrders: [["apu","neveli","Petit"]],
+    acceptedOrders: [["apu","neveli","Petit"],["Petit","apu","neveli"]],
     phase: 37,
   },
   {
     id: "s339",
     words: ["Petike","éhes","volt"],
-    acceptedOrders: [["Petike","éhes","volt"]],
+    acceptedOrders: [["Petike","éhes","volt"],["éhes","volt","Petike"]],
     phase: 37,
   },
   {
@@ -2061,43 +2061,43 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s341",
     words: ["Zita","hideg","szódavizet","ivott"],
-    acceptedOrders: [["Zita","hideg","szódavizet","ivott"]],
+    acceptedOrders: [["Zita","hideg","szódavizet","ivott"],["hideg","szódavizet","ivott","Zita"]],
     phase: 37,
   },
   {
     id: "s342",
     words: ["Peti","sípja","szépen","szól"],
-    acceptedOrders: [["Peti","sípja","szépen","szól"]],
+    acceptedOrders: [["Peti","sípja","szépen","szól"],["szépen","szól","Peti","sípja"]],
     phase: 37,
   },
   {
     id: "s343",
     words: ["Piri","befűzi","a","tűt"],
-    acceptedOrders: [["Piri","befűzi","a","tűt"]],
+    acceptedOrders: [["Piri","befűzi","a","tűt"],["befűzi","a","tűt","Piri"]],
     phase: 37,
   },
   {
     id: "s344",
     words: ["Zoli","fújja","a","tüzet"],
-    acceptedOrders: [["Zoli","fújja","a","tüzet"]],
+    acceptedOrders: [["Zoli","fújja","a","tüzet"],["fújja","a","tüzet","Zoli"]],
     phase: 37,
   },
   {
     id: "s345",
     words: ["Peti","tányérokat","töröget"],
-    acceptedOrders: [["Peti","tányérokat","töröget"]],
+    acceptedOrders: [["Peti","tányérokat","töröget"],["tányérokat","töröget","Peti"]],
     phase: 37,
   },
   {
     id: "s346",
     words: ["Pista","papírral","játszik"],
-    acceptedOrders: [["Pista","papírral","játszik"]],
+    acceptedOrders: [["Pista","papírral","játszik"],["papírral","játszik","Pista"]],
     phase: 37,
   },
   {
     id: "s347",
     words: ["Pityu","falun","lakik"],
-    acceptedOrders: [["Pityu","falun","lakik"]],
+    acceptedOrders: [["Pityu","falun","lakik"],["falun","lakik","Pityu"]],
     phase: 37,
   },
   {
@@ -2109,31 +2109,31 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s54",
     words: ["Hanna","szép","virágot","szed"],
-    acceptedOrders: [["Hanna","szép","virágot","szed"],["Hanna","virágot","szed","szép"]],
+    acceptedOrders: [["Hanna","szép","virágot","szed"],["szép","virágot","szed","Hanna"]],
     phase: 37,
   },
   {
     id: "s111",
     words: ["Laciék","falun","laknak"],
-    acceptedOrders: [["Laciék","falun","laknak"]],
+    acceptedOrders: [["Laciék","falun","laknak"],["falun","laknak","Laciék"]],
     phase: 38,
   },
   {
     id: "s129",
     words: ["Kati","szép","képet","rajzol"],
-    acceptedOrders: [["Kati","szép","képet","rajzol"]],
+    acceptedOrders: [["Kati","szép","képet","rajzol"],["szép","képet","rajzol","Kati"]],
     phase: 38,
   },
   {
     id: "s142",
     words: ["Nándi","a","mezőn","kaszál"],
-    acceptedOrders: [["Nándi","a","mezőn","kaszál"]],
+    acceptedOrders: [["Nándi","a","mezőn","kaszál"],["a","mezőn","kaszál","Nándi"]],
     phase: 38,
   },
   {
     id: "s143",
     words: ["Kata","a","folyóban","lassan","úszik"],
-    acceptedOrders: [["Kata","a","folyóban","lassan","úszik"]],
+    acceptedOrders: [["Kata","a","folyóban","lassan","úszik"],["a","folyóban","lassan","úszik","Kata"]],
     phase: 38,
   },
   {
@@ -2145,19 +2145,19 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s177",
     words: ["Lili","keze","fáj"],
-    acceptedOrders: [["Lili","keze","fáj"]],
+    acceptedOrders: [["Lili","keze","fáj"],["fáj","Lili","keze"]],
     phase: 38,
   },
   {
     id: "s178",
     words: ["Kati","áll","a","ló","mellett"],
-    acceptedOrders: [["Kati","áll","a","ló","mellett"]],
+    acceptedOrders: [["Kati","áll","a","ló","mellett"],["Kati","a","ló","mellett","áll"]],
     phase: 38,
   },
   {
     id: "s179",
     words: ["Enikő","későn","kelt","fel"],
-    acceptedOrders: [["Enikő","későn","kelt","fel"]],
+    acceptedOrders: [["Enikő","későn","kelt","fel"],["későn","kelt","fel","Enikő"]],
     phase: 38,
   },
   {
@@ -2187,7 +2187,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s184",
     words: ["Laci","készíti","el","a","reggelit"],
-    acceptedOrders: [["Laci","készíti","el","a","reggelit"]],
+    acceptedOrders: [["Laci","készíti","el","a","reggelit"],["a","reggelit","Laci","készíti","el"]],
     phase: 38,
   },
   {
@@ -2199,7 +2199,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s348",
     words: ["Kis","Kata","utazik"],
-    acceptedOrders: [["Kis","Kata","utazik"]],
+    acceptedOrders: [["Kis","Kata","utazik"],["utazik","Kis","Kata"]],
     phase: 38,
   },
   {
@@ -2211,13 +2211,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s350",
     words: ["Nusi","a","napos"],
-    acceptedOrders: [["Nusi","a","napos"]],
+    acceptedOrders: [["Nusi","a","napos"],["a","napos","Nusi"]],
     phase: 38,
   },
   {
     id: "s351",
     words: ["Nusi","jól","tanul"],
-    acceptedOrders: [["Nusi","jól","tanul"]],
+    acceptedOrders: [["Nusi","jól","tanul"],["jól","tanul","Nusi"]],
     phase: 38,
   },
   {
@@ -2229,37 +2229,37 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s353",
     words: ["Kati","szeme","fekete"],
-    acceptedOrders: [["Kati","szeme","fekete"]],
+    acceptedOrders: [["Kati","szeme","fekete"],["fekete","Kati","szeme"]],
     phase: 38,
   },
   {
     id: "s354",
     words: ["Laci","foga","fáj"],
-    acceptedOrders: [["Laci","foga","fáj"]],
+    acceptedOrders: [["Laci","foga","fáj"],["fáj","Laci","foga"]],
     phase: 38,
   },
   {
     id: "s355",
     words: ["Nándi","feni","a","kaszát"],
-    acceptedOrders: [["Nándi","feni","a","kaszát"]],
+    acceptedOrders: [["Nándi","feni","a","kaszát"],["a","kaszát","Nándi","feni"]],
     phase: 38,
   },
   {
     id: "s356",
     words: ["Eszti","ülve","alszik"],
-    acceptedOrders: [["Eszti","ülve","alszik"]],
+    acceptedOrders: [["Eszti","ülve","alszik"],["ülve","alszik","Eszti"]],
     phase: 38,
   },
   {
     id: "s357",
     words: ["Ági","felmossa","a","konyhát"],
-    acceptedOrders: [["Ági","felmossa","a","konyhát"]],
+    acceptedOrders: [["Ági","felmossa","a","konyhát"],["felmossa","Ági","a","konyhát"]],
     phase: 38,
   },
   {
     id: "s358",
-    words: ["Ági","fagyi","és","tortát","vett"],
-    acceptedOrders: [["Ági","fagyi","és","tortát","vett"]],
+    words: ["Ági","fagyit","és","tortát","vett"],
+    acceptedOrders: [["Ági","fagyit","és","tortát","vett"],["fagyit","és","tortát","vett","Ági"]],
     phase: 38,
   },
   {
@@ -2283,7 +2283,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s55",
     words: ["Lajos","nagy","labdát","rúg"],
-    acceptedOrders: [["Lajos","nagy","labdát","rúg"]],
+    acceptedOrders: [["Lajos","nagy","labdát","rúg"],["nagy","labdát","rúg","Lajos"]],
     phase: 38,
   },
   {
@@ -2295,25 +2295,25 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s136",
     words: ["Éva","csokrot","köt","anyának"],
-    acceptedOrders: [["Éva","csokrot","köt","anyának"]],
+    acceptedOrders: [["Éva","csokrot","köt","anyának"],["csokrot","köt","anyának","Éva"]],
     phase: 39,
   },
   {
     id: "s137",
     words: ["Béla","nagy","halat","fogott"],
-    acceptedOrders: [["Béla","nagy","halat","fogott"]],
+    acceptedOrders: [["Béla","nagy","halat","fogott"],["nagy","halat","fogott","Béla"]],
     phase: 39,
   },
   {
     id: "s186",
     words: ["a","kis","Éva","cumit","kap"],
-    acceptedOrders: [["a","kis","Éva","cumit","kap"]],
+    acceptedOrders: [["a","kis","Éva","cumit","kap"],["cumit","kap","a","kis","Éva"]],
     phase: 39,
   },
   {
     id: "s187",
     words: ["Éva","eteti","Misit"],
-    acceptedOrders: [["Éva","eteti","Misit"]],
+    acceptedOrders: [["Éva","eteti","Misit"],["Misit","eteti","Éva"]],
     phase: 39,
   },
   {
@@ -2325,25 +2325,25 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s362",
     words: ["Éva","szeme","kék"],
-    acceptedOrders: [["Éva","szeme","kék"]],
+    acceptedOrders: [["Éva","szeme","kék"],["kék","Éva","szeme"]],
     phase: 39,
   },
   {
     id: "s363",
     words: ["Éva","nézi","a","képeket"],
-    acceptedOrders: [["Éva","nézi","a","képeket"]],
+    acceptedOrders: [["Éva","nézi","a","képeket"],["a","képeket","nézi","Éva"]],
     phase: 39,
   },
   {
     id: "s364",
     words: ["Éva","tejet","tölt","neki"],
-    acceptedOrders: [["Éva","tejet","tölt","neki"]],
+    acceptedOrders: [["Éva","tejet","tölt","neki"],["tejet","tölt","neki","Éva"]],
     phase: 39,
   },
   {
     id: "s365",
     words: ["Bori","a","táblára","írt"],
-    acceptedOrders: [["Bori","a","táblára","írt"]],
+    acceptedOrders: [["Bori","a","táblára","írt"],["a","táblára","írt","Bori"]],
     phase: 39,
   },
   {
@@ -2355,19 +2355,19 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s367",
     words: ["Cili","iskolába","jár"],
-    acceptedOrders: [["Cili","iskolába","jár"]],
+    acceptedOrders: [["Cili","iskolába","jár"],["iskolába","jár","Cili"]],
     phase: 39,
   },
   {
     id: "s368",
     words: ["Öregapó","almafát","ültetett"],
-    acceptedOrders: [["Öregapó","almafát","ültetett"]],
+    acceptedOrders: [["Öregapó","almafát","ültetett"],["almafát","ültetett","Öregapó"]],
     phase: 39,
   },
   {
     id: "s369",
-    words: ["Éva","Sányinak","nyújtja"],
-    acceptedOrders: [["Éva","Sányinak","nyújtja"]],
+    words: ["Éva","labdát","nyújt","Sanyinak"],
+    acceptedOrders: [["Éva","labdát","nyújt","Sanyinak"],["labdát","nyújt","Sanyinak","Éva"]],
     phase: 39,
   },
   {
@@ -2379,7 +2379,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s57",
     words: ["Éva","szép","ruhát","vesz"],
-    acceptedOrders: [["Éva","szép","ruhát","vesz"],["Éva","ruhát","vesz","szép"]],
+    acceptedOrders: [["Éva","szép","ruhát","vesz"],["szép","ruhát","vesz","Éva"]],
     phase: 39,
   },
   {
@@ -2391,25 +2391,25 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s189",
     words: ["Juci","feje","fáj"],
-    acceptedOrders: [["Juci","feje","fáj"]],
+    acceptedOrders: [["Juci","feje","fáj"],["fáj","Juci","feje"]],
     phase: 40,
   },
   {
     id: "s190",
     words: ["Géza","viszi","a","kapát"],
-    acceptedOrders: [["Géza","viszi","a","kapát"]],
+    acceptedOrders: [["Géza","viszi","a","kapát"],["a","kapát","viszi","Géza"]],
     phase: 40,
   },
   {
     id: "s371",
     words: ["Jocó","a","kapus"],
-    acceptedOrders: [["Jocó","a","kapus"]],
+    acceptedOrders: [["Jocó","a","kapus"],["a","kapus","Jocó"]],
     phase: 40,
   },
   {
     id: "s372",
     words: ["Gizi","a","tévét","nézi"],
-    acceptedOrders: [["Gizi","a","tévét","nézi"]],
+    acceptedOrders: [["Gizi","a","tévét","nézi"],["a","tévét","nézi","Gizi"]],
     phase: 40,
   },
   {
@@ -2421,7 +2421,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s374",
     words: ["Gézu","papája","falun","lakik"],
-    acceptedOrders: [["Gézu","papája","falun","lakik"]],
+    acceptedOrders: [["Gézu","papája","falun","lakik"],["falun","lakik","Gézu","papája"]],
     phase: 40,
   },
   {
@@ -2433,13 +2433,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s376",
     words: ["Gábor","fagyit","kért","aputól"],
-    acceptedOrders: [["Gábor","fagyit","kért","aputól"]],
+    acceptedOrders: [["Gábor","fagyit","kért","aputól"],["fagyit","kért","aputól","Gábor"]],
     phase: 40,
   },
   {
     id: "s377",
     words: ["Julcsi","segít","anyunak"],
-    acceptedOrders: [["Julcsi","segít","anyunak"]],
+    acceptedOrders: [["Julcsi","segít","anyunak"],["segít","anyunak","Julcsi"]],
     phase: 40,
   },
   {
@@ -2451,31 +2451,31 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s379",
     words: ["Jenő","golyóval","játszik"],
-    acceptedOrders: [["Jenő","golyóval","játszik"]],
+    acceptedOrders: [["Jenő","golyóval","játszik"],["golyóval","játszik","Jenő"]],
     phase: 40,
   },
   {
     id: "s380",
     words: ["Juci","tavaly","elsős","volt"],
-    acceptedOrders: [["Juci","tavaly","elsős","volt"]],
+    acceptedOrders: [["Juci","tavaly","elsős","volt"],["tavaly","elsős","volt","Juci"]],
     phase: 40,
   },
   {
     id: "s59",
     words: ["Géza","nagy","csigát","fog"],
-    acceptedOrders: [["Géza","nagy","csigát","fog"]],
+    acceptedOrders: [["Géza","nagy","csigát","fog"],["nagy","csigát","fog","Géza"]],
     phase: 40,
   },
   {
     id: "s60",
     words: ["Fanni","szépen","énekel","ma"],
-    acceptedOrders: [["Fanni","szépen","énekel","ma"]],
+    acceptedOrders: [["Fanni","szépen","énekel","ma"],["ma","szépen","énekel","Fanni"],["Fanni","ma","szépen","énekel"]],
     phase: 40,
   },
   {
     id: "s132",
     words: ["Dóra","lovat","rajzol","ma"],
-    acceptedOrders: [["Dóra","lovat","rajzol","ma"]],
+    acceptedOrders: [["Dóra","lovat","rajzol","ma"],["ma","lovat","rajzol","Dóra"],["Dóra","ma","lovat","rajzol"]],
     phase: 41,
   },
   {
@@ -2487,13 +2487,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s141",
     words: ["Csaba","gyorsan","fut","haza"],
-    acceptedOrders: [["Csaba","gyorsan","fut","haza"]],
+    acceptedOrders: [["Csaba","gyorsan","fut","haza"],["gyorsan","fut","haza","Csaba"]],
     phase: 41,
   },
   {
     id: "s191",
     words: ["Szilvi","előveszi","a","szánkót"],
-    acceptedOrders: [["Szilvi","előveszi","a","szánkót"]],
+    acceptedOrders: [["Szilvi","előveszi","a","szánkót"],["a","szánkót","előveszi","Szilvi"]],
     phase: 41,
   },
   {
@@ -2529,13 +2529,13 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s383",
     words: ["Rudi","labdája","piros"],
-    acceptedOrders: [["Rudi","labdája","piros"]],
+    acceptedOrders: [["Rudi","labdája","piros"],["piros","Rudi","labdája"]],
     phase: 41,
   },
   {
     id: "s384",
     words: ["Dóra","a","réten","játszott"],
-    acceptedOrders: [["Dóra","a","réten","játszott"]],
+    acceptedOrders: [["Dóra","a","réten","játszott"],["a","réten","játszott","Dóra"]],
     phase: 41,
   },
   {
@@ -2553,49 +2553,49 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s61",
     words: ["Dani","reggel","rétest","eszik"],
-    acceptedOrders: [["Dani","reggel","rétest","eszik"]],
+    acceptedOrders: [["Dani","reggel","rétest","eszik"],["reggel","rétest","eszik","Dani"]],
     phase: 41,
   },
   {
     id: "s139",
     words: ["Zsuzsi","friss","rétest","kap"],
-    acceptedOrders: [["Zsuzsi","friss","rétest","kap"]],
+    acceptedOrders: [["Zsuzsi","friss","rétest","kap"],["friss","rétest","kap","Zsuzsi"]],
     phase: 42,
   },
   {
     id: "s140",
     words: ["Zsolt","a","tóban","horgászik"],
-    acceptedOrders: [["Zsolt","a","tóban","horgászik"]],
+    acceptedOrders: [["Zsolt","a","tóban","horgászik"],["a","tóban","horgászik","Zsolt"]],
     phase: 42,
   },
   {
     id: "s387",
     words: ["Zsóka","anyjának","névnapja","van"],
-    acceptedOrders: [["Zsóka","anyjának","névnapja","van"]],
+    acceptedOrders: [["Zsóka","anyjának","névnapja","van"],["névnapja","van","Zsóka","anyjának"]],
     phase: 42,
   },
   {
     id: "s388",
     words: ["Zsóka","gondban","van"],
-    acceptedOrders: [["Zsóka","gondban","van"]],
+    acceptedOrders: [["Zsóka","gondban","van"],["gondban","van","Zsóka"]],
     phase: 42,
   },
   {
     id: "s389",
     words: ["Zsolt","ma","nyolcéves"],
-    acceptedOrders: [["Zsolt","ma","nyolcéves"]],
+    acceptedOrders: [["Zsolt","ma","nyolcéves"],["ma","nyolcéves","Zsolt"]],
     phase: 42,
   },
   {
     id: "s390",
     words: ["Zsolt","örül","az","ajándékoknak"],
-    acceptedOrders: [["Zsolt","örül","az","ajándékoknak"]],
+    acceptedOrders: [["Zsolt","örül","az","ajándékoknak"],["az","ajándékoknak","örül","Zsolt"]],
     phase: 42,
   },
   {
     id: "s391",
     words: ["Gyuri","csokoládét","kapott","a","nagymamától"],
-    acceptedOrders: [["Gyuri","csokoládét","kapott","a","nagymamától"]],
+    acceptedOrders: [["Gyuri","csokoládét","kapott","a","nagymamától"],["csokoládét","kapott","a","nagymamától","Gyuri"]],
     phase: 42,
   },
   {
@@ -2607,19 +2607,19 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s393",
     words: ["Gyuri","a","kertbe","megy"],
-    acceptedOrders: [["Gyuri","a","kertbe","megy"]],
+    acceptedOrders: [["Gyuri","a","kertbe","megy"],["a","kertbe","megy","Gyuri"]],
     phase: 42,
   },
   {
     id: "s394",
     words: ["Zsuzsi","ma","álmosan","ébredt"],
-    acceptedOrders: [["Zsuzsi","ma","álmosan","ébredt"]],
+    acceptedOrders: [["Zsuzsi","ma","álmosan","ébredt"],["ma","álmosan","ébredt","Zsuzsi"]],
     phase: 42,
   },
   {
     id: "s395",
     words: ["Gyuri","papa","indul","a","boltba"],
-    acceptedOrders: [["Gyuri","papa","indul","a","boltba"]],
+    acceptedOrders: [["Gyuri","papa","indul","a","boltba"],["a","boltba","indul","Gyuri","papa"]],
     phase: 42,
   },
   {
@@ -2631,7 +2631,7 @@ export const SENTENCE_BANK: SentenceItem[] = [
   {
     id: "s62",
     words: ["Gyula","nagy","csigát","keres"],
-    acceptedOrders: [["Gyula","nagy","csigát","keres"]],
+    acceptedOrders: [["Gyula","nagy","csigát","keres"],["nagy","csigát","keres","Gyula"]],
     phase: 42,
   },
 ];
