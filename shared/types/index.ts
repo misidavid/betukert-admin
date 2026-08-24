@@ -50,6 +50,11 @@ export interface ExerciseTypeSettings {
   fromPhase: number;
   toPhase: number;
   weight: 'rare' | 'normal' | 'frequent';
+  // Csak a letter_recognition-nél értelmezett: ha be van kapcsolva, a
+  // válaszlehetőségek közé szándékosan bekerül a célbetű ismert tévesztőpárja
+  // (pl. b/d), hogy a gyerek gyakorolja a megkülönböztetést (Meixner-differenciálás).
+  // Hiánya (undefined) bekapcsolt állapotot jelent.
+  differentiateConfusables?: boolean;
 }
 
 export interface ChildSettings {
@@ -93,10 +98,18 @@ export interface Exercise {
   displayText?: string;
   question?: string;
   pairs?: { imageId: string; word: string }[];
+  // Több-választós feladatokhoz (pl. szóhalászat): az összes helyes válasz.
+  correctAnswers?: string[];
 }
 
 export type ExerciseType =
   | 'letter_recognition'
+  | 'letter_in_word'
+  | 'missing_letter'
+  | 'real_word'
+  | 'word_length'
+  | 'letter_fishing'
+  | 'syllable_pair'
   | 'letter_sequence'
   | 'syllable_reading'
   | 'syllable_choice'

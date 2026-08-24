@@ -23,17 +23,29 @@ export async function fetchSoundNeedsAction(): Promise<{ items: SoundNeed[]; err
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_SOUND_STATUSES = new Set<SoundStatus>(['missing', 'uploaded', 'pending_review', 'approved', 'published', 'rejected', 'needs_regeneration']);
 
+// KANONIKUS UTASÍTÁS-LISTA
+// Ennek a mobil app minden statikus `instruction:` szövegével egyeznie kell
+// (forrás: betukert-mobile/src/engine/sessionBuilder.ts). Új feladattípusnál,
+// amelynek új felolvasandó utasítása van, ide vedd fel egy sorral — a "Hangok"
+// panel "Utasítások generálása" gombja csak az itt szereplő szövegekhez hoz létre
+// felvételi igényt. (Ellenőrzés: grep "instruction:" a sessionBuilder.ts-ben.)
 const INSTRUCTIONS = [
   'Koppints a betűre!',
+  'Melyik szóban van ez a betű?',
+  'Koppints minden szóra, amelyikben megvan ez a betű!',
   'Koppints minden keresett betűre!',
+  'Melyik betű hiányzik?',
+  'Hogyan írjuk helyesen?',
+  'Melyik az igazi szó?',
+  'Melyik szótaggal lesz igazi szó?',
   'Melyik hanggal kezdődik?',
   'Melyik szótag ez?',
+  'Keresd meg a szótagpárokat!',
   'Tapsolj, és számold meg a szótagokat!',
   'Melyik szót látod a képen?',
-  'Rakd ki a szót!',
-  'Keresd meg a szótagpárokat!',
-  'Rakd helyes sorrendbe a szavakat!',
   'Húzd a szavakat a képek alá!',
+  'Rakd ki a szót!',
+  'Rakd helyes sorrendbe a szavakat!',
   'Húzd az ujjad balról jobbra a vonalon!',
   'Melyik kép illik a mondathoz?',
   'Mi történik a képen?',
