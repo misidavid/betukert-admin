@@ -31,6 +31,17 @@ export const DEFAULT_EXERCISE_SETTINGS: ExerciseTypeSettings[] = [
     weight: 'normal',
   },
   {
+    // Kizárólag az y-hoz: önálló y-nal írt magyar gyerekszó nincs, viszont az y
+    // a gy/ly/ny/ty alkotórésze — ezért a 34. fázis betűjét a kétjegyűeken
+    // keresztül gyakoroltatjuk. A generátor csak akkor ad feladatot, ha épp az
+    // y a célbetű, ezért a többi fázison nem jelenik meg.
+    type: 'letter_in_digraph',
+    enabled: true,
+    fromPhase: 34,
+    toPhase: 45,
+    weight: 'normal',
+  },
+  {
     type: 'first_sound',
     enabled: true,
     fromPhase: 3,
@@ -154,6 +165,7 @@ export const DEFAULT_EXERCISE_SETTINGS: ExerciseTypeSettings[] = [
 export const EXERCISE_TYPE_LABELS: Record<string, string> = {
   letter_recognition: 'Betűfelismerés',
   letter_in_word: 'Betű a szóban',
+  letter_in_digraph: 'Y a kétjegyű betűkben',
   letter_sequence: 'Betűsor olvasás',
   first_sound: 'Első hang felismerés',
   missing_letter: 'Hiányzó betű',

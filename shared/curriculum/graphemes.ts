@@ -198,8 +198,14 @@ export const GRAPHEMES: Grapheme[] = [
 export const getGraphemesByPhase = (maxPhase: number): Grapheme[] =>
   GRAPHEMES.filter(g => g.phase <= maxPhase && !g.rare && !g.implicit);
 
+// A szószűréshez a ritka betűk (x, y, w) is ismertnek számítanak a saját
+// fázisuktól: azok immár valódi, begyakorlandó szintek, tehát az őket
+// tartalmazó szavak (taxi, watt…) onnantól használhatók. Az implicit
+// grafémák itt szándékosan bent vannak — a szavakban előfordulnak.
+// (A SZÓTAGGENERÁTOR külön függvényt használ, ami továbbra is kizárja a
+// ritkákat, így „xa”-féle generált szótag nem keletkezik.)
 export const getGraphemesForWordFilter = (maxPhase: number): Grapheme[] =>
-  GRAPHEMES.filter(g => g.phase <= maxPhase && !g.rare);
+  GRAPHEMES.filter(g => g.phase <= maxPhase);
 
 export const getGraphemeById = (id: string): Grapheme | undefined =>
   GRAPHEMES.find(g => g.id === id);

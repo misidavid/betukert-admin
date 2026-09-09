@@ -78,6 +78,16 @@ export interface MasteryRecord {
   // Csak lokális (a felhő-szinkron nem viszi át): melyik gyakorlási alkalom
   // növelte utoljára a sessions számlálót — alkalmanként legfeljebb egyszer nő.
   lastSessionId?: string;
+  // Az utolsó néhány válasz eredménye, a legrégebbitől a legújabbig —
+  // '1' = helyes, '0' = hibás. A felhővel is szinkronizálódik (recent_results),
+  // hogy eszközváltásnál a friss teljesítmény kövesse a gyereket.
+  // A szintlépés ezen a csúszóablakon méri a pontosságot, nem az élettartam-
+  // arányon: így egy korai hibasorozat nem zárja el véglegesen a továbblépést,
+  // viszont a friss teljesítmény számít. Hossza legfeljebb MAX_WINDOW_LENGTH
+  // (progressionConfig); a vágás az írás (updateMasteryRecord) feladata, az
+  // olvasó mindig az utolsó N karaktert nézi. Hiányzó/rövid ablak = még nincs
+  // elég friss adat, ezért a betű nem számít beérettnek.
+  recentResults?: string;
 }
 
 export interface Exercise {
@@ -105,6 +115,7 @@ export interface Exercise {
 export type ExerciseType =
   | 'letter_recognition'
   | 'letter_in_word'
+  | 'letter_in_digraph'
   | 'missing_letter'
   | 'real_word'
   | 'word_length'
