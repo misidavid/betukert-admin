@@ -42,6 +42,18 @@ export const DEFAULT_EXERCISE_SETTINGS: ExerciseTypeSettings[] = [
     weight: 'normal',
   },
   {
+    // Csak a nagybetűs szakaszon: fent az egyik alak, lent négy másik betű a
+    // másik alakból — a párját kell megtalálni. A nagybetűs fázisok igazi
+    // feladata (a hang már rögzült, csak az íráskép új), és az EGYETLEN
+    // gazdagabb típus, ami nagybetűt is tud célozni: a szóbank kisbetűs, ezért
+    // az első hang / hiányzó betű / szóhalászat nagybetűre nem működik.
+    type: 'letter_case_pair',
+    enabled: true,
+    fromPhase: 36,
+    toPhase: 45,
+    weight: 'normal',
+  },
+  {
     type: 'first_sound',
     enabled: true,
     fromPhase: 3,
@@ -166,6 +178,7 @@ export const EXERCISE_TYPE_LABELS: Record<string, string> = {
   letter_recognition: 'Betűfelismerés',
   letter_in_word: 'Betű a szóban',
   letter_in_digraph: 'Y a kétjegyű betűkben',
+  letter_case_pair: 'Kis- és nagybetű párosítás',
   letter_sequence: 'Betűsor olvasás',
   first_sound: 'Első hang felismerés',
   missing_letter: 'Hiányzó betű',

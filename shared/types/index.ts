@@ -116,6 +116,7 @@ export type ExerciseType =
   | 'letter_recognition'
   | 'letter_in_word'
   | 'letter_in_digraph'
+  | 'letter_case_pair'
   | 'missing_letter'
   | 'real_word'
   | 'word_length'
