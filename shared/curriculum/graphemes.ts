@@ -1,3 +1,17 @@
+// ============================================
+// FIGYELEM — ez a fájl KÉT repóban él, azonos tartalommal:
+//   betukert-mobile/shared/curriculum/graphemes.ts
+//   betukert-admin/shared/curriculum/graphemes.ts
+//
+// Az admin publikálás a SAJÁT példányát teszi a manifestbe (publish.ts), a
+// mobilapp pedig a manifest betűkészletét részesíti előnyben a beépítettel
+// szemben (contentSync.getGraphemes). Vagyis az admin példánya határozza meg a
+// gyerek tananyagát: fázisok, ritka jelölés, implicit betűk. A két példány
+// ezért SOHA nem térhet el.
+//
+// Ellenőrzés:  node scripts/check-shared-sync.mjs   (a mobil repóban)
+// ============================================
+
 import { Grapheme } from '../types';
 
 export const GRAPHEMES: Grapheme[] = [

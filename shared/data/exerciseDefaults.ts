@@ -199,6 +199,10 @@ export const EXERCISE_TYPE_LABELS: Record<string, string> = {
   image_sentence_match: 'Mi történik a képen',
 };
 
+// Feladattípusok ABC-sorrendbe rendezése a megjelenített (magyar) címke alapján.
+export const compareByExerciseLabel = (a: string, b: string): number =>
+  (EXERCISE_TYPE_LABELS[a] || a).localeCompare(EXERCISE_TYPE_LABELS[b] || b, 'hu');
+
 export const WEIGHT_LABELS: Record<string, string> = {
   rare: 'Ritka',
   normal: 'Normál',

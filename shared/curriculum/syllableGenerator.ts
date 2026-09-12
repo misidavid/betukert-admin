@@ -133,13 +133,15 @@ export const generateSyllables = (maxPhase: number): Syllable[] => {
   return [...vc, ...cv, ...cvc];
 };
 
-// Meixner-féle tévesztőpárok — soha nem szerepelhetnek ugyanabban a feladatban
+// Meixner-féle tévesztőpárok — a kanonikus (egyetlen) forrás. Két helyen
+// használjuk: (1) itt kizárásra (soha nem kerülhetnek ugyanabba a feladatba),
+// (2) a betűfelismerésnél differenciálásra (szándékosan egymás mellé téve).
 // Forrás: Meixner Ildikó (589344797), NT-98488 kézikönyv
-// Vizuálisan ÉS akusztikusan hasonló (legsúlyosabb): b–d, m–n
+// Vizuálisan ÉS akusztikusan hasonló (legsúlyosabb): b–d, m–n, sz–s
 // Csak vizuálisan hasonló: b–p, d–p, f–t, h–n
 // Csak akusztikusan hasonló (képzés helye): f–v, t–n
 // Csak akusztikusan hasonló (képzés módja): sz–f, g–d
-const CONFUSION_PAIRS: [string, string][] = [
+export const CONFUSION_PAIRS: [string, string][] = [
   ['b', 'd'],
   ['b', 'p'],
   ['d', 'p'],
@@ -149,6 +151,7 @@ const CONFUSION_PAIRS: [string, string][] = [
   ['t', 'n'],
   ['h', 'n'],
   ['sz', 'f'],
+  ['sz', 's'],
   ['g', 'd'],
 ];
 
