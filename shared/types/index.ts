@@ -110,6 +110,12 @@ export interface Exercise {
   pairs?: { imageId: string; word: string }[];
   // Több-választós feladatokhoz (pl. szóhalászat): az összes helyes válasz.
   correctAnswers?: string[];
+  // TÖBB CÉLELEMŰ feladatokhoz (kép-szó párosítás): minden résztvevő elem
+  // azonosítója. A kiértékelés mindent vagy semmit, ezért ugyanaz az eredmény
+  // íródik mindegyikre — egyetlen elemre könyvelve a többi soha nem kapna
+  // adatot, az az egy pedig elnyelné az egész feladat eredményét.
+  // Hiányában a `targetItem` az egyetlen célelem.
+  targetItems?: string[];
 }
 
 export type ExerciseType =
