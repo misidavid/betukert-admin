@@ -31,6 +31,8 @@ const VALID_SOUND_STATUSES = new Set<SoundStatus>(['missing', 'uploaded', 'pendi
 // felvételi igényt. (Ellenőrzés: grep "instruction:" a sessionBuilder.ts-ben.)
 const INSTRUCTIONS = [
   'Koppints a betűre!',
+  'Melyik a párja?',
+  'Melyik betűben van y?',
   'Melyik szóban látod ezt a betűt?',
   'Koppints minden szóra, amelyik tartalmazza ezt a betűt!',
   'Koppints minden keresett betűre!',
