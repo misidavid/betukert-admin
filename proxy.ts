@@ -2,9 +2,10 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { isAdminEmail } from './lib/adminAllowlist';
 
-// A landing oldal a Figma Sites-on él; a fő domain gyökere ide irányít át.
-// 307 (ideiglenes), hogy a böngészők ne cache-eljék, ha később saját domainre költözik
-const LANDING_URL = 'https://ide-latch-63099174.figma.site';
+// A landing oldal a Figma Make-en él, www.betukert.hu saját domainnel (CNAME a Figmára);
+// az apex a Vercelen marad a publikus aloldalak miatt, a gyökere a www-re irányít át.
+// 307 (ideiglenes), hogy a böngészők ne cache-eljék, ha a landing később máshová költözik
+const LANDING_URL = 'https://www.betukert.hu';
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
