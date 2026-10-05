@@ -2,6 +2,10 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { isAdminEmail } from './lib/adminAllowlist';
 
+// A landing oldal a Figma Sites-on él; a fő domain gyökere ide irányít át.
+// 307 (ideiglenes), hogy a böngészők ne cache-eljék, ha később saját domainre költözik
+const LANDING_URL = 'https://ide-latch-63099174.figma.site';
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = (request.headers.get('host') ?? '').split(':')[0];
@@ -9,11 +13,7 @@ export async function proxy(request: NextRequest) {
   // A publikus fő domain csak a landing oldalt és a publikus aloldalakat szolgálja ki;
   // az admin az admin.betukert.hu-n (és a vercel.app címen) él
   if (host === 'betukert.hu' || host === 'www.betukert.hu') {
-    if (pathname === '/') {
-      return NextResponse.rewrite(new URL('/landing', request.url));
-    }
     if (
-      pathname.startsWith('/landing') ||
       pathname.startsWith('/adatvedelem') ||
       pathname.startsWith('/tamogatas') ||
       pathname.startsWith('/fiok-torles') ||
@@ -23,7 +23,8 @@ export async function proxy(request: NextRequest) {
     ) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL('/', request.url));
+    // A gyökér, a régi /landing és minden ismeretlen útvonal a Figma-s landingre megy
+    return NextResponse.redirect(LANDING_URL, 307);
   }
 
   // A mobilapp által hívott publikus endpoint, a login oldal, az UI kit és a landing wireframe nem védett
