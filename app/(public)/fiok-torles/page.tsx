@@ -83,9 +83,11 @@ export default function AccountDeletionPage() {
       <Section title="Előfizetés">
         <p>
           Az előfizetést az App Store, illetve a Google Play kezeli, ezért azt a fiók törlése nem
-          mondja le automatikusan. Ha aktív előfizetésed van, azt a készüléked{' '}
-          <strong>Beállítások → (saját név) → Előfizetések</strong> menüpontjában külön kell
-          lemondanod, hogy ne terheljünk további díjat.
+          mondja le automatikusan. Ha aktív előfizetésed van, azt külön kell lemondanod, hogy ne
+          terhelődjön további díj: iPhone-on a{' '}
+          <strong>Beállítások → (saját név) → Előfizetések</strong>, Androidon a{' '}
+          <strong>Play Áruház → profilkép → Fizetések és előfizetések → Előfizetések</strong>{' '}
+          menüpontban.
         </p>
       </Section>
 
