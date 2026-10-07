@@ -59,8 +59,6 @@ export interface ExerciseTypeSettings {
 
 export interface ChildSettings {
   uppercaseEnabled: boolean;
-  mixedCaseEnabled: boolean;
-  enabledPhases: number[];
   exerciseSettings: ExerciseTypeSettings[];
   parentPin: string;
   autoReadInstructions: boolean;
