@@ -72,7 +72,12 @@ export default function SupportPage() {
           Az <strong>első 5 szint ingyenes</strong>. A teljes tananyaghoz (mind a 45 szint) és a
           szabad gyakorláshoz teljes hozzáférés szükséges, amely egyszeri vásárlással vagy havi,
           illetve éves előfizetéssel oldható fel. A hozzáférés a szülői fiókhoz tartozik, tehát
-          egyszerre érvényes az összes gyermekprofilra. Az Alkalmazás nem tartalmaz hirdetést.
+          egyszerre érvényes az összes gyermekprofilra. Az Alkalmazás nem tartalmaz hirdetést. A
+          részleteket a{' '}
+          <Link href="/felhasznalasi-feltetelek" style={linkStyle}>
+            Felhasználási feltételek
+          </Link>{' '}
+          tartalmazzák.
         </p>
       </Section>
 

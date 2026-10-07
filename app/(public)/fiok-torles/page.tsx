@@ -49,8 +49,8 @@ export default function AccountDeletionPage() {
       <Section title="Fiók törlése kérése e-mailben">
         <p>
           Ha nem tudsz belépni az Alkalmazásba, e-mailben is kérheted a fiókod törlését. Írj a{' '}
-          <a href="mailto:misi.david@gmail.com" style={{ color: '#2F6B3F', fontWeight: 700 }}>
-            misi.david@gmail.com
+          <a href="mailto:info@betukert.hu" style={{ color: '#2F6B3F', fontWeight: 700 }}>
+            info@betukert.hu
           </a>{' '}
           címre a következő tárggyal: <strong>„Fiók törlése”</strong>, és add meg a levélben azt az{' '}
           <strong>e-mail címet</strong>, amellyel a fiókodat létrehoztad.
@@ -92,8 +92,8 @@ export default function AccountDeletionPage() {
       <p className="text-sm" style={{ color: '#8A8478' }}>
         To request deletion of your account and associated data, use the in-app option (parental
         mode → “Account” section at the bottom → “Delete account permanently”), or email us at{' '}
-        <a href="mailto:misi.david@gmail.com" style={{ color: '#2F6B3F', fontWeight: 700 }}>
-          misi.david@gmail.com
+        <a href="mailto:info@betukert.hu" style={{ color: '#2F6B3F', fontWeight: 700 }}>
+          info@betukert.hu
         </a>{' '}
         with the email address used to create your account. Requests are processed within 30 days.
       </p>

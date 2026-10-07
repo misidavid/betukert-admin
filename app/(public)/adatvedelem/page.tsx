@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
         Adatvédelmi tájékoztató
       </h1>
       <p className="text-sm mb-10" style={{ color: '#8A8478' }}>
-        Hatályos: 2026. szeptember 18-tól
+        Hatályos: 2026. október 7-től
       </p>
 
       <Section title="1. Bevezetés">
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
 
       <Section title="2. Az adatkezelő">
         <p>
-          Név: <strong>Betűkert</strong>
+          Név: <strong>Misi Dávid</strong> (magánszemély), a Betűkert fejlesztője és üzemeltetője
           <br />
           E-mail:{' '}
           <a href="mailto:info@betukert.hu" style={{ color: '#2F6B3F' }}>

@@ -12,7 +12,7 @@ const body = Quicksand({
   variable: '--font-body',
 });
 
-// A publikus oldalak (landing, adatvédelem, támogatás, megerősítve) közös
+// A publikus oldalak (landing, adatvédelem, felhasználási feltételek, támogatás, megerősítve) közös
 // layoutja — az admin navigáció ide nem kerül be. A későbbi publikus menü
 // helye a {children} elé kerülő <header>.
 export default function PublicLayout({
