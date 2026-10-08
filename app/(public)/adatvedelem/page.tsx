@@ -46,10 +46,11 @@ export default function PrivacyPolicyPage() {
         </p>
         <p>
           Az Alkalmazás iOS és Android rendszeren érhető el, kizárólag magyar nyelven. Az
-          Alkalmazás nem tartalmaz hirdetést, nem használ analitikai vagy hirdetési
-          szoftverfejlesztő-készletet (SDK-t), és nem tartalmaz a gyermek számára elérhető külső
-          hivatkozást vagy vásárlási felületet: a vásárlási képernyő a szülői PIN-nel védett
-          szülői felületről, illetve a fizetős funkciók megnyitásakor érhető el.
+          Alkalmazás nem tartalmaz hirdetést, nem használ hirdetési szoftverfejlesztő-készletet
+          (SDK-t), és nem tartalmaz a gyermek számára elérhető külső hivatkozást vagy vásárlási
+          felületet: a vásárlási képernyő a szülői PIN-nel védett szülői felületről, illetve a
+          fizetős funkciók megnyitásakor érhető el. Az Alkalmazás fejlesztéséhez — kizárólag a
+          szülő hozzájárulásával — névtelen használati statisztikát gyűjtünk (lásd a 3. f) pontot).
         </p>
       </Section>
 
@@ -124,12 +125,39 @@ export default function PrivacyPolicyPage() {
           is, hogy a szülő mely alkalmazáson belüli tippeket látta már.
         </p>
 
-        <p><strong>f) Amit nem kezelünk</strong></p>
+        <p><strong>f) Használati statisztika (csak hozzájárulással)</strong></p>
         <p>
-          Az Alkalmazás nem gyűjt eszközazonosítót és helyadatot, nem küld push értesítéseket,
-          nem kér mikrofon-, kamera- vagy fájlhozzáférést, nem használ harmadik féltől származó
-          analitikai vagy hirdetési SDK-t, és nem tesz lehetővé semmilyen kommunikációt vagy
-          tartalommegosztást más felhasználókkal. A tananyag frissítésekor az Alkalmazás
+          Ha a szülő ehhez hozzájárul, az Alkalmazás a Google Analytics for Firebase szolgáltatás
+          segítségével névtelen használati statisztikát küld, hogy lássuk, mely részeit
+          használják, és hol érdemes javítani rajta. Ilyenkor a következő adatok kerülnek
+          továbbításra: a megnyitott képernyők (például főoldal, gyakorlás, vásárlási képernyő),
+          az Alkalmazás megnyitásának és a használat időtartamának adatai, az alkalmazáson belüli
+          vásárlások ténye (a termék azonosítója és ára), a készülék típusa, operációs rendszere
+          és nyelve, az Alkalmazás verziója, a maszkolt IP-címből származtatott hozzávetőleges
+          hely (ország, város), valamint egy véletlenszerű, az adott telepítéshez tartozó
+          azonosító, amelyet a Google Analytics a készüléken tárol.
+        </p>
+        <p>
+          A statisztika nem tartalmaz nevet, e-mail címet, a gyermekprofil adatait vagy a
+          gyakorlás eredményeit, nem kapcsolódik a szülői fiókhoz, és nem használ hirdetési
+          azonosítót. Hirdetési célra és profilalkotásra nem használjuk, harmadik féllel nem
+          osztjuk meg. Az adatokat a Google Analytics a gyűjtéstől számított 2 hónapig őrzi meg.
+        </p>
+        <p>
+          A hozzájárulást az Alkalmazás bejelentkezés után egyszer kéri; megadása önkéntes, és
+          nélküle az Alkalmazás teljes értékűen használható. A döntés a Szülői felület „Fiók”
+          szakaszában a „Névtelen használati statisztika” kapcsolóval bármikor módosítható. A
+          döntést az adott készüléken tároljuk. Visszavonáskor az Alkalmazás leállítja a
+          gyűjtést, és a készüléken tárolt statisztikai azonosítót és adatokat is törli; a már
+          elküldött adatok a megőrzési idő végén törlődnek.
+        </p>
+
+        <p><strong>g) Amit nem kezelünk</strong></p>
+        <p>
+          Az Alkalmazás nem gyűjt hirdetési azonosítót (IDFA, Android hirdetési azonosító) és
+          pontos helyadatot, nem küld push értesítéseket, nem kér mikrofon-, kamera- vagy
+          fájlhozzáférést, nem használ hirdetési SDK-t, és nem tesz lehetővé semmilyen
+          kommunikációt vagy tartalommegosztást más felhasználókkal. A tananyag frissítésekor az Alkalmazás
           kizárólag letölti a tartalmat a szerverünkről — ilyenkor a gyermekről semmilyen adatot
           nem küld.
         </p>
@@ -139,8 +167,9 @@ export default function PrivacyPolicyPage() {
         <p>
           Az adatkezelés célja a szülői fiók és a gyermekprofilok létrehozásának és kezelésének
           lehetővé tétele, a tanulási folyamat személyre szabása, a szülő tájékoztatása a gyermek
-          fejlődéséről, a haladás eszközök közötti szinkronizálása, valamint az előfizetéshez
-          kötött funkciók biztosítása és a jogosultság ellenőrzése.
+          fejlődéséről, a haladás eszközök közötti szinkronizálása, az előfizetéshez kötött
+          funkciók biztosítása és a jogosultság ellenőrzése, valamint — hozzájárulás esetén — az
+          Alkalmazás fejlesztése a névtelen használati statisztika alapján.
         </p>
         <p>
           Jogalap: a szolgáltatás igénybevételéhez szükséges szerződés teljesítése (GDPR 6. cikk
@@ -148,13 +177,19 @@ export default function PrivacyPolicyPage() {
           adatkezelő között létrejövő szerződés alapján. A vásárlásokhoz kapcsolódó számviteli
           kötelezettségeket az App Store, illetve a Google Play teljesíti mint eladó.
         </p>
+        <p>
+          A 3. f) pont szerinti használati statisztika jogalapja a szülő hozzájárulása (GDPR 6.
+          cikk (1) bekezdés a) pont, valamint az elektronikus hírközlésről szóló 2003. évi C.
+          törvény 155. § (4) bekezdése). A hozzájárulás bármikor, indoklás nélkül visszavonható;
+          a visszavonás nem érinti a korábbi adatkezelés jogszerűségét.
+        </p>
       </Section>
 
       <Section title="5. Adatfeldolgozók, címzettek">
         <p>Az adatok kezeléséhez az alábbi szolgáltatókat vesszük igénybe adatfeldolgozóként:</p>
         <ul className="list-disc pl-6 space-y-1">
           <li><strong>Supabase</strong> — adatbázis, hitelesítés (bejelentkezés), adattárolás és a tananyag kiszolgálása</li>
-          <li><strong>Google LLC</strong> — Google-fiókkal történő bejelentkezés, valamint a fizetések lebonyolítása Android készüléken (Google Play)</li>
+          <li><strong>Google LLC</strong> — Google-fiókkal történő bejelentkezés, a fizetések lebonyolítása Android készüléken (Google Play), valamint — hozzájárulás esetén — a használati statisztika (Google Analytics for Firebase)</li>
           <li><strong>Apple Inc.</strong> — Apple-fiókkal történő bejelentkezés, valamint a fizetések lebonyolítása iOS készüléken (App Store)</li>
           <li><strong>RevenueCat, Inc.</strong> — előfizetések és vásárlások kezelése, a hozzáférés ellenőrzése</li>
           <li><strong>Expo / EAS</strong> — az Alkalmazás frissítéseinek kézbesítése</li>
@@ -172,7 +207,9 @@ export default function PrivacyPolicyPage() {
       <Section title="6. Adatmegőrzés időtartama">
         <p>
           A fiók és a hozzá tartozó adatok a fiók törléséig, illetve a törlési kérelem
-          teljesítéséig kerülnek megőrzésre.
+          teljesítéséig kerülnek megőrzésre. A használati statisztika (3. f) pont) adatait a
+          Google Analytics a gyűjtéstől számított 2 hónapig őrzi meg; ezek nem kapcsolódnak a
+          fiókhoz, ezért a fiók törlése nem érinti őket.
         </p>
         <p>
           Egy gyermekprofil önállóan, az Alkalmazáson belül bármikor törölhető (profilválasztó
@@ -207,7 +244,9 @@ export default function PrivacyPolicyPage() {
           (e-mail címet, valós nevet, elérhetőséget, fényképet vagy hangfelvételt) — a
           gyermekprofilban megadott név szabadon választható, akár becenév is lehet. Az
           Alkalmazásban nincs hirdetés, nincs közösségi funkció, és nincs gyermek által elérhető
-          külső hivatkozás.
+          külső hivatkozás. A használati statisztikáról kizárólag a szülő dönt; ha hozzájárul, a
+          statisztika a gyermek által használt képernyőkről is tartalmaz névtelen adatot, de a
+          gyermek nevét, profilját vagy eredményeit nem.
         </p>
       </Section>
 
@@ -219,7 +258,8 @@ export default function PrivacyPolicyPage() {
           <li>az adatok törlése („elfeledtetéshez való jog”);</li>
           <li>az adatkezelés korlátozása;</li>
           <li>adathordozhatóság;</li>
-          <li>tiltakozás az adatkezelés ellen.</li>
+          <li>tiltakozás az adatkezelés ellen;</li>
+          <li>a hozzájárulás bármikori visszavonása (a használati statisztikánál a Szülői felület kapcsolójával).</li>
         </ul>
         <p>
           E jogok gyakorlásához kérjük, vedd fel velünk a kapcsolatot a 2. pontban megadott
@@ -244,8 +284,9 @@ export default function PrivacyPolicyPage() {
 
       <Section title="10. Sütik és követés">
         <p>
-          Az Alkalmazás nem használ sütiket, sem harmadik féltől származó nyomkövető, analitikai
-          vagy hirdetési kódot. A betukert.hu weboldal kizárólag a működéshez szükséges,
+          Az Alkalmazás nem használ sütiket, hirdetési kódot, sem az alkalmazások és weboldalak
+          közötti nyomkövetést. Analitikai eszközt (Google Analytics for Firebase) kizárólag a
+          szülő hozzájárulásával használ, a 3. f) pontban leírt módon. A betukert.hu weboldal kizárólag a működéshez szükséges,
           minimális technikai adatokat kezel, és nem használ marketing- vagy analitikai sütiket.
         </p>
       </Section>

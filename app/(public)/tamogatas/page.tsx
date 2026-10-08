@@ -237,7 +237,9 @@ export default function SupportPage() {
           <Faq q="Milyen adatokat kezeltek a gyerekről?">
             Csak a profil nevét (akár becenév is lehet) és a gyakorlás eredményeit, a tanulás
             személyre szabásához. Életkort, fényképet, hangfelvételt vagy elérhetőséget nem kérünk,
-            hirdetést és külső analitikát nem használunk. Részletek az{' '}
+            hirdetést nem használunk. Névtelen használati statisztikát csak a szülő
+            hozzájárulásával gyűjtünk, és az sem tartalmazza a gyerek nevét vagy eredményeit.
+            Részletek az{' '}
             <Link href="/adatvedelem" style={linkStyle}>
               Adatvédelmi tájékoztatóban
             </Link>
