@@ -16,7 +16,10 @@ export async function fetchImageNeedsAction(): Promise<{
       getSupabaseAdmin().from('image_needs').select('*').order('phase', { ascending: true }),
       getSupabaseAdmin().from('exercise_type_config').select('*').eq('requires_image', true),
     ]);
-    return { items: (items ?? []) as ImageNeed[], configs: (configs ?? []) as ExerciseTypeConfig[] };
+    return {
+      items: (items ?? []) as ImageNeed[],
+      configs: ((configs ?? []) as ExerciseTypeConfig[]).filter(c => !SENTENCE_IMAGE_TYPES.has(c.id)),
+    };
   } catch (e) {
     console.error('[fetchImageNeedsAction]', e);
     return { items: [], configs: [], error: 'Szerverhiba' };
@@ -28,6 +31,15 @@ import { GRAPHEMES } from '../../shared/curriculum/graphemes';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_IMAGE_STATUSES = new Set<ImageStatus>(['missing', 'uploaded', 'approved', 'published', 'rejected', 'needs_replacement']);
+
+// Ezek a típusok a mondatképekből dolgoznak (Mondatképek oldal), szóképhez nem
+// rendelhetők, ezért a szóképek típuslistájából kimaradnak.
+const SENTENCE_IMAGE_TYPES = new Set(['sentence_picture_match', 'image_sentence_match']);
+
+// Új szókép alapértelmezett típusai: minden szóképes feladat. A mobilapp a szó
+// szerkezete alapján tovább szűr (pl. legfeljebb 2 szótag), és jelenleg csak az
+// első hang felismerésnél veszi figyelembe a jelölést.
+const DEFAULT_WORD_IMAGE_TYPES = ['image_word_match', 'image_word_drag', 'first_sound', 'missing_letter', 'word_length'];
 
 const getFirstSound = (word: string): string =>
   splitIntoGraphemes(word.toLowerCase())[0] || '';
@@ -46,13 +58,6 @@ const getPhase = (word: string): number => {
     }
   }
   return maxPhase;
-};
-
-const getExerciseTypes = (word: string): string[] => {
-  const syllables = splitIntoSyllables(word);
-  const types = ['image_word_match', 'image_word_drag', 'first_sound'];
-  if (syllables.length >= 2) types.push('syllable_clapping', 'word_builder');
-  return types;
 };
 
 export async function generateImageNeedsAction(): Promise<{ inserted: number; skipped: number; error?: string }> {
@@ -75,7 +80,7 @@ export async function generateImageNeedsAction(): Promise<{ inserted: number; sk
           first_sound: getFirstSound(word),
           first_syllable: getFirstSyllable(word),
           phase: getPhase(word),
-          exercise_types: getExerciseTypes(word),
+          exercise_types: [...DEFAULT_WORD_IMAGE_TYPES],
           image_brief: `Egyértelmű, gyerekbarát illusztráció erről: "${word}"`,
           ambiguity_notes: '',
           status: 'missing',
@@ -235,13 +240,8 @@ export async function toggleImageNeedExerciseTypeAction(
     await requireAuth();
     if (!UUID_RE.test(id)) return { error: 'Érvénytelen azonosító' };
 
-    const { data: config } = await getSupabaseAdmin()
-      .from('exercise_type_config')
-      .select('id')
-      .eq('id', type)
-      .eq('requires_image', true)
-      .maybeSingle();
-    if (!config) return { error: 'Érvénytelen feladattípus' };
+    const imageTypes = await fetchImageTypeIds();
+    if (!imageTypes.has(type)) return { error: 'Érvénytelen feladattípus' };
 
     const { data: record, error: fetchError } = await getSupabaseAdmin()
       .from('image_needs')
@@ -270,50 +270,74 @@ export async function toggleImageNeedExerciseTypeAction(
   }
 }
 
+const MAX_BULK_IDS = 500;
+
+function validateBulkIds(ids: string[]): string | null {
+  if (!Array.isArray(ids) || ids.length === 0) return 'Nincs kijelölt elem';
+  if (ids.length > MAX_BULK_IDS) return `Túl sok elem (max ${MAX_BULK_IDS})`;
+  if (!ids.every(id => UUID_RE.test(id))) return 'Érvénytelen azonosító';
+  return null;
+}
+
+async function fetchImageTypeIds(): Promise<Set<string>> {
+  const { data: configs } = await getSupabaseAdmin()
+    .from('exercise_type_config')
+    .select('id')
+    .eq('requires_image', true);
+  return new Set((configs ?? []).map(c => c.id).filter(id => !SENTENCE_IMAGE_TYPES.has(id)));
+}
+
+// A tömeges feladattípus-műveletek közös váza: a computeNext szavanként megadja
+// az új exercise_types tömböt, és csak a ténylegesen változó sorokat írjuk vissza.
+async function applyExerciseTypeUpdates(
+  ids: string[],
+  logLabel: string,
+  computeNext: (current: string[]) => string[],
+): Promise<{ updated: number; error?: string }> {
+  const { data: records, error: fetchError } = await getSupabaseAdmin()
+    .from('image_needs')
+    .select('id, exercise_types')
+    .in('id', ids);
+  if (fetchError || !records) return { updated: 0, error: 'Nem találhatók a bejegyzések' };
+
+  const now = new Date().toISOString();
+  const toUpdate = records
+    .map(r => {
+      const current: string[] = r.exercise_types ?? [];
+      return { id: r.id, current, next: computeNext(current) };
+    })
+    .filter(r => r.next.length !== r.current.length || r.next.some((t, i) => t !== r.current[i]));
+
+  const results = await Promise.all(
+    toUpdate.map(r =>
+      getSupabaseAdmin()
+        .from('image_needs')
+        .update({ exercise_types: r.next, updated_at: now })
+        .eq('id', r.id),
+    ),
+  );
+  const failed = results.filter(r => r.error);
+  if (failed.length > 0) {
+    console.error(`[${logLabel}] DB hiba:`, failed[0].error);
+    return { updated: toUpdate.length - failed.length, error: `${failed.length} elem frissítése nem sikerült` };
+  }
+  return { updated: toUpdate.length };
+}
+
 export async function bulkRemoveImageExerciseTypesAction(
   ids: string[],
 ): Promise<{ updated: number; error?: string }> {
   try {
     await requireAuth();
-    if (!Array.isArray(ids) || ids.length === 0) return { updated: 0, error: 'Nincs kijelölt elem' };
-    if (ids.length > 500) return { updated: 0, error: 'Túl sok elem (max 500)' };
-    if (!ids.every(id => UUID_RE.test(id))) return { updated: 0, error: 'Érvénytelen azonosító' };
+    const idsError = validateBulkIds(ids);
+    if (idsError) return { updated: 0, error: idsError };
 
-    const { data: configs } = await getSupabaseAdmin()
-      .from('exercise_type_config')
-      .select('id')
-      .eq('requires_image', true);
-    const imageTypes = new Set((configs ?? []).map(c => c.id));
+    const imageTypes = await fetchImageTypeIds();
     if (imageTypes.size === 0) return { updated: 0, error: 'Nincs képköteles feladattípus' };
 
-    const { data: records, error: fetchError } = await getSupabaseAdmin()
-      .from('image_needs')
-      .select('id, exercise_types')
-      .in('id', ids);
-    if (fetchError || !records) return { updated: 0, error: 'Nem találhatók a bejegyzések' };
-
-    const now = new Date().toISOString();
-    const toUpdate = records
-      .map(r => {
-        const current: string[] = r.exercise_types ?? [];
-        return { id: r.id, current, next: current.filter(t => !imageTypes.has(t)) };
-      })
-      .filter(r => r.next.length !== r.current.length);
-
-    const results = await Promise.all(
-      toUpdate.map(r =>
-        getSupabaseAdmin()
-          .from('image_needs')
-          .update({ exercise_types: r.next, updated_at: now })
-          .eq('id', r.id),
-      ),
+    return await applyExerciseTypeUpdates(ids, 'bulkRemoveImageExerciseTypesAction', current =>
+      current.filter(t => !imageTypes.has(t)),
     );
-    const failed = results.filter(r => r.error);
-    if (failed.length > 0) {
-      console.error('[bulkRemoveImageExerciseTypesAction] DB hiba:', failed[0].error);
-      return { updated: toUpdate.length - failed.length, error: `${failed.length} elem frissítése nem sikerült` };
-    }
-    return { updated: toUpdate.length };
   } catch (e) {
     console.error('[bulkRemoveImageExerciseTypesAction]', e);
     return { updated: 0, error: 'Szerverhiba' };
@@ -325,49 +349,44 @@ export async function bulkRestoreImageExerciseTypesAction(
 ): Promise<{ updated: number; error?: string }> {
   try {
     await requireAuth();
-    if (!Array.isArray(ids) || ids.length === 0) return { updated: 0, error: 'Nincs kijelölt elem' };
-    if (ids.length > 500) return { updated: 0, error: 'Túl sok elem (max 500)' };
-    if (!ids.every(id => UUID_RE.test(id))) return { updated: 0, error: 'Érvénytelen azonosító' };
+    const idsError = validateBulkIds(ids);
+    if (idsError) return { updated: 0, error: idsError };
 
-    const { data: configs } = await getSupabaseAdmin()
-      .from('exercise_type_config')
-      .select('id')
-      .eq('requires_image', true);
-    const imageTypes = new Set((configs ?? []).map(c => c.id));
+    const imageTypes = await fetchImageTypeIds();
     if (imageTypes.size === 0) return { updated: 0, error: 'Nincs képköteles feladattípus' };
 
-    const { data: records, error: fetchError } = await getSupabaseAdmin()
-      .from('image_needs')
-      .select('id, word, exercise_types')
-      .in('id', ids);
-    if (fetchError || !records) return { updated: 0, error: 'Nem találhatók a bejegyzések' };
-
-    const now = new Date().toISOString();
-    const toUpdate = records
-      .map(r => {
-        const current: string[] = r.exercise_types ?? [];
-        const defaults = getExerciseTypes(r.word).filter(t => imageTypes.has(t));
-        const next = [...current, ...defaults.filter(t => !current.includes(t))];
-        return { id: r.id, current, next };
-      })
-      .filter(r => r.next.length !== r.current.length);
-
-    const results = await Promise.all(
-      toUpdate.map(r =>
-        getSupabaseAdmin()
-          .from('image_needs')
-          .update({ exercise_types: r.next, updated_at: now })
-          .eq('id', r.id),
-      ),
+    const defaults = DEFAULT_WORD_IMAGE_TYPES.filter(t => imageTypes.has(t));
+    return await applyExerciseTypeUpdates(ids, 'bulkRestoreImageExerciseTypesAction', current =>
+      [...current, ...defaults.filter(t => !current.includes(t))],
     );
-    const failed = results.filter(r => r.error);
-    if (failed.length > 0) {
-      console.error('[bulkRestoreImageExerciseTypesAction] DB hiba:', failed[0].error);
-      return { updated: toUpdate.length - failed.length, error: `${failed.length} elem frissítése nem sikerült` };
-    }
-    return { updated: toUpdate.length };
   } catch (e) {
     console.error('[bulkRestoreImageExerciseTypesAction]', e);
+    return { updated: 0, error: 'Szerverhiba' };
+  }
+}
+
+// Egyetlen képköteles feladattípusba tesz be (included=true) vagy onnan vesz ki
+// (included=false) több szót egyszerre; a többi típus-hozzárendelésükhöz nem nyúl.
+export async function bulkSetImageExerciseTypeAction(
+  ids: string[],
+  type: string,
+  included: boolean,
+): Promise<{ updated: number; error?: string }> {
+  try {
+    await requireAuth();
+    const idsError = validateBulkIds(ids);
+    if (idsError) return { updated: 0, error: idsError };
+
+    const imageTypes = await fetchImageTypeIds();
+    if (!imageTypes.has(type)) return { updated: 0, error: 'Érvénytelen feladattípus' };
+
+    return await applyExerciseTypeUpdates(ids, 'bulkSetImageExerciseTypeAction', current =>
+      included
+        ? (current.includes(type) ? current : [...current, type])
+        : current.filter(t => t !== type),
+    );
+  } catch (e) {
+    console.error('[bulkSetImageExerciseTypeAction]', e);
     return { updated: 0, error: 'Szerverhiba' };
   }
 }

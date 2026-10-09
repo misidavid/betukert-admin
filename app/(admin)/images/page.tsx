@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ImageNeed, ImageStatus } from '../../../lib/supabase';
-import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction, fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, updateAmbiguityNotesAction, bulkRemoveImageExerciseTypesAction } from '../../actions/imageNeeds';
+import { generateImageNeedsAction, uploadImageFileAction, updateImageNeedStatusAction, deleteImageFileAction, fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, updateAmbiguityNotesAction, bulkRemoveImageExerciseTypesAction, bulkSetImageExerciseTypeAction } from '../../actions/imageNeeds';
 import { ExerciseTypeConfig } from '../../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
@@ -116,6 +116,8 @@ export default function ImagesPage() {
   const [bulkWorking, setBulkWorking] = useState(false);
   const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
   const [bulkRemoveTypesConfirm, setBulkRemoveTypesConfirm] = useState(false);
+  const [bulkType, setBulkType] = useState('');
+  const [bulkTypeRemoveConfirm, setBulkTypeRemoveConfirm] = useState(false);
   const [message, setMessage] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
   const savedScrollY = useRef<number | null>(null);
@@ -275,8 +277,43 @@ export default function ImagesPage() {
     loadData(true);
   };
 
+  // Kivételnél azok a szavak, amelyeknek ez az utolsó képköteles típusa,
+  // lekerülnek erről az oldalról a Kizárt szavak közé
+  const countLeavingPage = (selectedItems: ImageNeed[], type: string) =>
+    selectedItems.filter(i =>
+      i.exercise_types?.includes(type) &&
+      !i.exercise_types.some(t => t !== type && imageRequiredTypes.includes(t))
+    ).length;
+
+  const handleBulkSetType = async (type: string, included: boolean) => {
+    const config = configs.find(c => c.id === type);
+    if (!config) return;
+    setBulkWorking(true);
+    const selectedItems = filtered.filter(i => selected.has(i.id));
+    const leaving = included ? 0 : countLeavingPage(selectedItems, type);
+    const result = await bulkSetImageExerciseTypeAction(selectedItems.map(i => i.id), type, included);
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
+      const unchanged = selectedItems.length - result.updated;
+      setMessage(included
+        ? `✅ ${result.updated} szó bekerült ide: ${config.label}.${unchanged > 0 ? ` ${unchanged} már benne volt.` : ''}`
+        : `✅ ${result.updated} szó kikerült innen: ${config.label}.${unchanged > 0 ? ` ${unchanged} eddig sem volt benne.` : ''}${leaving > 0 ? ` ${leaving} szónak ez volt az utolsó képköteles típusa, ezek a Kizárt szavak közé kerültek.` : ''}`);
+    }
+    // Hozzáadás után a kijelölés marad, így ugyanazok a szavak további típusokba is betehetők
+    if (!included || result.error) setSelected(new Set());
+    setBulkWorking(false);
+    loadData(true);
+  };
+
   // Csak képköteles feladattípusokhoz tartozó szavak
   const imageRequiredTypes = configs.map(c => c.id);
+
+  // A tömeges típusművelet célja: a kézzel választott típus, különben a típusszűrő, különben az első
+  const activeBulkType = configs.some(c => c.id === bulkType)
+    ? bulkType
+    : (typeFilter !== 'all' ? typeFilter : configs[0]?.id ?? '');
+  const activeBulkLabel = configs.find(c => c.id === activeBulkType)?.label ?? '';
 
   const relevantItems = items.filter(item =>
     item.exercise_types?.some(t => imageRequiredTypes.includes(t))
@@ -302,6 +339,15 @@ export default function ImagesPage() {
     if (searchTerm && !item.word.toLowerCase().includes(searchTerm)) return false;
     return true;
   });
+
+  const bulkTypeLeaving = bulkTypeRemoveConfirm
+    ? countLeavingPage(filtered.filter(i => selected.has(i.id)), activeBulkType)
+    : 0;
+
+  const handleConfirmBulkTypeRemove = () => {
+    setBulkTypeRemoveConfirm(false);
+    handleBulkSetType(activeBulkType, false);
+  };
 
   const phases = [...new Set(relevantItems.map(i => i.phase))].sort((a, b) => a - b);
 
@@ -510,6 +556,36 @@ export default function ImagesPage() {
         </div>
       );
     })()}
+    {bulkTypeRemoveConfirm && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="bg-white rounded-[24px] p-6 max-w-md mx-4 shadow-xl">
+          <h3 className="text-lg mb-2" style={{ ...display, fontWeight: 700, color: GREEN_DARK }}>Kivétel egy feladattípusból</h3>
+          <p className="text-sm mb-4" style={{ color: MUTED }}>
+            A kijelölt <strong style={{ color: GREEN_DARK }}>{selected.size} szó</strong> kikerül ebből a feladattípusból: <strong style={{ color: GREEN_DARK }}>{activeBulkLabel}</strong>.
+            A többi feladattípusuk nem változik.
+            {bulkTypeLeaving > 0 && (
+              <> <strong style={{ color: GREEN_DARK }}>{bulkTypeLeaving} szónak</strong> ez az utolsó képköteles típusa, ezek a Kizárt szavak közé kerülnek (onnan visszavehetők).</>
+            )}
+          </p>
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => setBulkTypeRemoveConfirm(false)}
+              className="text-sm px-4 py-2 rounded-2xl transition-colors"
+              style={{ color: MUTED, background: TRACK }}
+            >
+              Mégse
+            </button>
+            <button
+              onClick={handleConfirmBulkTypeRemove}
+              className="text-white text-sm px-4 py-2 rounded-2xl transition-colors"
+              style={{ ...display, fontWeight: 600, background: '#C97B3E' }}
+            >
+              Kivétel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     {bulkRemoveTypesConfirm && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div className="bg-white rounded-[24px] p-6 max-w-md mx-4 shadow-xl">
@@ -698,6 +774,38 @@ export default function ImagesPage() {
               🔄 Csere szükséges
             </button>
           )}
+          <div className="flex items-center gap-1 rounded-xl p-1" style={{ background: '#FFFFFF' }}>
+            <select
+              value={activeBulkType}
+              onChange={e => setBulkType(e.target.value)}
+              disabled={bulkWorking}
+              title="Melyik feladattípusba kerüljenek a kijelölt szavak, vagy melyikből kerüljenek ki"
+              className="text-xs px-2 py-1 rounded-lg outline-none cursor-pointer disabled:opacity-50"
+              style={{ background: 'transparent', color: GREEN_DARK, fontWeight: 600 }}
+            >
+              {configs.map(c => (
+                <option key={c.id} value={c.id}>{c.label}</option>
+              ))}
+            </select>
+            <button
+              onClick={() => handleBulkSetType(activeBulkType, true)}
+              disabled={bulkWorking || !activeBulkType}
+              title={`A kijelölt szavak bekerülnek ide: ${activeBulkLabel}`}
+              className="text-xs px-2.5 py-1 rounded-lg transition-colors disabled:opacity-50"
+              style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }}
+            >
+              + Hozzáadás
+            </button>
+            <button
+              onClick={() => setBulkTypeRemoveConfirm(true)}
+              disabled={bulkWorking || !activeBulkType}
+              title={`A kijelölt szavak kikerülnek innen: ${activeBulkLabel}`}
+              className="text-xs px-2.5 py-1 rounded-lg transition-colors disabled:opacity-50"
+              style={{ background: '#FBE9DC', color: '#8A5A2F', fontWeight: 600 }}
+            >
+              − Kivétel
+            </button>
+          </div>
           <button
             onClick={() => setBulkRemoveTypesConfirm(true)}
             disabled={bulkWorking}

@@ -16,6 +16,7 @@ const DEFAULT_REQUIRES_IMAGE = new Set<string>([
   'sentence_picture_match',
   'image_sentence_match',
   'missing_letter',
+  'word_length',
 ]);
 
 export interface ExerciseTypeConfig {

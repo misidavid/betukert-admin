@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageNeed } from '../../../../lib/supabase';
-import { fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, bulkRestoreImageExerciseTypesAction } from '../../../actions/imageNeeds';
+import { fetchImageNeedsAction, toggleImageNeedExerciseTypeAction, bulkRestoreImageExerciseTypesAction, bulkSetImageExerciseTypeAction } from '../../../actions/imageNeeds';
 import { ExerciseTypeConfig } from '../../../actions/exerciseTypeConfig';
 import Link from 'next/link';
 
@@ -20,6 +20,7 @@ export default function ExcludedWordsPage() {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkWorking, setBulkWorking] = useState(false);
+  const [bulkType, setBulkType] = useState('');
   const [message, setMessage] = useState('');
 
   const loadData = async () => {
@@ -69,6 +70,24 @@ export default function ExcludedWordsPage() {
       setMessage(`❌ Hiba: ${result.error}`);
     } else {
       setMessage(`✅ ${result.updated} szó visszakerült a képköteles feladattípusokba.`);
+    }
+    setSelected(new Set());
+    setBulkWorking(false);
+    loadData();
+  };
+
+  const activeBulkType = configs.some(c => c.id === bulkType) ? bulkType : configs[0]?.id ?? '';
+
+  const handleBulkAddType = async () => {
+    const config = configs.find(c => c.id === activeBulkType);
+    if (!config) return;
+    setBulkWorking(true);
+    const ids = filtered.filter(i => selected.has(i.id)).map(i => i.id);
+    const result = await bulkSetImageExerciseTypeAction(ids, config.id, true);
+    if (result.error) {
+      setMessage(`❌ Hiba: ${result.error}`);
+    } else {
+      setMessage(`✅ ${result.updated} szó bekerült ide: ${config.label}, így visszakerültek a Képek oldalra.`);
     }
     setSelected(new Set());
     setBulkWorking(false);
@@ -137,6 +156,28 @@ export default function ExcludedWordsPage() {
           >
             {bulkWorking ? 'Visszavétel...' : '↩️ Visszavétel a képköteles típusokba'}
           </button>
+          <div className="flex items-center gap-1 rounded-xl p-1" style={{ background: '#FFFFFF' }}>
+            <select
+              value={activeBulkType}
+              onChange={e => setBulkType(e.target.value)}
+              disabled={bulkWorking}
+              title="Melyik feladattípusba kerüljenek a kijelölt szavak"
+              className="text-xs px-2 py-1 rounded-lg outline-none cursor-pointer disabled:opacity-50"
+              style={{ background: 'transparent', color: GREEN_DARK, fontWeight: 600 }}
+            >
+              {configs.map(c => (
+                <option key={c.id} value={c.id}>{c.label}</option>
+              ))}
+            </select>
+            <button
+              onClick={handleBulkAddType}
+              disabled={bulkWorking || !activeBulkType}
+              className="text-xs px-2.5 py-1 rounded-lg transition-colors disabled:opacity-50"
+              style={{ background: GREEN_LIGHT, color: GREEN_DARK, fontWeight: 600 }}
+            >
+              + Hozzáadás csak ehhez
+            </button>
+          </div>
           <button
             onClick={() => setSelected(new Set())}
             className="text-xs px-3 py-1.5 rounded-xl transition-colors ml-auto"
