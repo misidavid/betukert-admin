@@ -2,34 +2,57 @@
 
 import { useMemo } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { StatsData } from '../../../../lib/stats/types';
+import type { DailyPoint, StatsData } from '../../../../lib/stats/types';
 import { Card, CardHeader, ChartCard, DataTable, KpiTile, LegendItem, TooltipBox } from './ui';
-import { C, CATEGORY_LABELS, ORDINAL, fmtLongDate, fmtNum, fmtPct, fmtShortDate } from './theme';
+import { C, CATEGORY_LABELS, ORDINAL, fmtLongDate, fmtNum, fmtPct, fmtShortDate, periodPhrase, periodPhraseStart, periodScope } from './theme';
 
 const axisTick = { fontSize: 11, fill: C.muted };
 
-export function OverviewTab({ data, period }: { data: StatsData; period: number }) {
-  const { totals } = data;
+// Hosszú időszaknál (összesen nézet) a napi pontok helyett heti összegek —
+// 120 nap fölött a napi vonal már olvashatatlanul fogazott.
+const WEEKLY_THRESHOLD = 120;
 
-  const series = useMemo(() => data.daily.slice(-period), [data.daily, period]);
-  const previous = useMemo(() => data.daily.slice(-2 * period, -period), [data.daily, period]);
-  const signupsNow = series.reduce((s, d) => s + d.signups, 0);
-  const signupsPrev = previous.reduce((s, d) => s + d.signups, 0);
-  const profilesNow = series.reduce((s, d) => s + d.profiles, 0);
+interface SeriesPoint extends DailyPoint {
+  /** Heti bontásnál a hét utolsó napja, napinál azonos a date-tel */
+  until: string;
+}
 
-  const practicing = data.practiceRecency.length;
-  const activeInPeriod = data.practiceRecency.filter(d => d < period).length;
+const toSeries = (daily: DailyPoint[]): { points: SeriesPoint[]; weekly: boolean } => {
+  if (daily.length <= WEEKLY_THRESHOLD) return { points: daily.map(d => ({ ...d, until: d.date })), weekly: false };
+  // A heteket a mai naptól visszafelé vágjuk, így az utolsó pont mindig teljes, mai végű hét.
+  const points: SeriesPoint[] = [];
+  for (let end = daily.length; end > 0; end -= 7) {
+    const chunk = daily.slice(Math.max(0, end - 7), end);
+    points.unshift({
+      date: chunk[0].date,
+      until: chunk[chunk.length - 1].date,
+      signups: chunk.reduce((s, d) => s + d.signups, 0),
+      profiles: chunk.reduce((s, d) => s + d.profiles, 0),
+    });
+  }
+  return { points, weekly: true };
+};
 
-  const recency = useMemo(() => {
-    const r = data.practiceRecency;
-    const neverPracticed = Math.max(0, totals.profiles - totals.practicedProfiles);
-    return [
-      { label: 'Az utolsó 7 napban', value: r.filter(d => d < 7).length, color: ORDINAL[2] },
-      { label: '8–30 napja', value: r.filter(d => d >= 7 && d < 30).length, color: ORDINAL[1] },
-      { label: 'Több mint 30 napja', value: r.filter(d => d >= 30).length, color: ORDINAL[0] },
-      { label: 'Még nem gyakorolt', value: neverPracticed, color: C.neutralFill },
-    ];
-  }, [data.practiceRecency, totals.profiles, totals.practicedProfiles]);
+const prevNote = (prev: number | null, days: number) => (prev === null ? null : `előző ${days} nap: ${fmtNum(prev)}`);
+
+export function OverviewTab({ data }: { data: StatsData }) {
+  const { totals, period } = data;
+  const all = period === 'all';
+  const days = all ? 0 : period;
+  const scope = periodScope(period);
+
+  const { points: series, weekly } = useMemo(() => toSeries(data.daily), [data.daily]);
+  const signupsSum = data.daily.reduce((s, d) => s + d.signups, 0);
+  const profilesSum = data.daily.reduce((s, d) => s + d.profiles, 0);
+
+  // Az időszakban létrehozott profil nem gyakorolhatott régebben, mint az
+  // időszak hossza — a lehetetlen sávokat (pl. 7 napnál „8–30 napja") elhagyjuk.
+  const recency = [
+    { label: 'Az utolsó 7 napban', value: data.recency.last7, color: ORDINAL[2], minDaysAgo: 0 },
+    { label: '8–30 napja', value: data.recency.days8to30, color: ORDINAL[1], minDaysAgo: 7 },
+    { label: 'Több mint 30 napja', value: data.recency.over30, color: ORDINAL[0], minDaysAgo: 30 },
+    { label: 'Még nem gyakorolt', value: data.recency.never, color: C.neutralFill, minDaysAgo: 0 },
+  ].filter(r => all || period > r.minDaysAgo);
   const recencyTotal = recency.reduce((s, r) => s + r.value, 0);
 
   const funnelMax = Math.max(1, ...data.funnel.map(f => f.value));
@@ -38,56 +61,71 @@ export function OverviewTab({ data, period }: { data: StatsData; period: number 
     <div className="space-y-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <KpiTile
-          label="Regisztrált fiókok"
-          scope="összesen"
+          label={all ? 'Regisztrált fiókok' : 'Új regisztrációk'}
+          scope={scope}
           value={fmtNum(totals.accounts)}
           sub={
-            <>
-              <span style={{ color: C.goodText, fontWeight: 600 }}>+{fmtNum(signupsNow)}</span> az utolsó {period} napban
-              {' · '}előtte: {fmtNum(signupsPrev)}
-            </>
+            all
+              ? `${fmtNum(totals.accountsWithProfile)} fiókban van gyerekprofil`
+              : [prevNote(totals.accountsPrev, days), `mindösszesen ${fmtNum(totals.accountsTotal)} fiók`].join(' · ')
           }
-          info="A Supabase Auth összes fiókja (szülők). Az időszakos szám a regisztráció budapesti naptári napja szerint számol."
+          info="A szülői fiókok a regisztráció budapesti naptári napja szerint. Az előző időszak az ugyanilyen hosszú, közvetlenül megelőző időszak."
         />
         <KpiTile
-          label="Gyerekprofilok"
-          scope="összesen"
+          label={all ? 'Gyerekprofilok' : 'Új gyerekprofilok'}
+          scope={scope}
           value={fmtNum(totals.profiles)}
-          sub={`${fmtNum(totals.practicedProfiles)} már gyakorolt (${fmtPct(totals.practicedProfiles / Math.max(1, totals.profiles))}) · ${fmtNum(totals.accountsWithProfile)} fiókban`}
-          info="A gyakorolt profilnak van legalább egy valódi gyakorlási rekordja. A kézi szintugrás seed-rekordjai nem számítanak gyakorlásnak."
+          sub={[
+            `${fmtNum(totals.practicedProfiles)} már gyakorolt (${fmtPct(totals.practicedProfiles / Math.max(1, totals.profiles))})`,
+            all ? null : prevNote(totals.profilesPrev, days),
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          info="A gyerekprofilok a létrehozásuk napja szerint. Gyakorolt: van legalább egy valódi gyakorlási rekordja (a kézi szintugrás seed-rekordjai nem számítanak)."
         />
         <KpiTile
-          label="Aktív gyerekek"
-          scope={`utolsó ${period} nap`}
-          value={fmtNum(activeInPeriod)}
-          sub={`a gyakorló gyerekek ${fmtPct(activeInPeriod / Math.max(1, practicing))}-a`}
+          label={all ? 'Gyakorló gyerekek' : 'Aktív gyerekek'}
+          scope={scope}
+          value={fmtNum(all ? totals.practicingTotal : totals.activeChildren)}
+          sub={
+            all
+              ? `legalább egyszer gyakoroltak · a profilok ${fmtPct(totals.practicingTotal / Math.max(1, totals.profilesTotal))}-a`
+              : `a valaha gyakorló ${fmtNum(totals.practicingTotal)} gyerek ${fmtPct(totals.activeChildren / Math.max(1, totals.practicingTotal))}-a`
+          }
           info={
             <>
-              Azok a gyerekek, akik az utolsó {period} naptári napban (a mai napot is beleértve, budapesti idő szerint)
-              legalább egy feladatot megoldottak. A szabad gyakorlás nem ír rekordot, ezért nem számít bele.
+              Azok a gyerekek, akik {periodPhrase(period)} legalább egy feladatot megoldottak (budapesti naptári nap szerint,
+              a mai napot is beleértve). A szabad gyakorlás nem ír rekordot, ezért nem számít bele.
             </>
           }
         />
         <KpiTile
           label="Rögzített válaszok"
           scope="összesen"
+          unscoped={!all}
           value={fmtNum(totals.answers)}
-          sub="helyes + hibás válasz, elemenként"
-          info="A mastery-rekordok helyes és hibás számlálóinak összege. Nem feladatszám: a több célelemű feladatok (pl. szóhúzás) minden elemükre írnak. Pontos feladatszámhoz eseménynapló kell."
+          sub={all ? 'helyes + hibás válasz, elemenként' : 'időszakra nem bontható — a naplózás után lesz'}
+          info="A mastery-rekordok helyes és hibás számlálóinak összege. Ezek élettartam-számlálók: az adatbázis nem tárolja, mikor érkezett egy válasz, ezért időszakra csak az eseménynapló bevezetése után bontható. Nem is feladatszám: a több célelemű feladatok (pl. szóhúzás) minden elemükre írnak."
         />
         <KpiTile
           label="Betűk friss pontossága"
-          scope="jelenlegi"
+          scope={scope}
           value={fmtPct(totals.graphemeRecentAccuracy)}
           sub={`élettartam: ${fmtPct(totals.graphemeLifetimeAccuracy)} · szintlépési küszöb: 80%`}
-          info="Betűrekordonként az utolsó legfeljebb 6 válasz (a mobil szintlépése is ezt az ablakot nézi), az összes gyerekre összesítve. Az élettartam-pontosság az összes valaha adott válaszból számol."
+          info={
+            <>
+              A {all ? 'valaha' : periodPhrase(period)} gyakorolt betűrekordok utolsó (legfeljebb 6) válasza, az összes gyerekre
+              összesítve — a mobil szintlépése is ezt az ablakot nézi. Az élettartam-pontosság ugyanezeknek a rekordoknak az
+              összes valaha adott válaszából számol.
+            </>
+          }
         />
         <KpiTile
           label="Ismétlésre szoruló gyerekek"
-          scope="jelenlegi"
+          scope={scope}
           value={fmtNum(totals.childrenNeedingReview)}
-          sub="legalább egy elemük „ismétlés kell” státuszú"
-          info="Az app akkor jelöl egy elemet „ismétlés kell” státuszúnak, ha legalább 2 körben gyakorolták, és az élettartam-pontosság 50% alatti."
+          sub={all ? 'legalább egy elemük „ismétlés kell” státuszú' : 'az időszakban gyakorlók közül, jelenlegi állapot'}
+          info="Azok a gyerekek, akiknek legalább egy eleme most „ismétlés kell” státuszú. Az app akkor jelöl így egy elemet, ha legalább 2 körben gyakorolták, és az élettartam-pontossága 50% alatti."
         />
       </div>
 
@@ -95,14 +133,18 @@ export function OverviewTab({ data, period }: { data: StatsData; period: number 
         <div className="lg:col-span-2">
           <ChartCard
             title="Új regisztrációk és gyerekprofilok"
-            description={`Naponta, az utolsó ${period} napban · ${fmtNum(signupsNow)} fiók, ${fmtNum(profilesNow)} profil`}
-            info="Pontos adat: a fiók és a gyerekprofil létrehozásának időpontjából, budapesti naptári nap szerint."
+            description={`${weekly ? 'Hetente' : 'Naponta'}, ${periodPhrase(period)} · ${fmtNum(signupsSum)} fiók, ${fmtNum(profilesSum)} profil`}
+            info="Pontos adat: a fiók és a gyerekprofil létrehozásának időpontjából, budapesti naptári nap szerint. 120 napnál hosszabb időszakot heti összegekben mutat."
             table={
               <DataTable
                 rows={[...series].reverse()}
                 rowKey={r => r.date}
                 columns={[
-                  { key: 'date', label: 'Nap', render: r => fmtLongDate(r.date) },
+                  {
+                    key: 'date',
+                    label: weekly ? 'Hét' : 'Nap',
+                    render: r => (weekly ? `${fmtLongDate(r.date)} – ${fmtShortDate(r.until)}` : fmtLongDate(r.date)),
+                  },
                   { key: 'signups', label: 'Regisztráció', align: 'right', render: r => fmtNum(r.signups) },
                   { key: 'profiles', label: 'Új gyerekprofil', align: 'right', render: r => fmtNum(r.profiles) },
                 ]}
@@ -127,17 +169,18 @@ export function OverviewTab({ data, period }: { data: StatsData; period: number 
                 <YAxis allowDecimals={false} tick={axisTick} tickLine={false} axisLine={false} width={40} />
                 <Tooltip
                   cursor={{ stroke: C.axis, strokeWidth: 1 }}
-                  content={({ active, payload, label }) =>
-                    active && payload?.length ? (
+                  content={({ active, payload }) => {
+                    const p = active ? (payload?.[0]?.payload as SeriesPoint | undefined) : undefined;
+                    return p ? (
                       <TooltipBox
-                        title={fmtLongDate(String(label))}
+                        title={weekly ? `${fmtLongDate(p.date)} – ${fmtShortDate(p.until)}` : fmtLongDate(p.date)}
                         rows={[
-                          { kind: 'line', color: C.accent, label: 'Regisztráció', value: fmtNum(Number(payload[0]?.payload.signups ?? 0)) },
-                          { kind: 'line', color: C.series2, label: 'Új gyerekprofil', value: fmtNum(Number(payload[0]?.payload.profiles ?? 0)) },
+                          { kind: 'line', color: C.accent, label: 'Regisztráció', value: fmtNum(p.signups) },
+                          { kind: 'line', color: C.series2, label: 'Új gyerekprofil', value: fmtNum(p.profiles) },
                         ]}
                       />
-                    ) : null
-                  }
+                    ) : null;
+                  }}
                 />
                 <Line type="linear" dataKey="signups" stroke={C.accent} strokeWidth={2} dot={false} activeDot={{ r: 4, stroke: C.surface, strokeWidth: 2 }} isAnimationActive={false} />
                 <Line type="linear" dataKey="profiles" stroke={C.series2} strokeWidth={2} dot={false} activeDot={{ r: 4, stroke: C.surface, strokeWidth: 2 }} isAnimationActive={false} />
@@ -148,35 +191,45 @@ export function OverviewTab({ data, period }: { data: StatsData; period: number 
 
         <Card>
           <CardHeader
-            title="Utolsó gyakorlás"
-            description={`${fmtNum(recencyTotal)} gyerekprofil, a legutóbbi gyakorlás szerint`}
-            info="Gyerekenként a legfrissebb gyakorlási rekord napja (budapesti idő). Ez pontos — a napi aktivitás idősorához viszont eseménynapló kell, mert a rekord csak az utolsó gyakorlást őrzi."
+            title={all ? 'Utolsó gyakorlás' : 'Az új profilok aktivitása'}
+            description={
+              all
+                ? `${fmtNum(recencyTotal)} gyerekprofil, a legutóbbi gyakorlás szerint`
+                : `${periodPhraseStart(period)} létrehozott ${fmtNum(recencyTotal)} profil, a legutóbbi gyakorlás szerint`
+            }
+            info="Profilonként a legfrissebb gyakorlási rekord napja (budapesti idő). Időszakos nézetben az időszakban létrehozott profilokat mutatja: elkezdtek-e gyakorolni, és mikor jártak utoljára az appban."
           />
           <div className="px-5 pb-5 pt-4">
-            <div className="flex h-3 w-full gap-[2px] overflow-hidden rounded-[4px]" role="img" aria-label="Gyerekprofilok megoszlása az utolsó gyakorlás szerint">
-              {recency.map(r =>
-                r.value > 0 ? (
-                  <div
-                    key={r.label}
-                    title={`${r.label}: ${r.value}`}
-                    style={{ width: `${(r.value / Math.max(1, recencyTotal)) * 100}%`, background: r.color }}
-                  />
-                ) : null,
-              )}
-            </div>
-            <ul className="mt-4 space-y-2.5">
-              {recency.map(r => (
-                <li key={r.label} className="flex items-center justify-between text-[13px]">
-                  <LegendItem color={r.color} label={r.label} />
-                  <span style={{ color: C.ink, fontVariantNumeric: 'tabular-nums' }}>
-                    <span className="font-semibold">{fmtNum(r.value)}</span>
-                    <span className="ml-2 inline-block w-10 text-right" style={{ color: C.muted }}>
-                      {fmtPct(r.value / Math.max(1, recencyTotal))}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+            {recencyTotal === 0 ? (
+              <p className="text-[13px]" style={{ color: C.muted }}>Ebben az időszakban nem jött létre gyerekprofil.</p>
+            ) : (
+              <>
+                <div className="flex h-3 w-full gap-[2px] overflow-hidden rounded-[4px]" role="img" aria-label="Gyerekprofilok megoszlása az utolsó gyakorlás szerint">
+                  {recency.map(r =>
+                    r.value > 0 ? (
+                      <div
+                        key={r.label}
+                        title={`${r.label}: ${r.value}`}
+                        style={{ width: `${(r.value / recencyTotal) * 100}%`, background: r.color }}
+                      />
+                    ) : null,
+                  )}
+                </div>
+                <ul className="mt-4 space-y-2.5">
+                  {recency.map(r => (
+                    <li key={r.label} className="flex items-center justify-between text-[13px]">
+                      <LegendItem color={r.color} label={r.label} />
+                      <span style={{ color: C.ink, fontVariantNumeric: 'tabular-nums' }}>
+                        <span className="font-semibold">{fmtNum(r.value)}</span>
+                        <span className="ml-2 inline-block w-10 text-right" style={{ color: C.muted }}>
+                          {fmtPct(r.value / recencyTotal)}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </Card>
       </div>
@@ -185,8 +238,8 @@ export function OverviewTab({ data, period }: { data: StatsData; period: number 
         <Card>
           <CardHeader
             title="Aktiválási tölcsér"
-            description="Fiókok, lépcsőnként"
-            info="Minden lépcső az előző részhalmaza. A szintlépés lépcső gyakorló gyereket kíván, így a szülői kézi léptetés gyakorlás nélkül nem számít bele."
+            description={all ? 'Minden fiók, lépcsőnként' : `${periodPhraseStart(period)} regisztrált fiókok, lépcsőnként`}
+            info="Minden lépcső az előző részhalmaza; a lépcsők a fiókok MOSTANI állapotát mutatják. A szintlépés lépcső gyakorló gyereket kíván, így a szülői kézi léptetés gyakorlás nélkül nem számít bele."
           />
           <div className="space-y-3 px-5 pb-5 pt-4">
             {data.funnel.map((step, i) => {
@@ -219,8 +272,8 @@ export function OverviewTab({ data, period }: { data: StatsData; period: number 
         <Card>
           <CardHeader
             title="Tananyag-kategóriák"
-            description="Gyakorolt elemek és pontosság, összesen"
-            info="A „Szó” típusú rekordokból a mondatos (s…) és szövegértési (c…) feladatok külön kategóriába kerültek; a régi, előtag nélküli szóazonosítók össze vannak vonva az újjal."
+            description={all ? 'Valaha gyakorolt elemek' : `${periodPhraseStart(period)} gyakorolt elemek`}
+            info="Elemek és gyerekek: akik és amik az időszakban gyakoroltak. A friss pontosság az utolsó (legfeljebb 6) válaszból számol; az élettartam-pontosság ugyanezeknek a rekordoknak az összes válaszából. A mondatos (s…) és szövegértési (c…) feladatok külön kategóriában vannak."
           />
           <div className="px-2 pb-3 pt-2">
             <DataTable
@@ -230,8 +283,8 @@ export function OverviewTab({ data, period }: { data: StatsData; period: number 
                 { key: 'cat', label: 'Kategória', render: r => CATEGORY_LABELS[r.category] },
                 { key: 'items', label: 'Elemek', align: 'right', render: r => fmtNum(r.items) },
                 { key: 'children', label: 'Gyerekek', align: 'right', render: r => fmtNum(r.children) },
-                { key: 'answers', label: 'Válaszok', align: 'right', render: r => fmtNum(r.answers) },
-                { key: 'acc', label: 'Pontosság', align: 'right', render: r => fmtPct(r.accuracy) },
+                { key: 'recent', label: 'Friss', align: 'right', render: r => fmtPct(r.recentAccuracy) },
+                { key: 'acc', label: 'Élettartam', align: 'right', render: r => fmtPct(r.accuracy) },
               ]}
             />
           </div>

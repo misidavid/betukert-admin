@@ -1,4 +1,4 @@
-import type { ItemCategory, MasteryStatus } from '../../../../lib/stats/types';
+import type { ItemCategory, MasteryStatus, StatsPeriod } from '../../../../lib/stats/types';
 
 // Színtokenek. A diagramszíneket a dataviz-validátor ellenőrizte fehér
 // felületen: az ORDINAL egyszínű, monoton sorrendi skála (a legvilágosabb lépcső
@@ -74,3 +74,17 @@ export const fmtShortDate = (iso: string): string => `${iso.slice(5, 7)}.${iso.s
 
 /** 'YYYY-MM-DD' → 'YYYY. MM. DD.' */
 export const fmtLongDate = (iso: string): string => `${iso.slice(0, 4)}. ${iso.slice(5, 7)}. ${iso.slice(8, 10)}.`;
+
+// ── Időszak ─────────────────────────────────────────────────────────────────
+
+/** Rövid címke a választóhoz: „7 nap" / „Összesen" */
+export const periodOption = (p: StatsPeriod): string => (p === 'all' ? 'Összesen' : `${p} nap`);
+
+/** Kártya-sarok: „utolsó 7 nap" / „összesen" */
+export const periodScope = (p: StatsPeriod): string => (p === 'all' ? 'összesen' : `utolsó ${p} nap`);
+
+/** Mondatba: „az utolsó 7 napban" / „eddig összesen" */
+export const periodPhrase = (p: StatsPeriod): string => (p === 'all' ? 'eddig összesen' : `az utolsó ${p} napban`);
+
+/** Mondat elejére: „Az utolsó 7 napban" / „Eddig összesen" */
+export const periodPhraseStart = (p: StatsPeriod): string => (p === 'all' ? 'Eddig összesen' : `Az utolsó ${p} napban`);

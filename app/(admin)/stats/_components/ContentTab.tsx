@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, Search } from 'lucide-react';
 import type { ItemCategory, ItemStat, StatsData } from '../../../../lib/stats/types';
 import { Card, CardHeader, DataTable, EmptyState, Segmented } from './ui';
-import { C, CATEGORY_LABELS, fmtDaysAgo, fmtNum, fmtPct } from './theme';
+import { C, CATEGORY_LABELS, fmtDaysAgo, fmtNum, fmtPct, periodPhrase, periodPhraseStart } from './theme';
 
 type SortKey = 'hardest' | 'easiest' | 'answers' | 'children' | 'stale';
 
@@ -120,12 +120,14 @@ export function ContentTab({ data }: { data: StatsData }) {
     <Card>
       <CardHeader
         title="Elemenkénti teljesítmény"
-        description="Betűk, szótagok, szavak és mondatok — gyerekenként összevonva"
+        description={`${data.period === 'all' ? 'A valaha' : periodPhraseStart(data.period)} gyakorolt betűk, szótagok, szavak és mondatok — gyerekenként összevonva`}
         info={
           <>
-            Pontosság: az összes válaszból. A sáv a 95%-os Wilson-intervallum: kevés válasznál széles. Gyerekátlag: a
-            gyerekenkénti pontosságok átlaga — így egy sokat gyakorló gyerek nem nyomja el a többit. Friss: az utolsó
-            legfeljebb 6 válasz gyerekenként.
+            Az elem akkor szerepel, ha {data.period === 'all' ? 'valaha' : periodPhrase(data.period)} legalább egy gyerek
+            gyakorolta. A válaszszám és a pontosság élettartam-számláló: ezeknek a gyerekeknek az összes válasza az elemre —
+            napokra csak az eseménynapló után bontható. A sáv a 95%-os Wilson-intervallum: kevés válasznál széles.
+            Gyerekátlag: a gyerekenkénti pontosságok átlaga, így egy sokat gyakorló gyerek nem nyomja el a többit. Friss: az
+            utolsó legfeljebb 6 válasz gyerekenként.
           </>
         }
         actions={

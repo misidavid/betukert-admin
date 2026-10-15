@@ -2,14 +2,17 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getStatsAction } from '../../actions/stats';
-import type { StatsData, StatsResponse } from '../../../lib/stats/types';
+import type { StatsData, StatsPeriod, StatsResponse } from '../../../lib/stats/types';
 import { StatsDashboard } from './_components/StatsDashboard';
+
+const DEFAULT_PERIOD: StatsPeriod = 30;
 
 export default function StatsPage() {
   const [data, setData] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [includeInternal, setIncludeInternal] = useState(false);
+  const [period, setPeriod] = useState<StatsPeriod>(DEFAULT_PERIOD);
   // Gyors kapcsolgatásnál csak a legutolsó kérés válasza érvényes.
   const requestId = useRef(0);
 
@@ -26,13 +29,15 @@ export default function StatsPage() {
 
   useEffect(() => {
     const id = ++requestId.current;
-    getStatsAction({ includeInternal: false }).then(result => apply(id, result));
+    getStatsAction({ includeInternal: false, period: DEFAULT_PERIOD }).then(result => apply(id, result));
   }, [apply]);
 
-  const reload = (internal: boolean) => {
+  // A szerver 5 percig megőrzi a nyers adatot, így az időszak és a szűrő
+  // váltása gyors; a Frissítés gomb (fresh) mindig újraolvassa az adatbázist.
+  const reload = (next: { includeInternal: boolean; period: StatsPeriod; fresh?: boolean }) => {
     const id = ++requestId.current;
     setLoading(true);
-    getStatsAction({ includeInternal: internal }).then(result => apply(id, result));
+    getStatsAction(next).then(result => apply(id, result));
   };
 
   return (
@@ -43,9 +48,14 @@ export default function StatsPage() {
       includeInternal={includeInternal}
       onIncludeInternalChange={v => {
         setIncludeInternal(v);
-        reload(v);
+        reload({ includeInternal: v, period });
       }}
-      onRefresh={() => reload(includeInternal)}
+      period={period}
+      onPeriodChange={p => {
+        setPeriod(p);
+        reload({ includeInternal, period: p });
+      }}
+      onRefresh={() => reload({ includeInternal, period, fresh: true })}
     />
   );
 }

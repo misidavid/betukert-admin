@@ -2,27 +2,25 @@
 
 import { useState } from 'react';
 import { RefreshCw } from 'lucide-react';
-import type { StatsData } from '../../../../lib/stats/types';
+import { STATS_PERIODS, type StatsData, type StatsPeriod } from '../../../../lib/stats/types';
 import { OverviewTab } from './OverviewTab';
 import { LearningTab } from './LearningTab';
 import { ContentTab } from './ContentTab';
 import { QualityTab } from './QualityTab';
 import { BUSINESS_VIEW, ComingSoonTab, RETENTION_VIEW } from './ComingSoonTab';
 import { Card, Segmented, Switch } from './ui';
-import { C, fmtNum } from './theme';
+import { C, fmtNum, periodOption } from './theme';
 
 type TabId = 'overview' | 'learning' | 'content' | 'quality' | 'retention' | 'business';
 
-const TABS: { id: TabId; label: string; soon?: boolean }[] = [
-  { id: 'overview', label: 'Áttekintés' },
-  { id: 'learning', label: 'Tanulás' },
-  { id: 'content', label: 'Tartalom' },
+const TABS: { id: TabId; label: string; soon?: boolean; periodAware?: boolean }[] = [
+  { id: 'overview', label: 'Áttekintés', periodAware: true },
+  { id: 'learning', label: 'Tanulás', periodAware: true },
+  { id: 'content', label: 'Tartalom', periodAware: true },
   { id: 'quality', label: 'Adatminőség' },
   { id: 'retention', label: 'Megtartás', soon: true },
   { id: 'business', label: 'Előfizetések', soon: true },
 ];
-
-const PERIODS = [7, 30, 90] as const;
 
 export function StatsDashboard({
   data,
@@ -30,6 +28,8 @@ export function StatsDashboard({
   error,
   includeInternal,
   onIncludeInternalChange,
+  period,
+  onPeriodChange,
   onRefresh,
 }: {
   data: StatsData | null;
@@ -37,10 +37,11 @@ export function StatsDashboard({
   error: string | null;
   includeInternal: boolean;
   onIncludeInternalChange: (v: boolean) => void;
+  period: StatsPeriod;
+  onPeriodChange: (p: StatsPeriod) => void;
   onRefresh: () => void;
 }) {
   const [tab, setTab] = useState<TabId>('overview');
-  const [period, setPeriod] = useState<(typeof PERIODS)[number]>(30);
   const warnings = data?.quality.filter(q => q.level === 'warning').length ?? 0;
 
   const updatedAt = data
@@ -107,16 +108,20 @@ export function StatsDashboard({
       </nav>
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        {tab === 'overview' && (
+        {TABS.find(t => t.id === tab)?.periodAware ? (
           <div className="flex items-center gap-2 text-[13px]" style={{ color: C.ink2 }}>
             Időszak
             <Segmented
               ariaLabel="Időszak"
               value={period}
-              onChange={setPeriod}
-              options={PERIODS.map(p => ({ value: p, label: `${p} nap` }))}
+              onChange={onPeriodChange}
+              options={STATS_PERIODS.map(p => ({ value: p, label: periodOption(p) }))}
             />
           </div>
+        ) : (
+          tab === 'quality' && (
+            <span className="text-[12.5px]" style={{ color: C.muted }}>Az adatminőség a teljes adatbázisra vonatkozik, időszaktól függetlenül.</span>
+          )
         )}
         <Switch
           checked={includeInternal}
@@ -143,7 +148,7 @@ export function StatsDashboard({
       ) : (
         // Újratöltéskor az előző állapot halványan marad — nincs ugrálás, villanás.
         <div className="transition-opacity" style={{ opacity: loading ? 0.55 : 1 }} aria-busy={loading}>
-          {tab === 'overview' && <OverviewTab data={data} period={period} />}
+          {tab === 'overview' && <OverviewTab data={data} />}
           {tab === 'learning' && <LearningTab data={data} />}
           {tab === 'content' && <ContentTab data={data} />}
           {tab === 'quality' && <QualityTab data={data} />}

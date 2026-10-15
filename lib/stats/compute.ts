@@ -17,7 +17,9 @@ import type {
   MasteryStatus,
   PhasePoint,
   QualityCheck,
+  RecencyBuckets,
   StatsData,
+  StatsPeriod,
 } from './types';
 
 export interface MasteryRow {
@@ -54,10 +56,12 @@ export interface RawStatsInput {
   internalUserIds: Set<string>;
   sentences: Map<string, SentenceInfo>;
   includeInternal: boolean;
+  period: StatsPeriod;
   now: Date;
 }
 
-export const DAILY_DAYS = 180;
+/** Összesen nézetben a napi sorozat legfeljebb ennyi napra nyúlik vissza */
+const MAX_SERIES_DAYS = 730;
 
 export const CATEGORY_ORDER: ItemCategory[] = ['grapheme', 'syllable', 'word', 'sentence', 'comprehension'];
 const STATUSES: MasteryStatus[] = ['new', 'learning', 'practicing', 'stable', 'needs_review'];
@@ -116,6 +120,15 @@ const countOnes = (s: string): number => {
 };
 
 // ── Fő számítás ─────────────────────────────────────────────────────────────
+//
+// Az időszak két populációt szűr (lásd StatsTotals):
+//  - ÚJ: a létrehozás napja esik az időszakba (fiók, profil) — pontos;
+//  - AKTÍV: a gyakorlás napja esik az időszakba. A rekord csak az UTOLSÓ
+//    gyakorlás napját őrzi, de az „volt-e gyakorlás az időszakban" kérdésre ez
+//    is pontos válasz, mert az időszak mindig a mai napig tart.
+// A helyes/hibás számlálók viszont élettartamra szólnak: egy elem válaszai nem
+// bonthatók szét időszakra. Ezért az elemek pontossága „az időszakban gyakorolt
+// elemek élettartam-pontossága", a válaszszám pedig mindig összesen.
 
 interface ChildAgg {
   correct: number;
@@ -126,59 +139,82 @@ interface ChildAgg {
 }
 
 export const computeStats = (input: RawStatsInput): StatsData => {
-  const { internalUserIds, includeInternal, sentences } = input;
+  const { internalUserIds, includeInternal, sentences, period } = input;
   const today = budapestDayIndex(input.now);
-  const daysAgo = (iso: string) => today - budapestDayIndex(new Date(iso));
+  const dayOf = (iso: string) => budapestDayIndex(new Date(iso));
+  const daysAgo = (iso: string) => today - dayOf(iso);
+  // A mai nap is benne van: a 7 napos időszak = ma + az előző 6 nap.
+  const inWindow = (day: number) => period === 'all' || today - day < period;
+  const inPrevWindow = (day: number) => period !== 'all' && today - day >= period && today - day < 2 * period;
   const inScope = (userId: string) => includeInternal || !internalUserIds.has(userId);
 
   const users = input.users.filter(u => inScope(u.id));
   const profiles = input.profiles.filter(p => inScope(p.user_id));
-  const scopedRows = input.mastery.filter(r => inScope(r.user_id));
-  const rows = scopedRows.filter(r => !isSeedRow(r));
+  const rows = input.mastery.filter(r => inScope(r.user_id) && !isSeedRow(r));
+  const windowRows = rows.filter(r => inWindow(dayOf(r.last_practiced)));
 
-  // ── Gyerekek és fiókok ────────────────────────────────────────────────────
-  const lastPracticeByChild = new Map<string, number>();
+  // ── Gyerekek: az utolsó gyakorlás napja, a teljes előzményből ─────────────
+  const lastDayByChild = new Map<string, number>();
   for (const r of rows) {
-    const t = Date.parse(r.last_practiced);
-    const prev = lastPracticeByChild.get(r.child_id);
-    if (prev === undefined || t > prev) lastPracticeByChild.set(r.child_id, t);
+    const d = dayOf(r.last_practiced);
+    const prev = lastDayByChild.get(r.child_id);
+    if (prev === undefined || d > prev) lastDayByChild.set(r.child_id, d);
   }
-  const practiced = (childId: string) => lastPracticeByChild.has(childId);
+  const practiced = (childId: string) => lastDayByChild.has(childId);
+  const activeInWindow = (childId: string) => {
+    const d = lastDayByChild.get(childId);
+    return d !== undefined && inWindow(d);
+  };
 
-  const userIds = new Set(users.map(u => u.id));
-  const accountsWithProfile = new Set<string>();
-  const accountsPracticed = new Set<string>();
-  const accountsAdvanced = new Set<string>();
-  for (const p of profiles) {
-    if (!userIds.has(p.user_id)) continue;
-    accountsWithProfile.add(p.user_id);
-    if (practiced(p.id)) {
-      accountsPracticed.add(p.user_id);
-      if (p.current_phase >= 2) accountsAdvanced.add(p.user_id);
-    }
+  // ── Új: az időszakban regisztrált fiókok és létrehozott profilok ──────────
+  const cohortUsers = users.filter(u => inWindow(dayOf(u.created_at)));
+  const cohortProfiles = profiles.filter(p => inWindow(dayOf(p.created_at)));
+
+  const profilesByUser = new Map<string, ProfileRow[]>();
+  for (const p of profiles) profilesByUser.set(p.user_id, [...(profilesByUser.get(p.user_id) ?? []), p]);
+  let withProfile = 0;
+  let withPractice = 0;
+  let withAdvance = 0;
+  for (const u of cohortUsers) {
+    const own = profilesByUser.get(u.id) ?? [];
+    if (own.length === 0) continue;
+    withProfile += 1;
+    const practicing = own.filter(p => practiced(p.id));
+    if (practicing.length === 0) continue;
+    withPractice += 1;
+    if (practicing.some(p => p.current_phase >= 2)) withAdvance += 1;
   }
 
   const funnel: FunnelStep[] = [
-    { label: 'Regisztrált fiók', value: users.length, hint: 'Minden fiók a Supabase Auth-ban.' },
-    { label: 'Létrehozott gyerekprofilt', value: accountsWithProfile.size, hint: 'Legalább egy gyerekprofil tartozik a fiókhoz.' },
-    { label: 'Gyereke gyakorolt', value: accountsPracticed.size, hint: 'Legalább egy gyereknek van valódi (nem seedelt) gyakorlási rekordja.' },
+    {
+      label: 'Regisztrált fiók',
+      value: cohortUsers.length,
+      hint: period === 'all' ? 'Minden fiók.' : 'Az időszakban regisztrált fiókok.',
+    },
+    { label: 'Létrehozott gyerekprofilt', value: withProfile, hint: 'Legalább egy gyerekprofil tartozik a fiókhoz.' },
+    { label: 'Gyereke gyakorolt', value: withPractice, hint: 'Legalább egy gyereknek van valódi (nem seedelt) gyakorlási rekordja.' },
     {
       label: 'Gyereke szintet lépett',
-      value: accountsAdvanced.size,
+      value: withAdvance,
       hint: 'Egy gyakorló gyerek a 2. fázisban vagy feljebb tart (szülői kézi léptetéssel is).',
     },
   ];
 
   // ── Napi sorozat (regisztráció, új profil) ────────────────────────────────
-  const firstDay = today - (DAILY_DAYS - 1);
+  let firstDay = today - ((period === 'all' ? MAX_SERIES_DAYS : period) - 1);
+  if (period === 'all') {
+    const created = [...users.map(u => dayOf(u.created_at)), ...profiles.map(p => dayOf(p.created_at))];
+    if (created.length > 0) firstDay = Math.max(firstDay, Math.min(...created));
+    else firstDay = today;
+  }
   const signupsByDay = new Map<number, number>();
   const profilesByDay = new Map<number, number>();
   for (const u of users) {
-    const d = budapestDayIndex(new Date(u.created_at));
+    const d = dayOf(u.created_at);
     signupsByDay.set(d, (signupsByDay.get(d) ?? 0) + 1);
   }
   for (const p of profiles) {
-    const d = budapestDayIndex(new Date(p.created_at));
+    const d = dayOf(p.created_at);
     profilesByDay.set(d, (profilesByDay.get(d) ?? 0) + 1);
   }
   const daily: DailyPoint[] = [];
@@ -186,19 +222,36 @@ export const computeStats = (input: RawStatsInput): StatsData => {
     daily.push({ date: dayKey(d), signups: signupsByDay.get(d) ?? 0, profiles: profilesByDay.get(d) ?? 0 });
   }
 
-  const practiceRecency = Array.from(lastPracticeByChild.values(), t => today - budapestDayIndex(new Date(t)));
+  // ── Utolsó gyakorlás: az időszakban létrehozott profilok ──────────────────
+  const recency: RecencyBuckets = { last7: 0, days8to30: 0, over30: 0, never: 0 };
+  for (const p of cohortProfiles) {
+    const d = lastDayByChild.get(p.id);
+    if (d === undefined) recency.never += 1;
+    else if (today - d < 7) recency.last7 += 1;
+    else if (today - d < 30) recency.days8to30 += 1;
+    else recency.over30 += 1;
+  }
 
-  // ── Fázis-eloszlás ────────────────────────────────────────────────────────
+  // ── Fázis-eloszlás: minden profil, az időszakban aktív / nem aktív ────────
   const maxPhase = Math.max(MAX_PHASE, ...profiles.map(p => p.current_phase));
-  const phases: PhasePoint[] = Array.from({ length: maxPhase }, (_, i) => ({ phase: i + 1, practiced: 0, notPracticed: 0 }));
+  const phases: PhasePoint[] = Array.from({ length: maxPhase }, (_, i) => ({ phase: i + 1, active: 0, inactive: 0 }));
   for (const p of profiles) {
     const slot = phases[p.current_phase - 1];
     if (!slot) continue;
-    if (practiced(p.id)) slot.practiced += 1;
-    else slot.notPracticed += 1;
+    if (activeInWindow(p.id)) slot.active += 1;
+    else slot.inactive += 1;
   }
 
-  // ── Elemek: besorolás, gyerekenkénti összevonás ───────────────────────────
+  // Ismétlésre szoruló: az időszakban aktív gyerek, akinek bármelyik eleme
+  // MOST „ismétlés kell” státuszú (akkor is, ha azt az elemet régebben gyakorolta).
+  const childrenNeedingReview = new Set<string>();
+  let answers = 0;
+  for (const r of rows) {
+    answers += r.correct_count + r.incorrect_count;
+    if (r.status === 'needs_review' && activeInWindow(r.child_id)) childrenNeedingReview.add(r.child_id);
+  }
+
+  // ── Elemek: az időszakban gyakorolt rekordok, gyerekenként összevonva ─────
   // Gyerekenként vonunk össze, mert a régi és az új szó-id ugyanannál a
   // gyereknél két sor lehet — a gyerekszám így sem duplázódik.
   const itemAggs = new Map<string, { item: ClassifiedItem; children: Map<string, ChildAgg> }>();
@@ -208,25 +261,21 @@ export const computeStats = (input: RawStatsInput): StatsData => {
       { category, new: 0, learning: 0, practicing: 0, stable: 0, needs_review: 0, total: 0 },
     ]),
   );
-  const childrenNeedingReview = new Set<string>();
-  let answers = 0;
   let gCorrect = 0;
   let gAnswers = 0;
   let gRecentOnes = 0;
   let gRecentLen = 0;
 
-  for (const r of rows) {
+  for (const r of windowRows) {
     const item = classifyItem(r.item_type, r.item_id);
     if (!item) continue;
     const n = r.correct_count + r.incorrect_count;
-    answers += n;
 
     if ((STATUSES as string[]).includes(r.status)) {
       const s = statusMap.get(item.category)!;
       s[r.status as MasteryStatus] += 1;
       s.total += 1;
     }
-    if (r.status === 'needs_review') childrenNeedingReview.add(r.child_id);
 
     const recent = r.recent_results ?? '';
     if (item.category === 'grapheme') {
@@ -265,6 +314,9 @@ export const computeStats = (input: RawStatsInput): StatsData => {
   }
 
   const items: ItemStat[] = [];
+  const categoryAcc = new Map<ItemCategory, { items: number; children: Set<string>; correct: number; answers: number; recentOnes: number; recentLen: number }>(
+    CATEGORY_ORDER.map(c => [c, { items: 0, children: new Set(), correct: 0, answers: 0, recentOnes: 0, recentLen: 0 }]),
+  );
   for (const [key, { item, children }] of itemAggs) {
     let correct = 0;
     let n = 0;
@@ -273,7 +325,8 @@ export const computeStats = (input: RawStatsInput): StatsData => {
     let childAccSum = 0;
     let childAccCount = 0;
     let last = -Infinity;
-    for (const c of children.values()) {
+    const cat = categoryAcc.get(item.category)!;
+    for (const [childId, c] of children) {
       correct += c.correct;
       n += c.answers;
       recentOnes += c.recentOnes;
@@ -283,7 +336,14 @@ export const computeStats = (input: RawStatsInput): StatsData => {
         childAccCount += 1;
       }
       last = Math.max(last, c.last);
+      cat.children.add(childId);
     }
+    cat.items += 1;
+    cat.correct += correct;
+    cat.answers += n;
+    cat.recentOnes += recentOnes;
+    cat.recentLen += recentLen;
+
     const ci = wilsonInterval(correct, n);
     const meta = describeItem(item, sentences);
     items.push({
@@ -308,18 +368,22 @@ export const computeStats = (input: RawStatsInput): StatsData => {
   items.sort((a, b) => b.answers - a.answers);
 
   const categories: CategorySummary[] = CATEGORY_ORDER.map(category => {
-    const list = items.filter(i => i.category === category);
-    const children = new Set<string>();
-    for (const [key, agg] of itemAggs) {
-      if (key.startsWith(`${category}:`)) for (const id of agg.children.keys()) children.add(id);
-    }
-    const correct = list.reduce((s, i) => s + i.correct, 0);
-    const n = list.reduce((s, i) => s + i.answers, 0);
-    return { category, items: list.length, children: children.size, answers: n, accuracy: ratio(correct, n) };
+    const c = categoryAcc.get(category)!;
+    return {
+      category,
+      items: c.items,
+      children: c.children.size,
+      answers: c.answers,
+      accuracy: ratio(c.correct, c.answers),
+      recentAccuracy: ratio(c.recentOnes, c.recentLen),
+    };
   });
+
+  const countPrev = (dates: string[]) => (period === 'all' ? null : dates.filter(d => inPrevWindow(dayOf(d))).length);
 
   return {
     generatedAt: input.now.toISOString(),
+    period,
     includeInternal,
     internal: {
       accounts: input.users.filter(u => internalUserIds.has(u.id)).length,
@@ -327,10 +391,16 @@ export const computeStats = (input: RawStatsInput): StatsData => {
       records: input.mastery.filter(r => internalUserIds.has(r.user_id)).length,
     },
     totals: {
-      accounts: users.length,
-      accountsWithProfile: accountsWithProfile.size,
-      profiles: profiles.length,
-      practicedProfiles: profiles.filter(p => practiced(p.id)).length,
+      accounts: cohortUsers.length,
+      accountsPrev: countPrev(users.map(u => u.created_at)),
+      accountsTotal: users.length,
+      accountsWithProfile: withProfile,
+      profiles: cohortProfiles.length,
+      profilesPrev: countPrev(profiles.map(p => p.created_at)),
+      profilesTotal: profiles.length,
+      practicedProfiles: cohortProfiles.filter(p => practiced(p.id)).length,
+      activeChildren: profiles.filter(p => activeInWindow(p.id)).length,
+      practicingTotal: profiles.filter(p => practiced(p.id)).length,
       answers,
       childrenNeedingReview: childrenNeedingReview.size,
       graphemeRecentAccuracy: ratio(gRecentOnes, gRecentLen),
@@ -338,7 +408,7 @@ export const computeStats = (input: RawStatsInput): StatsData => {
     },
     funnel,
     daily,
-    practiceRecency,
+    recency,
     phases,
     statusByCategory: CATEGORY_ORDER.map(c => statusMap.get(c)!),
     categories,

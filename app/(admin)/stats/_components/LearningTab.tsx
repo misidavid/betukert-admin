@@ -25,6 +25,8 @@ import {
   fmtDaysAgo,
   fmtNum,
   fmtPct,
+  periodPhrase,
+  periodPhraseStart,
 } from './theme';
 import { AlertTriangle } from 'lucide-react';
 
@@ -32,6 +34,9 @@ const axisTick = { fontSize: 11, fill: C.muted };
 const THRESHOLD = 0.8;
 
 export function LearningTab({ data }: { data: StatsData }) {
+  const all = data.period === 'all';
+  const activeLabel = all ? 'Gyakorolt' : `Gyakorolt ${periodPhrase(data.period)}`;
+  const inactiveLabel = all ? 'Még nem gyakorolt' : 'Nem gyakorolt az időszakban';
   const phaseTicks = useMemo(
     () => data.phases.map(p => p.phase).filter(p => p === 1 || p % 5 === 0),
     [data.phases],
@@ -55,24 +60,24 @@ export function LearningTab({ data }: { data: StatsData }) {
     <div className="space-y-5">
       <ChartCard
         title="Fázis-eloszlás"
-        description="Gyerekprofilok az aktuális fázisuk szerint"
-        info="Minden fázis szerepel a tengelyen, az üresek is, így a távolságok valósak. A még nem gyakorolt profilok külön színnel látszanak — ezek többsége az 1. fázison áll, mert még el sem kezdte."
+        description={`Minden gyerekprofil az aktuális fázisa szerint · ${all ? 'gyakorolt / még nem gyakorolt' : 'aktív / nem aktív az időszakban'}`}
+        info="Minden fázis szerepel a tengelyen, az üresek is, így a távolságok valósak. A fázis a profil MOSTANI állapota; az időszak azt dönti el, melyik színnel látszik: gyakorolt-e a gyerek az időszakban. Összesen nézetben a soha nem gyakorolt profilok válnak el — ezek többsége az 1. fázison áll, mert még el sem kezdte."
         table={
           <DataTable
-            rows={data.phases.filter(p => p.practiced + p.notPracticed > 0)}
+            rows={data.phases.filter(p => p.active + p.inactive > 0)}
             rowKey={r => String(r.phase)}
             columns={[
               { key: 'phase', label: 'Fázis', render: r => `${r.phase}.` },
-              { key: 'practiced', label: 'Gyakorolt', align: 'right', render: r => fmtNum(r.practiced) },
-              { key: 'not', label: 'Még nem gyakorolt', align: 'right', render: r => fmtNum(r.notPracticed) },
-              { key: 'total', label: 'Összesen', align: 'right', render: r => fmtNum(r.practiced + r.notPracticed) },
+              { key: 'active', label: activeLabel, align: 'right', render: r => fmtNum(r.active) },
+              { key: 'inactive', label: inactiveLabel, align: 'right', render: r => fmtNum(r.inactive) },
+              { key: 'total', label: 'Összesen', align: 'right', render: r => fmtNum(r.active + r.inactive) },
             ]}
           />
         }
       >
         <div className="mb-3 flex gap-4">
-          <LegendItem color={C.accent} label="Gyakorolt" />
-          <LegendItem color={C.neutralFill} label="Még nem gyakorolt" />
+          <LegendItem color={C.accent} label={activeLabel} />
+          <LegendItem color={C.neutralFill} label={inactiveLabel} />
         </div>
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={data.phases} margin={{ top: 8, right: 8, bottom: 0, left: -12 }} barCategoryGap="18%">
@@ -94,15 +99,15 @@ export function LearningTab({ data }: { data: StatsData }) {
                   <TooltipBox
                     title={`${label}. fázis`}
                     rows={[
-                      { color: C.accent, label: 'Gyakorolt', value: fmtNum(Number(payload[0]?.payload.practiced ?? 0)) },
-                      { color: C.neutralFill, label: 'Még nem gyakorolt', value: fmtNum(Number(payload[0]?.payload.notPracticed ?? 0)) },
+                      { color: C.accent, label: activeLabel, value: fmtNum(Number(payload[0]?.payload.active ?? 0)) },
+                      { color: C.neutralFill, label: inactiveLabel, value: fmtNum(Number(payload[0]?.payload.inactive ?? 0)) },
                     ]}
                   />
                 ) : null
               }
             />
             <Bar
-              dataKey="practiced"
+              dataKey="active"
               stackId="p"
               fill={C.accent}
               maxBarSize={24}
@@ -110,11 +115,11 @@ export function LearningTab({ data }: { data: StatsData }) {
               strokeWidth={1}
               isAnimationActive={false}
               shape={(props: BarShapeProps) => (
-                <Rectangle {...props} radius={(props.payload as { notPracticed: number }).notPracticed > 0 ? 0 : [4, 4, 0, 0]} />
+                <Rectangle {...props} radius={(props.payload as { inactive: number }).inactive > 0 ? 0 : [4, 4, 0, 0]} />
               )}
             />
             <Bar
-              dataKey="notPracticed"
+              dataKey="inactive"
               stackId="p"
               fill={C.neutralFill}
               maxBarSize={24}
@@ -129,7 +134,7 @@ export function LearningTab({ data }: { data: StatsData }) {
 
       <ChartCard
         title="Elemek státusza kategóriánként"
-        description="Gyerek × elem rekordok megoszlása"
+        description={all ? 'Gyerek × elem rekordok megoszlása' : `${periodPhraseStart(data.period)} gyakorolt gyerek × elem rekordok jelenlegi státusza`}
         info={
           <>
             Az app által tárolt státusz. Az élettartam-pontosságon és a gyakorlási körök számán alapul (stabil: ≥ 5 kör és
@@ -203,8 +208,8 @@ export function LearningTab({ data }: { data: StatsData }) {
 
       <ChartCard
         title="Betűk friss pontossága"
-        description={`A tanmenet sorrendjében · ${graphemeChart.length} gyakorolt betű, ebből ${belowThreshold} a 80%-os küszöb alatt`}
-        info="Betűnként az összes gyerek utolsó (legfeljebb 6) válaszából. A szintlépés ugyanezt az ablakot nézi, 80%-os küszöbbel. A táblázatban az élettartam-pontosság és a gyerekenkénti átlag is látszik."
+        description={`A tanmenet sorrendjében · ${graphemeChart.length} betű ${all ? 'valaha' : periodPhrase(data.period)} gyakorolva, ebből ${belowThreshold} a 80%-os küszöb alatt`}
+        info="Betűnként az időszakban gyakorló gyerekek utolsó (legfeljebb 6) válaszából. A szintlépés ugyanezt az ablakot nézi, 80%-os küszöbbel. A táblázatban az élettartam-pontosság (ugyanezen gyerekek összes válasza) és a gyerekenkénti átlag is látszik."
         table={
           <DataTable
             rows={graphemes}

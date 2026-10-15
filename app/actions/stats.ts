@@ -3,9 +3,9 @@
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin';
 import { requireAuth } from '../../lib/requireAuth';
 import { isAdminEmail } from '../../lib/adminAllowlist';
-import { computeStats, type MasteryRow, type ProfileRow, type UserRow } from '../../lib/stats/compute';
+import { computeStats, type MasteryRow, type ProfileRow, type RawStatsInput, type UserRow } from '../../lib/stats/compute';
 import type { SentenceInfo } from '../../lib/stats/items';
-import type { StatsResponse } from '../../lib/stats/types';
+import { STATS_PERIODS, type StatsPeriod, type StatsResponse } from '../../lib/stats/types';
 import { SENTENCE_BANK, COMPREHENSION_BANK } from '../../shared/data/sentencebank';
 
 export async function fetchHomeStatsAction(): Promise<{
@@ -109,38 +109,61 @@ async function fetchSentenceLabels(): Promise<Map<string, SentenceInfo>> {
   return map;
 }
 
-export async function getStatsAction(options?: { includeInternal?: boolean }): Promise<StatsResponse> {
+// A nyers adat rövid ideig a szerver memóriájában marad, hogy az időszak és a
+// belső fiókok kapcsolgatása ne kérje le minden kattintásra a teljes adatbázist.
+// A „Frissítés" gomb (fresh) mindig újratölt. Csak az e-mailek nélküli,
+// számításhoz szükséges sorokat tartjuk meg.
+const RAW_TTL_MS = 5 * 60_000;
+
+type RawSource = Omit<RawStatsInput, 'includeInternal' | 'period' | 'now'> & { fetchedAt: Date };
+
+let rawCache: RawSource | null = null;
+
+async function loadRawSource(fresh: boolean): Promise<RawSource> {
+  if (!fresh && rawCache && Date.now() - rawCache.fetchedAt.getTime() < RAW_TTL_MS) return rawCache;
+
+  const [mastery, profiles, users, sentences] = await Promise.all([
+    fetchAllRows<MasteryRow>(
+      'mastery_records',
+      'child_id, user_id, item_id, item_type, status, correct_count, incorrect_count, sessions, last_practiced, recent_results',
+    ),
+    fetchAllRows<ProfileRow>('child_profiles', 'id, user_id, current_phase, created_at'),
+    fetchAllUsers(),
+    fetchSentenceLabels(),
+  ]);
+
+  const excluded = excludedEmails();
+  const internalUserIds = new Set(
+    users
+      .filter(u => isAdminEmail(u.email) || (u.email !== undefined && excluded.has(u.email.trim().toLowerCase())))
+      .map(u => u.id),
+  );
+
+  rawCache = {
+    mastery: mastery.rows,
+    masteryExactCount: mastery.exactCount,
+    profiles: profiles.rows,
+    users: users.map((u): UserRow => ({ id: u.id, created_at: u.created_at })),
+    internalUserIds,
+    sentences,
+    fetchedAt: new Date(),
+  };
+  return rawCache;
+}
+
+export async function getStatsAction(options?: {
+  includeInternal?: boolean;
+  period?: StatsPeriod;
+  fresh?: boolean;
+}): Promise<StatsResponse> {
   try {
     await requireAuth();
     const includeInternal = options?.includeInternal === true;
+    const period = STATS_PERIODS.includes(options?.period as StatsPeriod) ? (options!.period as StatsPeriod) : 30;
 
-    const [mastery, profiles, users, sentences] = await Promise.all([
-      fetchAllRows<MasteryRow>(
-        'mastery_records',
-        'child_id, user_id, item_id, item_type, status, correct_count, incorrect_count, sessions, last_practiced, recent_results',
-      ),
-      fetchAllRows<ProfileRow>('child_profiles', 'id, user_id, current_phase, created_at'),
-      fetchAllUsers(),
-      fetchSentenceLabels(),
-    ]);
-
-    const excluded = excludedEmails();
-    const internalUserIds = new Set(
-      users
-        .filter(u => isAdminEmail(u.email) || (u.email !== undefined && excluded.has(u.email.trim().toLowerCase())))
-        .map(u => u.id),
-    );
-
-    const data = computeStats({
-      mastery: mastery.rows,
-      masteryExactCount: mastery.exactCount,
-      profiles: profiles.rows,
-      users: users.map((u): UserRow => ({ id: u.id, created_at: u.created_at })),
-      internalUserIds,
-      sentences,
-      includeInternal,
-      now: new Date(),
-    });
+    const { fetchedAt, ...raw } = await loadRawSource(options?.fresh === true);
+    // A „most" az adat lekérésének ideje — így a napi bontás és a „Frissítve" egyezik.
+    const data = computeStats({ ...raw, includeInternal, period, now: fetchedAt });
     return { ok: true, data };
   } catch (e: unknown) {
     console.error('[getStatsAction]', e);

@@ -129,6 +129,7 @@ export function KpiTile({
   sub,
   info,
   scope,
+  unscoped = false,
 }: {
   label: string;
   value: ReactNode;
@@ -136,17 +137,24 @@ export function KpiTile({
   info?: ReactNode;
   /** A mutató érvényességi köre, pl. „utolsó 30 nap" vagy „összesen" */
   scope: string;
+  /** A kiválasztott időszakra nem bontható érték — halványítva, a sarokban jelezve */
+  unscoped?: boolean;
 }) {
   return (
-    <Card className="px-5 py-4">
+    <Card className={`px-5 py-4 ${unscoped ? 'bg-[#FBFAF6]' : ''}`}>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
           <span className="text-[13px] font-medium" style={{ color: C.ink2 }}>{label}</span>
           {info && <InfoTip text={info} />}
         </div>
-        <span className="text-[11px] font-medium uppercase tracking-wide" style={{ color: C.muted }}>{scope}</span>
+        <span
+          className={`text-[11px] font-medium uppercase tracking-wide ${unscoped ? 'rounded px-1.5 py-0.5' : ''}`}
+          style={unscoped ? { color: C.warning, background: C.warningSoft } : { color: C.muted }}
+        >
+          {scope}
+        </span>
       </div>
-      <div className="mt-2 text-[28px] font-semibold leading-tight" style={{ color: C.ink }}>{value}</div>
+      <div className="mt-2 text-[28px] font-semibold leading-tight" style={{ color: unscoped ? C.ink2 : C.ink }}>{value}</div>
       {sub && <div className="mt-1 text-[12.5px]" style={{ color: C.muted }}>{sub}</div>}
     </Card>
   );
