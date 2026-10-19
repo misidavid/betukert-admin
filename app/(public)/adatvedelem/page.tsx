@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
         Adatvédelmi tájékoztató
       </h1>
       <p className="text-sm mb-10" style={{ color: '#8A8478' }}>
-        Hatályos: 2026. október 7-től
+        Hatályos: 2026. október 19-től
       </p>
 
       <Section title="1. Bevezetés">
@@ -98,10 +98,24 @@ export default function PrivacyPolicyPage() {
           automatikus felolvasás, nagybetűs szakasz engedélyezése).
         </p>
         <p>
-          Ezeket az adatokat kizárólag arra használjuk, hogy a gyakorlás a gyermek tudásához
-          igazodjon, és hogy a szülő a Szülői felületen lássa a haladást és a statisztikát.
-          Profilozásra a jogi értelemben vett, joghatással járó automatizált döntéshozatalhoz
-          nem használjuk őket.
+          A gyakorlásról ezen felül eseménynaplót vezetünk. Gyakorlókörönként rögzítjük a kör
+          kezdetének és végének időpontját, a módját (tanmenet szerinti vagy szabad gyakorlás),
+          a gyermek akkori szintjét, a feladatok és a helyes válaszok számát, azt, hogy a kör
+          befejeződött-e, valamint a készülék platformját (iOS vagy Android) és az Alkalmazás
+          verzióját. Feladatonként rögzítjük a feladat típusát, a gyakorolt elemet (betű, szótag,
+          szó vagy mondat), a válasz helyességét, választós feladatnál a választott választ, és
+          a válaszadásig eltelt időt. A szint változásait (automatikus szintlépés vagy szülői
+          állítás) az időpontjukkal együtt rögzítjük.
+        </p>
+        <p>
+          Ezeket az adatokat arra használjuk, hogy a gyakorlás a gyermek tudásához igazodjon,
+          hogy a szülő a Szülői felületen lássa a haladást és a statisztikát, valamint
+          összesített (aggregált) elemzéssel a tananyag és az Alkalmazás fejlesztésére —
+          például annak feltárására, mely betűk, szavak vagy feladattípusok okoznak nehézséget,
+          és mennyi gyakorlás kell egy-egy szint elsajátításához. A fejlesztési elemzések
+          eredményei egyetlen gyermekhez sem kapcsolódnak. Az adatokat nem adjuk el, harmadik
+          félnek hirdetési célra nem adjuk át, és hirdetésre nem használjuk. Profilozásra a jogi
+          értelemben vett, joghatással járó automatizált döntéshozatalhoz nem használjuk őket.
         </p>
 
         <p><strong>d) Előfizetési és vásárlási adatok</strong></p>
@@ -117,8 +131,9 @@ export default function PrivacyPolicyPage() {
         <p><strong>e) Az eszközön tárolt adatok</strong></p>
         <p>
           Az Alkalmazás a készülék helyi tárhelyén is tárolja a gyermekprofilokat, a tanulási
-          adatokat, az aktív profil azonosítóját és az adott szinten lejátszott gyakorlókörök
-          számát, hogy internetkapcsolat nélkül is használható legyen. Ugyancsak a készüléken
+          adatokat, az aktív profil azonosítóját, az adott szinten lejátszott gyakorlókörök
+          számát és a még fel nem töltött eseménynaplót, hogy internetkapcsolat nélkül is
+          használható legyen. Ugyancsak a készüléken
           tárolódik a letöltött tananyag (képek, hangfájlok, szó- és mondatbank). Ezek az adatok
           a szülői fiókkal szinkronizálva a felhőben (Supabase) is mentésre kerülnek, így
           eszközváltás vagy újratelepítés után a haladás visszatölthető. Fiókszinten tároljuk azt
@@ -168,14 +183,23 @@ export default function PrivacyPolicyPage() {
           Az adatkezelés célja a szülői fiók és a gyermekprofilok létrehozásának és kezelésének
           lehetővé tétele, a tanulási folyamat személyre szabása, a szülő tájékoztatása a gyermek
           fejlődéséről, a haladás eszközök közötti szinkronizálása, az előfizetéshez kötött
-          funkciók biztosítása és a jogosultság ellenőrzése, valamint — hozzájárulás esetén — az
-          Alkalmazás fejlesztése a névtelen használati statisztika alapján.
+          funkciók biztosítása és a jogosultság ellenőrzése, a tananyag és az Alkalmazás
+          fejlesztése a tanulási adatok összesített elemzése alapján, valamint — hozzájárulás
+          esetén — az Alkalmazás fejlesztése a névtelen használati statisztika alapján.
         </p>
         <p>
           Jogalap: a szolgáltatás igénybevételéhez szükséges szerződés teljesítése (GDPR 6. cikk
           (1) bekezdés b) pont) — a felhasználói fiók létrehozásával a szülő/gondviselő és az
           adatkezelő között létrejövő szerződés alapján. A vásárlásokhoz kapcsolódó számviteli
           kötelezettségeket az App Store, illetve a Google Play teljesíti mint eladó.
+        </p>
+        <p>
+          A tanulási adatok összesített elemzésének (3. c) pont) jogalapja az adatkezelő jogos
+          érdeke (GDPR 6. cikk (1) bekezdés f) pont): a tananyag minőségének és a gyakorlás
+          hatékonyságának javítása, ami a gyermekek tanulását szolgálja. Az elemzés kizárólag
+          összesítve történik, eredménye egyetlen gyermekhez sem kapcsolódik, és a részletes,
+          feladatonkénti adatokat 12 hónap után töröljük. Ez ellen az adatkezelés ellen a 8.
+          pontban leírtak szerint bármikor tiltakozhatsz.
         </p>
         <p>
           A 3. f) pont szerinti használati statisztika jogalapja a szülő hozzájárulása (GDPR 6.
@@ -207,7 +231,10 @@ export default function PrivacyPolicyPage() {
       <Section title="6. Adatmegőrzés időtartama">
         <p>
           A fiók és a hozzá tartozó adatok a fiók törléséig, illetve a törlési kérelem
-          teljesítéséig kerülnek megőrzésre. A használati statisztika (3. f) pont) adatait a
+          teljesítéséig kerülnek megőrzésre. Kivétel az eseménynapló feladatonkénti része (3. c)
+          pont): ezeket az adatokat a rögzítésüktől számított 12 hónap elteltével automatikusan
+          töröljük; a gyakorlókörök és a szintváltások adatai a fiók, illetve a gyermekprofil
+          törléséig maradnak meg. A használati statisztika (3. f) pont) adatait a
           Google Analytics a gyűjtéstől számított 2 hónapig őrzi meg; ezek nem kapcsolódnak a
           fiókhoz, ezért a fiók törlése nem érinti őket.
         </p>
