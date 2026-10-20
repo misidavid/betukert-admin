@@ -28,7 +28,7 @@ export default function TermsPage() {
         Felhasználási feltételek
       </h1>
       <p className="text-sm mb-10" style={{ color: '#8A8478' }}>
-        Hatályos: 2026. október 7-től
+        Hatályos: 2026. október 20-tól
       </p>
 
       <Section title="1. A feltételek hatálya">
@@ -50,7 +50,13 @@ export default function TermsPage() {
         <p>
           Az Alkalmazás fejlesztője és üzemeltetője (a továbbiakban: „szolgáltató”, „mi”):
           <br />
-          Név: <strong>Misi Dávid</strong> (magánszemély)
+          Név: <strong>Dr. Misi Dávid egyéni vállalkozó</strong>
+          <br />
+          Székhely: 2730 Albertirsa, Lilaakác köz 1/B.
+          <br />
+          Nyilvántartási szám: 62958572
+          <br />
+          Adószám: 92475513-1-33
           <br />
           E-mail:{' '}
           <a href="mailto:info@betukert.hu" style={{ color: '#2F6B3F' }}>

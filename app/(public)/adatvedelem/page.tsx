@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
         Adatvédelmi tájékoztató
       </h1>
       <p className="text-sm mb-10" style={{ color: '#8A8478' }}>
-        Hatályos: 2026. október 19-től
+        Hatályos: 2026. október 20-tól
       </p>
 
       <Section title="1. Bevezetés">
@@ -56,7 +56,14 @@ export default function PrivacyPolicyPage() {
 
       <Section title="2. Az adatkezelő">
         <p>
-          Név: <strong>Misi Dávid</strong> (magánszemély), a Betűkert fejlesztője és üzemeltetője
+          Név: <strong>Dr. Misi Dávid egyéni vállalkozó</strong>, a Betűkert fejlesztője és
+          üzemeltetője
+          <br />
+          Székhely: 2730 Albertirsa, Lilaakác köz 1/B.
+          <br />
+          Nyilvántartási szám: 62958572
+          <br />
+          Adószám: 92475513-1-33
           <br />
           E-mail:{' '}
           <a href="mailto:info@betukert.hu" style={{ color: '#2F6B3F' }}>
@@ -167,7 +174,26 @@ export default function PrivacyPolicyPage() {
           elküldött adatok a megőrzési idő végén törlődnek.
         </p>
 
-        <p><strong>g) Amit nem kezelünk</strong></p>
+        <p><strong>g) Hibajelentés</strong></p>
+        <p>
+          Ha az Alkalmazás váratlanul leáll vagy hibába ütközik, a Firebase Crashlytics
+          szolgáltatás segítségével hibajelentést küld, hogy a hibát megtalálhassuk és
+          kijavíthassuk. A hibajelentés tartalma: a hiba technikai leírása (a programkód érintett
+          része), a hiba időpontja, a készülék típusa, operációs rendszerének verziója, a
+          készülék akkori állapotára vonatkozó technikai adatok (például szabad memória és
+          tárhely, képernyő-tájolás), az Alkalmazás verziója, valamint egy véletlenszerű, az
+          adott telepítéshez tartozó azonosító, amelyet a szolgáltatás a készüléken tárol. Ha a
+          szülő a használati statisztikához (3. f) pont) is hozzájárult, a hibajelentés a hibát
+          megelőzően megnyitott képernyők listáját is tartalmazhatja.
+        </p>
+        <p>
+          A hibajelentés nem tartalmaz nevet, e-mail címet, a gyermekprofil adatait vagy a
+          gyakorlás eredményeit, nem kapcsolódik a szülői fiókhoz, és nem használ hirdetési
+          azonosítót. Kizárólag a hibák feltárására és javítására használjuk. A hibajelentéseket
+          a szolgáltatás 90 napig őrzi meg.
+        </p>
+
+        <p><strong>h) Amit nem kezelünk</strong></p>
         <p>
           Az Alkalmazás nem gyűjt hirdetési azonosítót (IDFA, Android hirdetési azonosító) és
           pontos helyadatot, nem küld push értesítéseket, nem kér mikrofon-, kamera- vagy
@@ -184,8 +210,9 @@ export default function PrivacyPolicyPage() {
           lehetővé tétele, a tanulási folyamat személyre szabása, a szülő tájékoztatása a gyermek
           fejlődéséről, a haladás eszközök közötti szinkronizálása, az előfizetéshez kötött
           funkciók biztosítása és a jogosultság ellenőrzése, a tananyag és az Alkalmazás
-          fejlesztése a tanulási adatok összesített elemzése alapján, valamint — hozzájárulás
-          esetén — az Alkalmazás fejlesztése a névtelen használati statisztika alapján.
+          fejlesztése a tanulási adatok összesített elemzése alapján, az Alkalmazás hibáinak
+          feltárása és javítása a hibajelentések alapján, valamint — hozzájárulás esetén — az
+          Alkalmazás fejlesztése a névtelen használati statisztika alapján.
         </p>
         <p>
           Jogalap: a szolgáltatás igénybevételéhez szükséges szerződés teljesítése (GDPR 6. cikk
@@ -202,6 +229,14 @@ export default function PrivacyPolicyPage() {
           pontban leírtak szerint bármikor tiltakozhatsz.
         </p>
         <p>
+          A 3. g) pont szerinti hibajelentés jogalapja szintén az adatkezelő jogos érdeke (GDPR 6.
+          cikk (1) bekezdés f) pont): az Alkalmazás stabil, hibamentes működésének biztosítása,
+          ami minden felhasználó — így a gyermekek — érdekét is szolgálja. A hibajelentés csak a
+          hiba feltárásához szükséges technikai adatokat tartalmazza, nem kapcsolódik a szülői
+          fiókhoz vagy a gyermekprofilhoz, és 90 nap után törlődik. Ez ellen az adatkezelés ellen
+          is bármikor tiltakozhatsz a 8. pontban leírtak szerint.
+        </p>
+        <p>
           A 3. f) pont szerinti használati statisztika jogalapja a szülő hozzájárulása (GDPR 6.
           cikk (1) bekezdés a) pont, valamint az elektronikus hírközlésről szóló 2003. évi C.
           törvény 155. § (4) bekezdése). A hozzájárulás bármikor, indoklás nélkül visszavonható;
@@ -213,7 +248,7 @@ export default function PrivacyPolicyPage() {
         <p>Az adatok kezeléséhez az alábbi szolgáltatókat vesszük igénybe adatfeldolgozóként:</p>
         <ul className="list-disc pl-6 space-y-1">
           <li><strong>Supabase</strong> — adatbázis, hitelesítés (bejelentkezés), adattárolás és a tananyag kiszolgálása</li>
-          <li><strong>Google LLC</strong> — Google-fiókkal történő bejelentkezés, a fizetések lebonyolítása Android készüléken (Google Play), valamint — hozzájárulás esetén — a használati statisztika (Google Analytics for Firebase)</li>
+          <li><strong>Google LLC</strong> — Google-fiókkal történő bejelentkezés, a fizetések lebonyolítása Android készüléken (Google Play), a hibajelentések fogadása (Firebase Crashlytics), valamint — hozzájárulás esetén — a használati statisztika (Google Analytics for Firebase)</li>
           <li><strong>Apple Inc.</strong> — Apple-fiókkal történő bejelentkezés, valamint a fizetések lebonyolítása iOS készüléken (App Store)</li>
           <li><strong>RevenueCat, Inc.</strong> — előfizetések és vásárlások kezelése, a hozzáférés ellenőrzése</li>
           <li><strong>Expo / EAS</strong> — az Alkalmazás frissítéseinek kézbesítése</li>
@@ -236,7 +271,8 @@ export default function PrivacyPolicyPage() {
           töröljük; a gyakorlókörök és a szintváltások adatai a fiók, illetve a gyermekprofil
           törléséig maradnak meg. A használati statisztika (3. f) pont) adatait a
           Google Analytics a gyűjtéstől számított 2 hónapig őrzi meg; ezek nem kapcsolódnak a
-          fiókhoz, ezért a fiók törlése nem érinti őket.
+          fiókhoz, ezért a fiók törlése nem érinti őket. A hibajelentéseket (3. g) pont) a
+          Firebase Crashlytics 90 napig őrzi meg; ezek sem kapcsolódnak a fiókhoz.
         </p>
         <p>
           Egy gyermekprofil önállóan, az Alkalmazáson belül bármikor törölhető (profilválasztó
@@ -313,7 +349,8 @@ export default function PrivacyPolicyPage() {
         <p>
           Az Alkalmazás nem használ sütiket, hirdetési kódot, sem az alkalmazások és weboldalak
           közötti nyomkövetést. Analitikai eszközt (Google Analytics for Firebase) kizárólag a
-          szülő hozzájárulásával használ, a 3. f) pontban leírt módon. A betukert.hu weboldal kizárólag a működéshez szükséges,
+          szülő hozzájárulásával használ, a 3. f) pontban leírt módon. A hibajelentést (3. g)
+          pont) nem analitikai, hanem hibakeresési célra használja. A betukert.hu weboldal kizárólag a működéshez szükséges,
           minimális technikai adatokat kezel, és nem használ marketing- vagy analitikai sütiket.
         </p>
       </Section>
